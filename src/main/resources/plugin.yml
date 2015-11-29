@@ -1,0 +1,4 @@
+name: PacMan
+main: fr.azuxul.pacman.PacMan
+version: 1.0-SNAPSHOT
+author: Azuxul
