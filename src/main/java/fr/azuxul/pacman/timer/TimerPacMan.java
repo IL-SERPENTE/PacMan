@@ -21,7 +21,7 @@ public class TimerPacMan implements Runnable {
         this.gameManager = gameManager;
         this.server = gameManager.getServer();
         this.minutes = 20;
-        this.secondsBStart = -1;
+        this.secondsBStart = -2;
     }
 
     @Override
@@ -31,27 +31,32 @@ public class TimerPacMan implements Runnable {
 
             // TIMER BEFORE START
 
-            if (secondsBStart < 0) {
+            if (secondsBStart < -1) {
 
                 // If min players
                 if (gameManager.isMinPlayer()) {
                     secondsBStart = 5; // Set timer to 45 // TODO: Set to 45
-                    Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.DARK_BLUE + "La partie va bientot commencer !"); // Send hotbar message
+                    Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.YELLOW + "La partie va bientot commencer !"); // Send hotbar message
                 } else
                     Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.GREEN + "En attente de joueurs"); // Send hotbar message
 
             } else if (secondsBStart == 0) { // If timer is 0
 
                 gameManager.start(); // Start
+                secondsBStart = -1;
 
             } else if (!gameManager.isMinPlayer()) { // If is not min players
 
-                secondsBStart = -1; // Reset timer
+                secondsBStart = -2; // Reset timer
                 server.broadcastMessage(ChatColor.RED + "Démarrage annulé ! En attente de joueurs"); // Send message
-            } else {
+            } else if (secondsBStart > 0) {
 
                 if (gameManager.isMaxPlayer() && secondsBStart > 30) // If max player
                     secondsBStart = 30; // Set timer to 30
+
+                if (secondsBStart == 30 || secondsBStart == 15 || secondsBStart == 10 || (secondsBStart <= 5 && secondsBStart > 0))
+                    Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.YELLOW + "La partie commence dans " + ChatColor.DARK_GREEN + secondsBStart + "s");
+
 
                 secondsBStart--; // Decrement timer
             }
@@ -64,9 +69,9 @@ public class TimerPacMan implements Runnable {
             seconds--;
             if (seconds <= 0) {
                 minutes--;
-                if (minutes <= 0) {
+                seconds = 59;
+                if (minutes <= 0)
                     gameManager.end();
-                }
             }
         }
 

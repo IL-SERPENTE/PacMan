@@ -1,5 +1,6 @@
 package fr.azuxul.pacman.player;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
  * @author Azuxul
  * @version 1.0
  */
-public class PlayerPacMan {
+public class PlayerPacMan implements Comparable<PlayerPacMan> {
 
     UUID uuid;
     String name;
@@ -49,5 +50,20 @@ public class PlayerPacMan {
 
     public void setCoins(int coins) {
         this.coins = coins;
+    }
+
+    @Override
+    public int compareTo(@Nullable PlayerPacMan comparePlayerPacMan) {
+
+        if (comparePlayerPacMan == null) {
+            throw new NullPointerException("The compared object can not be null");
+        }
+        if (comparePlayerPacMan.getCoins() == this.getCoins()) {
+            return 0;
+        } else if (comparePlayerPacMan.getCoins() > this.getCoins()) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 }
