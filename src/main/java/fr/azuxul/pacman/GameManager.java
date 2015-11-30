@@ -39,14 +39,20 @@ public class GameManager {
         this.playerPacManList = new ArrayList<>();
     }
 
-    public void updatePlayerNb() {
+    /**
+     * Update player status values
+     *
+     * @param playerDisconnect if update when player disconnect
+     */
+    public void updatePlayerNb(boolean playerDisconnect) {
 
-        int players = server.getOnlinePlayers().size();
+        // Get player size and subtract one if playerDisconnect
+        int playerSize = server.getOnlinePlayers().size() - (playerDisconnect?1:0);
 
         // TODO: Set to 6
-        if (players >= 3) { // If player nb is >= 6
+        if (playerSize >= 1) { // If player nb is >= 6
             minPlayer = true; // Stet min player to true
-            maxPlayer = players >= 10; // Set max player to player nb >= 10
+            maxPlayer = playerSize >= 10; // Set max player to player nb >= 10
         } else
             minPlayer = false; // Else set to false
     }
@@ -99,26 +105,29 @@ public class GameManager {
         this.globalCoins = globalCoins;
     }
 
+    /**
+     * Start the game
+     */
     @SuppressWarnings("deprecation")
     public void start() {
 
         Location spawn = new Location(getServer().getWorlds().get(0), 0, 78, 0);
 
-        for(Player player : server.getOnlinePlayers()) {
+        for (Player player : server.getOnlinePlayers()) {
             player.teleport(spawn); // Teleport player to spawn
             player.setGameMode(GameMode.ADVENTURE); // Set player gamemode
         }
 
         // Timer before start
 
-        for(Player player : server.getOnlinePlayers()) {
+        for (Player player : server.getOnlinePlayers()) {
             player.sendTitle(ChatColor.GREEN + "3", "");
             player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true));
         }
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
-            for(Player player : server.getOnlinePlayers()) {
+            for (Player player : server.getOnlinePlayers()) {
                 player.sendTitle(ChatColor.YELLOW + "2", "");
                 player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true));
             }
@@ -126,7 +135,7 @@ public class GameManager {
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
-            for(Player player : server.getOnlinePlayers()) {
+            for (Player player : server.getOnlinePlayers()) {
                 player.sendTitle(ChatColor.RED + "1", "");
                 player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true));
             }
@@ -142,22 +151,27 @@ public class GameManager {
         }, 60L);
     }
 
+    /**
+     * Set end of game
+     */
     public void end() {
+
+        timer.setToZero(); // Set timer to zero
 
         end = true; // Set end
 
         // Sort playerPacManList
         Collections.sort(playerPacManList);
 
-        // Send end message
+        // Display whiners
         int size = playerPacManList.size();
         server.broadcastMessage(ChatColor.GOLD + "------------------------------");
-        if(size >= 1) {
+        if (size >= 1) {
             server.broadcastMessage(ChatColor.GREEN + "      Premier: " + playerPacManList.get(size - 1).getName() + ChatColor.GRAY + "(" + playerPacManList.get(size - 1).getCoins() + ")");
-            if(size >= 2) {
+            if (size >= 2) {
                 server.broadcastMessage(ChatColor.GREEN + "      Dexiéme: " + playerPacManList.get(size - 2).getName() + ChatColor.GRAY + "(" + playerPacManList.get(size - 2).getCoins() + ")");
-                if(size >= 3)
-                server.broadcastMessage(ChatColor.GREEN + "      Troisiéme: " + playerPacManList.get(size - 3).getName() + ChatColor.GRAY + "(" + playerPacManList.get(size - 3).getCoins() + ")");
+                if (size >= 3)
+                    server.broadcastMessage(ChatColor.GREEN + "      Troisiéme: " + playerPacManList.get(size - 3).getName() + ChatColor.GRAY + "(" + playerPacManList.get(size - 3).getCoins() + ")");
             }
         }
         server.broadcastMessage(ChatColor.GOLD + "------------------------------");

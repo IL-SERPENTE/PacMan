@@ -22,6 +22,13 @@ public class PlayerPacMan implements Comparable<PlayerPacMan> {
         this.name = name;
     }
 
+    /**
+     * Get playerPacMan in list with hir UUID
+     *
+     * @param playerPacManList list of PacManPlayer
+     * @param uuid UUID of player
+     * @return PlayerPacMan of UUID player
+     */
     public static PlayerPacMan getPlayerPacManInList(List<PlayerPacMan> playerPacManList, UUID uuid) {
 
         PlayerPacMan result = null;
@@ -36,18 +43,38 @@ public class PlayerPacMan implements Comparable<PlayerPacMan> {
         return result;
     }
 
+    /**
+     * Get name of playerPacMan
+     *
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get UUID of playerPacMan
+     *
+     * @return UUID
+     */
     public UUID getUuid() {
         return uuid;
     }
 
+    /**
+     * Get coins number of playerPacMan
+     *
+     * @return coins
+     */
     public int getCoins() {
         return coins;
     }
 
+    /**
+     * Set coins number of playerPacMan
+     *
+     * @param coins value of coins number
+     */
     public void setCoins(int coins) {
         this.coins = coins;
     }

@@ -44,9 +44,9 @@ public class Utils {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(chatBaseComponent, (byte) 2));
     }
 
-    public static ArmorStand spawnCoin(Location location) {
+    public static ArmorStand spawnCoin(Location location, boolean noGravity) {
 
-        ArmorStand armorStand = (ArmorStand) location.getWorld().spawnEntity(location, EntityType.ARMOR_STAND); // Spawn entity in world
+        ArmorStand armorStand = (ArmorStand) location.getWorld().spawnEntity(location.add(0, -0.2, 0), EntityType.ARMOR_STAND); // Spawn entity in world
 
         armorStand.setHelmet(new ItemStack(Material.GOLD_BLOCK)); // Set helmet
 
@@ -57,7 +57,7 @@ public class Utils {
         // Set nbtTagCompound
         entity.c(nbtTagCompound);
         nbtTagCompound.setBoolean("Small", true); // Set Small
-        nbtTagCompound.setBoolean("NoGravity", false); // Set NoGravity
+        nbtTagCompound.setBoolean("NoGravity", noGravity); // Set NoGravity
         nbtTagCompound.setBoolean("Invulnerable", true); // Set Invulnerable
         nbtTagCompound.setBoolean("Invisible", true); // Set Invisible
         nbtTagCompound.setInt("DisabledSlots", 31); // Disable slots
@@ -66,11 +66,14 @@ public class Utils {
         return armorStand;
     }
 
-    public static void spawnCoinWithDirection(Location location, Vector direction) {
+    public static void spawnPlayerDropedCoin(Location location, Vector direction) {
 
-        ArmorStand armorStand = spawnCoin(location);
+        ArmorStand armorStand = spawnCoin(location, false); // Spawn normal coin with gravity
+        GameManager gameManager = PacMan.getGameManager();
 
-        armorStand.setVelocity(direction);
+        armorStand.setVelocity(direction); // Set velocity
+
+        gameManager.getServer().getScheduler().runTaskLater(gameManager.getPlugin(), armorStand::remove, 300); // After 15s kill coin
     }
 
 }

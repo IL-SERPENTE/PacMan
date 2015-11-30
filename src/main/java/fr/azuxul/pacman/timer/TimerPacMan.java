@@ -35,10 +35,13 @@ public class TimerPacMan implements Runnable {
 
                 // If min players
                 if (gameManager.isMinPlayer()) {
-                    secondsBStart = 45; // Set timer to 45 // TODO: Set to 45
+                    secondsBStart = 5; // Set timer to 45 // TODO: Set to 45
                     Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.YELLOW + "La partie va bientot commencer !"); // Send hotbar message
-                } else
+                } else {
+                    gameManager.getServer().getOnlinePlayers().forEach(player -> player.setLevel(9999)); // Set players level
                     Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.GREEN + "En attente de joueurs"); // Send hotbar message
+
+                }
 
             } else if (secondsBStart == 0) { // If timer is 0
 
@@ -57,8 +60,9 @@ public class TimerPacMan implements Runnable {
                 if (secondsBStart == 30 || secondsBStart == 15 || secondsBStart == 10 || (secondsBStart <= 5 && secondsBStart > 0))
                     Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.YELLOW + "La partie commence dans " + ChatColor.DARK_GREEN + secondsBStart + "s");
 
-
                 secondsBStart--; // Decrement timer
+
+                gameManager.getServer().getOnlinePlayers().forEach(player -> player.setLevel(secondsBStart)); // Set players level to secondsBStart
             }
 
 
@@ -76,6 +80,12 @@ public class TimerPacMan implements Runnable {
         }
 
         server.getOnlinePlayers().forEach(player -> gameManager.getScoreboard().sendScoreboardToPlayer(player));
+    }
+
+    public void setToZero() {
+
+        minutes = 0;
+        seconds = 0;
     }
 
     public short getSeconds() {

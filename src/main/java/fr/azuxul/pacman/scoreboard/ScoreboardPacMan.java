@@ -31,9 +31,14 @@ public class ScoreboardPacMan {
         this.displayName = displayName; // Set display name
     }
 
+    /**
+     * Send scoreboard to param player
+     *
+     * @param player Receive scoreboard
+     */
     public void sendScoreboardToPlayer(Player player) {
 
-        if(!gameManager.isStart())
+        if (!gameManager.isStart())
             return;
 
         Scoreboard scoreboard = scoreboardManager.getNewScoreboard(); // Get new scoreboard
@@ -51,7 +56,9 @@ public class ScoreboardPacMan {
         try {
             objective.getScore(ChatColor.GRAY + String.format("%02d:%02d", gameManager.getTimer().getMinutes(), gameManager.getTimer().getSeconds())).setScore(score);
         } catch (IllegalFormatException e) {
-            e.printStackTrace();
+            for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                gameManager.getLogger().throwing(stackTraceElement.getClassName(), stackTraceElement.getMethodName(), e.getCause());
+            }
         }
 
         score++;
@@ -89,6 +96,6 @@ public class ScoreboardPacMan {
         score++;
         objective.getScore("Classement: ").setScore(score);
 
-        player.setScoreboard(scoreboard);
+        player.setScoreboard(scoreboard); // Send scoreboard to the player
     }
 }

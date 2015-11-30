@@ -31,7 +31,7 @@ public class PlayerEvent implements Listener {
         GameManager gameManager = PacMan.getGameManager();
         Player player = event.getPlayer();
 
-        gameManager.updatePlayerNb(); // Update player status
+        gameManager.updatePlayerNb(false); // Update player status
 
         if (PlayerPacMan.getPlayerPacManInList(gameManager.getPlayerPacManList(), player.getUniqueId()) == null) // If player is not in player pacman list
             gameManager.getPlayerPacManList().add(new PlayerPacMan(player.getUniqueId(), player.getDisplayName())); // Add this player in list
@@ -40,6 +40,7 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
 
+        PacMan.getGameManager().updatePlayerNb(true); // Update player status
     }
 
     @EventHandler
@@ -62,16 +63,14 @@ public class PlayerEvent implements Listener {
 
             int coins = playerPacMan.getCoins();
 
-                for(int i = RandomUtils.nextInt(3); i >= 1; i--) {
+            for (int i = RandomUtils.nextInt(3); i >= 1; i--)
+                if (coins > 0) {
+                    coins--;
 
-                    if(coins > 0) {
-                        coins--;
+                    Vector direction = new Vector(RandomUtils.nextInt(5) / 10, RandomUtils.nextInt(4) / 10, RandomUtils.nextInt(5) / 10);
 
-                        Vector direction = new Vector(RandomUtils.nextInt(5)/10, RandomUtils.nextInt(4)/10, RandomUtils.nextInt(5)/10);
-
-                        Utils.spawnCoinWithDirection(player.getLocation().add(RandomUtils.nextInt(3), 1 + RandomUtils.nextInt(2), RandomUtils.nextInt(3)), direction);
-                        playerPacMan.setCoins(coins);
-                    }
+                    Utils.spawnPlayerDropedCoin(player.getLocation().add(RandomUtils.nextInt(3), 1 + RandomUtils.nextInt(2), RandomUtils.nextInt(3)), direction);
+                    playerPacMan.setCoins(coins);
                 }
         }
     }
@@ -82,7 +81,7 @@ public class PlayerEvent implements Listener {
         Player player = event.getPlayer();
         GameManager gameManager = PacMan.getGameManager();
 
-        if(gameManager.isStart() && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+        if (gameManager.isStart() && !player.getGameMode().equals(GameMode.SPECTATOR)) {
 
             // Detect collides with coins
             player.getNearbyEntities(0, 0, 0).stream().filter(entity -> ((CraftEntity) entity).getHandle() instanceof EntityArmorStand && ((ArmorStand) entity).getHelmet().getType().equals(Material.GOLD_BLOCK)).forEach(entity -> { // Get entities Coin in radius of 0
@@ -99,7 +98,7 @@ public class PlayerEvent implements Listener {
                 int globalCoins = gameManager.getGlobalCoins() - 1;
                 gameManager.setGlobalCoins(globalCoins);
 
-                // If remaning coins is equals to 0 and is not end
+                // If remaining coins is equals to 0 and is not end
                 if (globalCoins <= 0 && !gameManager.isEnd())
                     gameManager.end(); // End
 
