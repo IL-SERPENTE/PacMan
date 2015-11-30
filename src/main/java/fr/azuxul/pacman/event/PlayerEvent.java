@@ -2,16 +2,20 @@ package fr.azuxul.pacman.event;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
+import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
-import org.bukkit.ChatColor;
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.util.Vector;
 
 /**
  * Player events of PacMan plugin
@@ -49,8 +53,27 @@ public class PlayerEvent implements Listener {
 
         GameManager gameManager = PacMan.getGameManager();
 
-        if (!gameManager.isStart()) // If is not started
+        if (!gameManager.isStart() || event.getEntity() instanceof ArmorStand) // If is not started
             event.setCancelled(true); // Cancel damages
+        else if (event.getEntity() instanceof Player) {
+
+            Player player = (Player) event.getEntity();
+            PlayerPacMan playerPacMan = PlayerPacMan.getPlayerPacManInList(gameManager.getPlayerPacManList(), player.getUniqueId());
+
+            int coins = playerPacMan.getCoins();
+
+                for(int i = RandomUtils.nextInt(3); i >= 1; i--) {
+
+                    if(coins > 0) {
+                        coins--;
+
+                        Vector direction = new Vector(RandomUtils.nextInt(5)/10, RandomUtils.nextInt(4)/10, RandomUtils.nextInt(5)/10);
+
+                        Utils.spawnCoinWithDirection(player.getLocation().add(RandomUtils.nextInt(3), 1 + RandomUtils.nextInt(2), RandomUtils.nextInt(3)), direction);
+                        playerPacMan.setCoins(coins);
+                    }
+                }
+        }
     }
 
     @EventHandler
@@ -62,7 +85,7 @@ public class PlayerEvent implements Listener {
         if(gameManager.isStart() && !player.getGameMode().equals(GameMode.SPECTATOR)) {
 
             // Detect collides with coins
-            player.getNearbyEntities(0, 0, 0).stream().filter(entity -> ((CraftEntity) entity).getHandle() instanceof EntityArmorStand && ((CraftEntity) entity).getHandle().getCustomName().equals(ChatColor.GOLD + "Coin")).forEach(entity -> { // Get entities Coin in radius of 0
+            player.getNearbyEntities(0, 0, 0).stream().filter(entity -> ((CraftEntity) entity).getHandle() instanceof EntityArmorStand && ((ArmorStand) entity).getHelmet().getType().equals(Material.GOLD_BLOCK)).forEach(entity -> { // Get entities Coin in radius of 0
 
                 entity.remove(); // Kill
 
@@ -77,7 +100,7 @@ public class PlayerEvent implements Listener {
                 gameManager.setGlobalCoins(globalCoins);
 
                 // If remaning coins is equals to 0 and is not end
-                if(globalCoins <= 0 && !gameManager.isEnd())
+                if (globalCoins <= 0 && !gameManager.isEnd())
                     gameManager.end(); // End
 
             });

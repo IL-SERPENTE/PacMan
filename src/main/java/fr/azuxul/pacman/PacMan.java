@@ -35,14 +35,7 @@ public class PacMan extends JavaPlugin {
         // Add players in playerPacManList
         getServer().getOnlinePlayers().forEach(player -> gameManager.getPlayerPacManList().add(new PlayerPacMan(player.getUniqueId(), player.getDisplayName())));
 
-        // TODO: Remove (test)
-        getServer().getWorlds().get(0).getBlockAt(0, 71, 0).setType(Material.GOLD_BLOCK);
-        getServer().getWorlds().get(0).getBlockAt(0, 71, 1).setType(Material.GOLD_BLOCK);
-        getServer().getWorlds().get(0).getBlockAt(0, 71, 2).setType(Material.GOLD_BLOCK);
-        getServer().getWorlds().get(0).getBlockAt(1, 71, 1).setType(Material.GOLD_BLOCK);
-        getServer().getWorlds().get(0).getBlockAt(0, 71, 1).setType(Material.GOLD_BLOCK);
-        getServer().getWorlds().get(0).getBlockAt(1, 71, 2).setType(Material.GOLD_BLOCK);
-        getServer().getWorlds().get(0).getBlockAt(0, 71, 2).setType(Material.GOLD_BLOCK);
+        getServer().getWorlds().get(0).setSpawnLocation(0, 73, 0);
 
         // Replace gold block with coins
         int globalCoins = 0;

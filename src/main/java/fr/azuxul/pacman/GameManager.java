@@ -44,7 +44,7 @@ public class GameManager {
         int players = server.getOnlinePlayers().size();
 
         // TODO: Set to 6
-        if (players >= 1) { // If player nb is >= 6
+        if (players >= 3) { // If player nb is >= 6
             minPlayer = true; // Stet min player to true
             maxPlayer = players >= 10; // Set max player to player nb >= 10
         } else
@@ -104,8 +104,10 @@ public class GameManager {
 
         Location spawn = new Location(getServer().getWorlds().get(0), 0, 78, 0);
 
-        // Teleport player to spawn
-        server.getOnlinePlayers().forEach(player -> player.teleport(spawn));
+        for(Player player : server.getOnlinePlayers()) {
+            player.teleport(spawn); // Teleport player to spawn
+            player.setGameMode(GameMode.ADVENTURE); // Set player gamemode
+        }
 
         // Timer before start
 

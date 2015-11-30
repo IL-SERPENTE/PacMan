@@ -35,7 +35,7 @@ public class TimerPacMan implements Runnable {
 
                 // If min players
                 if (gameManager.isMinPlayer()) {
-                    secondsBStart = 5; // Set timer to 45 // TODO: Set to 45
+                    secondsBStart = 45; // Set timer to 45 // TODO: Set to 45
                     Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.YELLOW + "La partie va bientot commencer !"); // Send hotbar message
                 } else
                     Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.GREEN + "En attente de joueurs"); // Send hotbar message
