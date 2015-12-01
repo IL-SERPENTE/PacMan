@@ -56,8 +56,7 @@ public class GameManager {
         // Get player size and subtract one if playerDisconnect
         int playerSize = server.getOnlinePlayers().size() - (playerDisconnect ? 1 : 0);
 
-        // TODO: Set to 6
-        if (playerSize >= 1) { // If player nb is >= 6
+        if (playerSize >= 6) { // If player nb is >= 6
             minPlayer = true; // Stet min player to true
             maxPlayer = playerSize >= 10; // Set max player to player nb >= 10
         } else
@@ -248,9 +247,8 @@ public class GameManager {
         // Kick players and shutdown the server after 15.30s
         server.getScheduler().runTaskTimer(plugin, () -> {
 
-            // TODO: Remove com
-            //server.getOnlinePlayers().forEach(player -> player.kickPlayer(""));
-            //server.shutdown();
+            server.getOnlinePlayers().forEach(player -> player.kickPlayer("")); // Kick players
+            server.shutdown(); // Shutdown server
 
         }, 310L, 0L);
     }

@@ -45,7 +45,13 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onPlayerLogin(PlayerLoginEvent event) {
 
-        // TODO: Disallow if is full or started
+        GameManager gameManager = PacMan.getGameManager();
+
+        if (gameManager.isStart())
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Started");
+
+        else if (gameManager.isMaxPlayer())
+            event.disallow(PlayerLoginEvent.Result.KICK_FULL, "Full");
     }
 
     @EventHandler
