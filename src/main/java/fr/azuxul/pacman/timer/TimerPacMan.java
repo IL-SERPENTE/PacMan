@@ -17,6 +17,11 @@ public class TimerPacMan implements Runnable {
     private GameManager gameManager;
     private Server server;
 
+    /**
+     * Class constructor
+     *
+     * @param gameManager game manager
+     */
     public TimerPacMan(GameManager gameManager) {
         this.gameManager = gameManager;
         this.server = gameManager.getServer();
@@ -24,6 +29,11 @@ public class TimerPacMan implements Runnable {
         this.secondsBStart = -2;
     }
 
+    /**
+     * When is run, timer decrement second if is started
+     * else if minimum player number are reached, start
+     * timer before game start
+     */
     @Override
     public void run() {
 
@@ -73,7 +83,7 @@ public class TimerPacMan implements Runnable {
             seconds--;
             if (seconds <= 0) {
                 minutes--;
-                seconds = 59;
+                seconds = 60;
                 if (minutes <= 0)
                     gameManager.end();
             }
@@ -82,16 +92,29 @@ public class TimerPacMan implements Runnable {
         server.getOnlinePlayers().forEach(player -> gameManager.getScoreboard().sendScoreboardToPlayer(player));
     }
 
+    /**
+     * Set timer to 0 minutes and 0 seconds
+     */
     public void setToZero() {
 
         minutes = 0;
         seconds = 0;
     }
 
+    /**
+     * Get seconds remaining before end
+     *
+     * @return seconds
+     */
     public short getSeconds() {
         return seconds;
     }
 
+    /**
+     * Get minutes remaining before end
+     *
+     * @return minutes
+     */
     public short getMinutes() {
         return minutes;
     }

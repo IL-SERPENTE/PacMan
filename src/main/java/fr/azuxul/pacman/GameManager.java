@@ -29,6 +29,13 @@ public class GameManager {
     private boolean start, end, maxPlayer, minPlayer;
     private int globalCoins;
 
+    /**
+     * Class constructor
+     *
+     * @param logger plugin logger
+     * @param plugin plugin
+     * @param server server
+     */
     public GameManager(Logger logger, Plugin plugin, Server server) {
 
         this.server = server;
@@ -47,7 +54,7 @@ public class GameManager {
     public void updatePlayerNb(boolean playerDisconnect) {
 
         // Get player size and subtract one if playerDisconnect
-        int playerSize = server.getOnlinePlayers().size() - (playerDisconnect?1:0);
+        int playerSize = server.getOnlinePlayers().size() - (playerDisconnect ? 1 : 0);
 
         // TODO: Set to 6
         if (playerSize >= 1) { // If player nb is >= 6
@@ -57,50 +64,112 @@ public class GameManager {
             minPlayer = false; // Else set to false
     }
 
+    /**
+     * Get list of playerPacMan
+     *
+     * @return playerListPacMan
+     */
     public List<PlayerPacMan> getPlayerPacManList() {
         return playerPacManList;
     }
 
+    /**
+     * Get game timer
+     *
+     * @return timer
+     */
     public TimerPacMan getTimer() {
         return timer;
     }
 
+    /**
+     * Get game scoreboard
+     *
+     * @return scoreboard
+     */
     public ScoreboardPacMan getScoreboard() {
         return scoreboard;
     }
 
+    /**
+     * Get server
+     *
+     * @return server
+     */
     public Server getServer() {
         return server;
     }
 
+    /**
+     * Get logger of plugin
+     *
+     * @return logger
+     */
     public Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Get plugin
+     *
+     * @return plugin
+     */
     public Plugin getPlugin() {
         return plugin;
     }
 
+    /**
+     * Get is game started
+     *
+     * @return started
+     */
     public boolean isStart() {
         return start;
     }
 
+    /**
+     * Get is game end
+     *
+     * @return end
+     */
     public boolean isEnd() {
         return end;
     }
 
+    /**
+     * Get if maximum number of player for
+     * start game is reached
+     *
+     * @return maxPlayer
+     */
     public boolean isMaxPlayer() {
         return maxPlayer;
     }
 
+    /**
+     * Get if minimum number of player for
+     * start game is reached
+     *
+     * @return minPlayer
+     */
     public boolean isMinPlayer() {
         return minPlayer;
     }
 
+    /**
+     * Get number of global coins remaining
+     *
+     * @return globalCoins
+     */
     public int getGlobalCoins() {
         return globalCoins;
     }
 
+    /**
+     * Set number of global coins remaining
+     *
+     * @param globalCoins global coins remaining
+     */
     public void setGlobalCoins(int globalCoins) {
         this.globalCoins = globalCoins;
     }
@@ -121,23 +190,23 @@ public class GameManager {
         // Timer before start
 
         for (Player player : server.getOnlinePlayers()) {
-            player.sendTitle(ChatColor.GREEN + "3", "");
-            player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true));
+            player.sendTitle(ChatColor.GREEN + "3", ""); // Send title to player
+            player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true)); // Play note to player
         }
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
             for (Player player : server.getOnlinePlayers()) {
-                player.sendTitle(ChatColor.YELLOW + "2", "");
-                player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true));
+                player.sendTitle(ChatColor.YELLOW + "2", ""); // Send title to player
+                player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true)); // Play note to player
             }
         }, 20L);
 
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
 
             for (Player player : server.getOnlinePlayers()) {
-                player.sendTitle(ChatColor.RED + "1", "");
-                player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true));
+                player.sendTitle(ChatColor.RED + "1", ""); // Send title to player
+                player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true)); // Play note to player
             }
         }, 40L);
 
@@ -146,7 +215,7 @@ public class GameManager {
 
             start = true; // Set start
 
-            server.getOnlinePlayers().forEach(player -> player.playNote(player.getLocation(), Instrument.PIANO, new Note(18)));
+            server.getOnlinePlayers().forEach(player -> player.playNote(player.getLocation(), Instrument.PIANO, new Note(18))); // Play note to player
 
         }, 60L);
     }

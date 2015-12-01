@@ -2,12 +2,12 @@ package fr.azuxul.pacman.event;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
-import fr.azuxul.pacman.Utils;
+import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.player.PlayerPacMan;
-import net.minecraft.server.v1_8_R3.EntityArmorStand;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -15,7 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.util.Vector;
 
 /**
  * Player events of PacMan plugin
@@ -61,16 +60,18 @@ public class PlayerEvent implements Listener {
             Player player = (Player) event.getEntity();
             PlayerPacMan playerPacMan = PlayerPacMan.getPlayerPacManInList(gameManager.getPlayerPacManList(), player.getUniqueId());
 
-            int coins = playerPacMan.getCoins();
+            int coins = playerPacMan.getCoins(); // Get player coins
 
             for (int i = RandomUtils.nextInt(3); i >= 1; i--)
-                if (coins > 0) {
-                    coins--;
+                if (coins > 0) { // If player coins number > 0
+                    coins--; // Decrement coins of player
 
-                    Vector direction = new Vector(RandomUtils.nextInt(5) / 10, RandomUtils.nextInt(4) / 10, RandomUtils.nextInt(5) / 10);
+                    Location location = player.getLocation();
 
-                    Utils.spawnPlayerDropedCoin(player.getLocation().add(RandomUtils.nextInt(3), 1 + RandomUtils.nextInt(2), RandomUtils.nextInt(3)), direction);
-                    playerPacMan.setCoins(coins);
+                    // Spawn coin
+                    new Coin(((CraftWorld) player.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+
+                    playerPacMan.setCoins(coins); // Set player coins
                 }
         }
     }
@@ -84,7 +85,9 @@ public class PlayerEvent implements Listener {
         if (gameManager.isStart() && !player.getGameMode().equals(GameMode.SPECTATOR)) {
 
             // Detect collides with coins
-            player.getNearbyEntities(0, 0, 0).stream().filter(entity -> ((CraftEntity) entity).getHandle() instanceof EntityArmorStand && ((ArmorStand) entity).getHelmet().getType().equals(Material.GOLD_BLOCK)).forEach(entity -> { // Get entities Coin in radius of 0
+            player.getNearbyEntities(0, 0, 0).stream().filter(entity -> ((CraftEntity) entity).getHandle() instanceof Coin).forEach(entity -> { // Get entities Coin in radius of 0
+
+                Coin coin = ((Coin) ((CraftEntity) entity).getHandle());
 
                 entity.remove(); // Kill
 
@@ -94,14 +97,16 @@ public class PlayerEvent implements Listener {
                 // Send scoreboard to player
                 gameManager.getScoreboard().sendScoreboardToPlayer(player);
 
-                // Set global coins
-                int globalCoins = gameManager.getGlobalCoins() - 1;
-                gameManager.setGlobalCoins(globalCoins);
+                if (!coin.isDroopedByPlayer()) { // If coin was not drooped by player
 
-                // If remaining coins is equals to 0 and is not end
-                if (globalCoins <= 0 && !gameManager.isEnd())
-                    gameManager.end(); // End
+                    // Set global coins
+                    int globalCoins = gameManager.getGlobalCoins() - 1;
+                    gameManager.setGlobalCoins(globalCoins);
 
+                    // If remaining coins is equals to 0 and is not end
+                    if (globalCoins <= 0 && !gameManager.isEnd())
+                        gameManager.end(); // End
+                }
             });
         }
     }

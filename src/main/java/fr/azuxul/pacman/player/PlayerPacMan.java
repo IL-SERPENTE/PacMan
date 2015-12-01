@@ -26,7 +26,7 @@ public class PlayerPacMan implements Comparable<PlayerPacMan> {
      * Get playerPacMan in list with hir UUID
      *
      * @param playerPacManList list of PacManPlayer
-     * @param uuid UUID of player
+     * @param uuid             UUID of player
      * @return PlayerPacMan of UUID player
      */
     public static PlayerPacMan getPlayerPacManInList(List<PlayerPacMan> playerPacManList, UUID uuid) {

@@ -38,7 +38,7 @@ public class ScoreboardPacMan {
      */
     public void sendScoreboardToPlayer(Player player) {
 
-        if (!gameManager.isStart())
+        if (!gameManager.isStart()) // If game is not started
             return;
 
         Scoreboard scoreboard = scoreboardManager.getNewScoreboard(); // Get new scoreboard
@@ -69,7 +69,8 @@ public class ScoreboardPacMan {
 
         // Display remaining global coins number
         score++;
-        objective.getScore("Coins restants: " + ChatColor.GOLD + gameManager.getGlobalCoins()).setScore(score);
+        int remainingCoins = gameManager.getGlobalCoins();
+        objective.getScore("Coins restants: " + ChatColor.GOLD + (remainingCoins < 0 ? 0 : remainingCoins)).setScore(score);
 
         // Display coins number
         score++;
