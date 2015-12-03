@@ -70,11 +70,7 @@ public class PacMan extends JavaPlugin {
                     block.setType(Material.AIR); // Set air
 
                     // Spawn coin normal coin
-
-                    double xAdd = x < 0 ? 0.5 : -0.5; // Add to x for adjust location
-                    double zAdd = z < 0 ? 0.5 : -0.5; // Add to z for adjust location
-
-                    new Coin(world, x + xAdd, 70.7, z + zAdd, false);
+                    new Coin(world, x + 0.5, 70.7, z + 0.5, false);
                     globalCoins++;
                 }
             }
@@ -89,6 +85,7 @@ public class PacMan extends JavaPlugin {
      * @param id    entity id
      * @param clazz entity class
      */
+    @SuppressWarnings("unchecked")
     private void registerEntity(String name, int id, Class clazz) {
 
         // put entity details in maps of EntityTypes class
