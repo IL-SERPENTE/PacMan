@@ -4,6 +4,7 @@ import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.minecraft.server.v1_8_R3.World;
+import net.samagames.api.SamaGamesAPI;
 import org.bukkit.Difficulty;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,9 +31,16 @@ public class PacMan extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        gameManager = new GameManager(getLogger(), this, getServer()); // Register GameManager
+        final String gameCodeName = "pacman-test"; // TODO: Change gameCodeName
+        final String gameName = "PacMan";
+        final String gameDescription = "";
 
-        gameManager.updatePlayerNb(false); // Update player nb
+        SamaGamesAPI samaGamesAPI = SamaGamesAPI.get();
+
+        gameManager = new GameManager(getLogger(), this, getServer(), gameCodeName, gameName, gameDescription, PlayerPacMan.class); // Register GameManager
+
+        samaGamesAPI.getGameManager().registerGame(gameManager); // Register game on SamaGameAPI
+        samaGamesAPI.getGameManager().getGameProperties(); // Get properties
 
         // Register events
         gameManager.getServer().getPluginManager().registerEvents(new PlayerEvent(), this);
@@ -43,11 +51,12 @@ public class PacMan extends JavaPlugin {
         // Register entity
         registerEntity("Coin", 54, Coin.class);
 
-        // Add players in playerPacManList
-        getServer().getOnlinePlayers().forEach(player -> gameManager.getPlayerPacManList().add(new PlayerPacMan(player.getUniqueId(), player.getDisplayName())));
+        // Kick players
+        getServer().getOnlinePlayers().forEach(player -> player.kickPlayer(""));
 
         getServer().getWorlds().get(0).setSpawnLocation(0, 73, 0); // Set spawn location
-        getServer().getWorlds().get(0).setDifficulty(Difficulty.PEACEFUL); // Set difficulty
+        getServer().getWorlds().get(0).setDifficulty(Difficulty.NORMAL); // Set difficulty
+        getServer().getWorlds().get(0).setGameRuleValue("doMobSpawning", "false"); // Set doMobSpawning game rule
 
         mapInitialisation();
     }

@@ -1,8 +1,8 @@
 package fr.azuxul.pacman.timer;
 
 import fr.azuxul.pacman.GameManager;
-import fr.azuxul.pacman.Utils;
-import org.bukkit.ChatColor;
+import net.samagames.api.SamaGamesAPI;
+import net.samagames.api.games.Status;
 import org.bukkit.Server;
 
 /**
@@ -13,20 +13,21 @@ import org.bukkit.Server;
  */
 public class TimerPacMan implements Runnable {
 
-    private short seconds, minutes, secondsBStart;
+    private short seconds, minutes;
     private GameManager gameManager;
     private Server server;
+    private SamaGamesAPI samaGamesAPI;
 
     /**
      * Class constructor
      *
      * @param gameManager game manager
      */
-    public TimerPacMan(GameManager gameManager) {
+    public TimerPacMan(GameManager gameManager, SamaGamesAPI samaGamesAPI) {
         this.gameManager = gameManager;
         this.server = gameManager.getServer();
+        this.samaGamesAPI = samaGamesAPI;
         this.minutes = 20;
-        this.secondsBStart = -2;
     }
 
     /**
@@ -37,46 +38,9 @@ public class TimerPacMan implements Runnable {
     @Override
     public void run() {
 
-        if (!gameManager.isStart()) {
+        Status gameStatus = samaGamesAPI.getGameManager().getGameStatus();
 
-            // TIMER BEFORE START
-
-            if (secondsBStart < -1) {
-
-                // If min players
-                if (gameManager.isMinPlayer()) {
-                    secondsBStart = 45; // Set timer to 45
-                    Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.YELLOW + "La partie va bientot commencer !"); // Send hotbar message
-                } else {
-                    gameManager.getServer().getOnlinePlayers().forEach(player -> player.setLevel(9999)); // Set players level
-                    Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.GREEN + "En attente de joueurs"); // Send hotbar message
-
-                }
-
-            } else if (secondsBStart == 0) { // If timer is 0
-
-                gameManager.start(); // Start
-                secondsBStart = -1;
-
-            } else if (!gameManager.isMinPlayer()) { // If is not min players
-
-                secondsBStart = -2; // Reset timer
-                server.broadcastMessage(ChatColor.RED + "Démarrage annulé ! En attente de joueurs"); // Send message
-            } else if (secondsBStart > 0) {
-
-                if (gameManager.isMaxPlayer() && secondsBStart > 30) // If max player
-                    secondsBStart = 30; // Set timer to 30
-
-                if (secondsBStart == 30 || secondsBStart == 15 || secondsBStart == 10 || (secondsBStart <= 5 && secondsBStart > 0))
-                    Utils.sendHotbarMessage(server.getOnlinePlayers(), ChatColor.YELLOW + "La partie commence dans " + ChatColor.DARK_GREEN + secondsBStart + "s");
-
-                secondsBStart--; // Decrement timer
-
-                gameManager.getServer().getOnlinePlayers().forEach(player -> player.setLevel(secondsBStart)); // Set players level to secondsBStart
-            }
-
-
-        } else if (!gameManager.isEnd()) {
+        if (gameStatus.equals(Status.IN_GAME)) {
 
             // GAME TIMER
 
@@ -89,7 +53,9 @@ public class TimerPacMan implements Runnable {
             }
         }
 
-        server.getOnlinePlayers().forEach(player -> gameManager.getScoreboard().sendScoreboardToPlayer(player));
+        Status status = samaGamesAPI.getGameManager().getGameStatus();
+
+        server.getOnlinePlayers().forEach(player -> gameManager.getScoreboard().sendScoreboardToPlayer(player, status));
     }
 
     /**

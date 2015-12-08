@@ -1,5 +1,8 @@
 package fr.azuxul.pacman.player;
 
+import net.samagames.api.games.GamePlayer;
+import org.bukkit.entity.Player;
+
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
@@ -10,16 +13,13 @@ import java.util.UUID;
  * @author Azuxul
  * @version 1.0
  */
-public class PlayerPacMan implements Comparable<PlayerPacMan> {
+public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
-    UUID uuid;
-    String name;
     int coins;
 
-    public PlayerPacMan(UUID uuid, String name) {
+    public PlayerPacMan(Player player) {
 
-        this.uuid = uuid;
-        this.name = name;
+        super(player);
     }
 
     /**
@@ -34,31 +34,13 @@ public class PlayerPacMan implements Comparable<PlayerPacMan> {
         PlayerPacMan result = null;
 
         for (PlayerPacMan p : playerPacManList) {
-            if (p.getUuid().equals(uuid)) {
+            if (p.getUUID().equals(uuid)) {
                 result = p;
                 break;
             }
         }
 
         return result;
-    }
-
-    /**
-     * Get name of playerPacMan
-     *
-     * @return name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Get UUID of playerPacMan
-     *
-     * @return UUID
-     */
-    public UUID getUuid() {
-        return uuid;
     }
 
     /**

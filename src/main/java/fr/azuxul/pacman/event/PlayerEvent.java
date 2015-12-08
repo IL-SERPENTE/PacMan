@@ -4,6 +4,8 @@ import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import net.samagames.api.SamaGamesAPI;
+import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -14,7 +16,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 /**
  * Player events of PacMan plugin
@@ -30,36 +36,32 @@ public class PlayerEvent implements Listener {
         GameManager gameManager = PacMan.getGameManager();
         Player player = event.getPlayer();
 
-        gameManager.updatePlayerNb(false); // Update player status
+        PlayerPacMan playerPacMan = PlayerPacMan.getPlayerPacManInList(gameManager.getPlayerPacManList(), player.getUniqueId());
 
-        if (PlayerPacMan.getPlayerPacManInList(gameManager.getPlayerPacManList(), player.getUniqueId()) == null) // If player is not in player pacman list
-            gameManager.getPlayerPacManList().add(new PlayerPacMan(player.getUniqueId(), player.getDisplayName())); // Add this player in list
+        if (playerPacMan == null) { // If player is not in player pacman list
+
+            playerPacMan = new PlayerPacMan(player);
+            gameManager.getPlayerPacManList().add(playerPacMan); // Add this player in list
+        }
+
+        playerPacMan.handleLogin(false);
     }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
 
-        PacMan.getGameManager().updatePlayerNb(true); // Update player status
-    }
+        PlayerPacMan playerPacMan = PlayerPacMan.getPlayerPacManInList(PacMan.getGameManager().getPlayerPacManList(), event.getPlayer().getUniqueId());
 
-    @EventHandler
-    public void onPlayerLogin(PlayerLoginEvent event) {
-
-        GameManager gameManager = PacMan.getGameManager();
-
-        if (gameManager.isStart())
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Started");
-
-        else if (gameManager.isMaxPlayer())
-            event.disallow(PlayerLoginEvent.Result.KICK_FULL, "Full");
+        playerPacMan.handleLogout();
     }
 
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
 
         GameManager gameManager = PacMan.getGameManager();
+        Status status = SamaGamesAPI.get().getGameManager().getGameStatus();
 
-        if (!gameManager.isStart() || event.getEntity() instanceof ArmorStand) // If is not started
+        if (!status.equals(Status.IN_GAME) || event.getEntity() instanceof ArmorStand) // If is not started
             event.setCancelled(true); // Cancel damages
         else if (event.getEntity() instanceof Player) {
 
@@ -87,8 +89,9 @@ public class PlayerEvent implements Listener {
 
         Player player = event.getPlayer();
         GameManager gameManager = PacMan.getGameManager();
+        Status status = SamaGamesAPI.get().getGameManager().getGameStatus();
 
-        if (gameManager.isStart() && !player.getGameMode().equals(GameMode.SPECTATOR)) {
+        if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
 
             // Detect collides with coins
             player.getNearbyEntities(0, 0, 0).stream().filter(entity -> ((CraftEntity) entity).getHandle() instanceof Coin).forEach(entity -> { // Get entities Coin in radius of 0
@@ -101,16 +104,16 @@ public class PlayerEvent implements Listener {
                 playerPacMan.setCoins(playerPacMan.getCoins() + 1); // Add coin to player
 
                 // Send scoreboard to player
-                gameManager.getScoreboard().sendScoreboardToPlayer(player);
+                gameManager.getScoreboard().sendScoreboardToPlayer(player, status);
 
                 if (!coin.isDroopedByPlayer()) { // If coin was not drooped by player
 
                     // Set global coins
-                    int globalCoins = gameManager.getGlobalCoins() - 1;
-                    gameManager.setGlobalCoins(globalCoins);
+                    int globalCoins = gameManager.getRemainingGlobalCoins() - 1;
+                    gameManager.setRemainingGlobalCoins(globalCoins);
 
                     // If remaining coins is equals to 0 and is not end
-                    if (globalCoins <= 0 && !gameManager.isEnd())
+                    if (globalCoins <= 0 && !status.equals(Status.FINISHED))
                         gameManager.end(); // End
                 }
             });
@@ -120,6 +123,11 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         event.setCancelled(true); // Cancel player interaction
+    }
+
+    @EventHandler
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        event.setCancelled(true); // Cancel food level change
     }
 
 }

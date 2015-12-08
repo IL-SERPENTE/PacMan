@@ -2,6 +2,7 @@ package fr.azuxul.pacman.scoreboard;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import net.samagames.api.games.Status;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -35,10 +36,11 @@ public class ScoreboardPacMan {
      * Send scoreboard to param player
      *
      * @param player Receive scoreboard
+     * @param status Game status
      */
-    public void sendScoreboardToPlayer(Player player) {
+    public void sendScoreboardToPlayer(Player player, Status status) {
 
-        if (!gameManager.isStart()) // If game is not started
+        if (!status.equals(Status.IN_GAME)) // If game is not started
             return;
 
         Scoreboard scoreboard = scoreboardManager.getNewScoreboard(); // Get new scoreboard
@@ -69,7 +71,7 @@ public class ScoreboardPacMan {
 
         // Display remaining global coins number
         score++;
-        int remainingCoins = gameManager.getGlobalCoins();
+        int remainingCoins = gameManager.getRemainingGlobalCoins();
         objective.getScore("Coins restants: " + ChatColor.GOLD + (remainingCoins < 0 ? 0 : remainingCoins)).setScore(score);
 
         // Display coins number
@@ -88,7 +90,7 @@ public class ScoreboardPacMan {
 
             try {
                 score++;
-                objective.getScore(ChatColor.GRAY + playerPacManDisplay.getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getCoins()).setScore(score);
+                objective.getScore(ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getCoins()).setScore(score);
             } catch (NullPointerException e) {
                 throw new NullPointerException("PlayerPacMan values can not be null");
             }

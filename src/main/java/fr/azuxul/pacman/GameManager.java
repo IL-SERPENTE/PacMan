@@ -3,7 +3,13 @@ package fr.azuxul.pacman;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.scoreboard.ScoreboardPacMan;
 import fr.azuxul.pacman.timer.TimerPacMan;
-import org.bukkit.*;
+import net.samagames.api.SamaGamesAPI;
+import net.samagames.api.games.Game;
+import net.samagames.api.games.themachine.messages.ITemplateManager;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -18,49 +24,38 @@ import java.util.logging.Logger;
  * @author Azuxul
  * @version 1.0
  */
-public class GameManager {
+public class GameManager extends Game<PlayerPacMan> {
 
     private Server server;
     private Logger logger;
     private Plugin plugin;
     private TimerPacMan timer;
     private ScoreboardPacMan scoreboard;
+    private SamaGamesAPI samaGamesAPI;
     private List<PlayerPacMan> playerPacManList;
-    private boolean start, end, maxPlayer, minPlayer;
-    private int globalCoins;
+    private int remainingGlobalCoins, globalCoins;
 
     /**
      * Class constructor
      *
-     * @param logger plugin logger
-     * @param plugin plugin
-     * @param server server
+     * @param logger          plugin logger
+     * @param server          server
+     * @param gameCodeName    unique id for game
+     * @param gameName        game name
+     * @param gameDescription game description
+     * @param gamePlayerClass game players class
      */
-    public GameManager(Logger logger, Plugin plugin, Server server) {
+    public GameManager(Logger logger, Plugin plugin, Server server, String gameCodeName, String gameName, String gameDescription, Class<PlayerPacMan> gamePlayerClass) {
+
+        super(gameCodeName, gameName, gameDescription, gamePlayerClass);
 
         this.server = server;
         this.logger = logger;
         this.plugin = plugin;
         this.scoreboard = new ScoreboardPacMan(ChatColor.YELLOW + "Pac-Man", this);
-        this.timer = new TimerPacMan(this);
+        this.samaGamesAPI = SamaGamesAPI.get();
+        this.timer = new TimerPacMan(this, samaGamesAPI);
         this.playerPacManList = new ArrayList<>();
-    }
-
-    /**
-     * Update player status values
-     *
-     * @param playerDisconnect if update when player disconnect
-     */
-    public void updatePlayerNb(boolean playerDisconnect) {
-
-        // Get player size and subtract one if playerDisconnect
-        int playerSize = server.getOnlinePlayers().size() - (playerDisconnect ? 1 : 0);
-
-        if (playerSize >= 6) { // If player nb is >= 6
-            minPlayer = true; // Stet min player to true
-            maxPlayer = playerSize >= 10; // Set max player to player nb >= 10
-        } else
-            minPlayer = false; // Else set to false
     }
 
     /**
@@ -118,58 +113,30 @@ public class GameManager {
     }
 
     /**
-     * Get is game started
-     *
-     * @return started
-     */
-    public boolean isStart() {
-        return start;
-    }
-
-    /**
-     * Get is game end
-     *
-     * @return end
-     */
-    public boolean isEnd() {
-        return end;
-    }
-
-    /**
-     * Get if maximum number of player for
-     * start game is reached
-     *
-     * @return maxPlayer
-     */
-    public boolean isMaxPlayer() {
-        return maxPlayer;
-    }
-
-    /**
-     * Get if minimum number of player for
-     * start game is reached
-     *
-     * @return minPlayer
-     */
-    public boolean isMinPlayer() {
-        return minPlayer;
-    }
-
-    /**
      * Get number of global coins remaining
      *
-     * @return globalCoins
+     * @return remainingGlobalCoins
      */
-    public int getGlobalCoins() {
-        return globalCoins;
+    public int getRemainingGlobalCoins() {
+        return remainingGlobalCoins;
     }
 
     /**
      * Set number of global coins remaining
      *
-     * @param globalCoins global coins remaining
+     * @param remainingGlobalCoins global coins remaining
+     */
+    public void setRemainingGlobalCoins(int remainingGlobalCoins) {
+        this.remainingGlobalCoins = remainingGlobalCoins;
+    }
+
+    /**
+     * Set number of global coins
+     *
+     * @param globalCoins global coins
      */
     public void setGlobalCoins(int globalCoins) {
+        this.setRemainingGlobalCoins(globalCoins);
         this.globalCoins = globalCoins;
     }
 
@@ -177,7 +144,10 @@ public class GameManager {
      * Start the game
      */
     @SuppressWarnings("deprecation")
-    public void start() {
+    @Override
+    public void startGame() {
+
+        super.startGame();
 
         Location spawn = new Location(getServer().getWorlds().get(0), 0, 78, 0);
 
@@ -185,38 +155,6 @@ public class GameManager {
             player.teleport(spawn); // Teleport player to spawn
             player.setGameMode(GameMode.ADVENTURE); // Set player gamemode
         }
-
-        // Timer before start
-
-        for (Player player : server.getOnlinePlayers()) {
-            player.sendTitle(ChatColor.GREEN + "3", ""); // Send title to player
-            player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true)); // Play note to player
-        }
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-
-            for (Player player : server.getOnlinePlayers()) {
-                player.sendTitle(ChatColor.YELLOW + "2", ""); // Send title to player
-                player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true)); // Play note to player
-            }
-        }, 20L);
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-
-            for (Player player : server.getOnlinePlayers()) {
-                player.sendTitle(ChatColor.RED + "1", ""); // Send title to player
-                player.playNote(player.getLocation(), Instrument.PIANO, new Note(0, Note.Tone.E, true)); // Play note to player
-            }
-        }, 40L);
-
-        // Start
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-
-            start = true; // Set start
-
-            server.getOnlinePlayers().forEach(player -> player.playNote(player.getLocation(), Instrument.PIANO, new Note(18))); // Play note to player
-
-        }, 60L);
     }
 
     /**
@@ -224,32 +162,64 @@ public class GameManager {
      */
     public void end() {
 
-        timer.setToZero(); // Set timer to zero
+        ITemplateManager templateManager = samaGamesAPI.getGameManager().getCoherenceMachine().getTemplateManager();
+        List<PlayerPacMan> winners = new ArrayList<>();
 
-        end = true; // Set end
+        timer.setToZero(); // Set timer to zero
 
         // Sort playerPacManList
         Collections.sort(playerPacManList);
 
-        // Display whiners
-        int size = playerPacManList.size();
-        server.broadcastMessage(ChatColor.GOLD + "------------------------------");
-        if (size >= 1) {
-            server.broadcastMessage(ChatColor.GREEN + "      Premier: " + playerPacManList.get(size - 1).getName() + ChatColor.GRAY + "(" + playerPacManList.get(size - 1).getCoins() + ")");
-            if (size >= 2) {
-                server.broadcastMessage(ChatColor.GREEN + "      Dexiéme: " + playerPacManList.get(size - 2).getName() + ChatColor.GRAY + "(" + playerPacManList.get(size - 2).getCoins() + ")");
-                if (size >= 3)
-                    server.broadcastMessage(ChatColor.GREEN + "      Troisiéme: " + playerPacManList.get(size - 3).getName() + ChatColor.GRAY + "(" + playerPacManList.get(size - 3).getCoins() + ")");
+        int playerPacManListSize = playerPacManList.size();
+
+        // Get winners
+        for (int i = 1; i <= 3; i++) {
+            if (winners.size() >= playerPacManListSize)
+                break;
+
+            winners.add(playerPacManList.get(playerPacManListSize - i));
+        }
+
+        // Add coins to players
+        for (PlayerPacMan playerPacMan : playerPacManList) {
+
+            int percentOfCoins = Math.round(playerPacMan.getCoins() * 100 / globalCoins); // Calculate percent of player coins
+            int coins = percentOfCoins / 5; // Calculate coins for player
+
+            playerPacMan.addCoins(coins, percentOfCoins + "% des coins récupérer");
+
+            if (winners.contains(playerPacMan)) {
+                if (winners.indexOf(playerPacMan) == 0) {
+                    playerPacMan.addCoins(30, "Partie gagnée");
+                    playerPacMan.addStars(2, "Partie gagnée");
+                } else {
+                    playerPacMan.addCoins(15, "Términer dans le classement");
+                    playerPacMan.addStars(1, "Términer dans le classement");
+                }
+            }
+
+            if (percentOfCoins >= 35) {
+                playerPacMan.addStars(1, "Plus de 35% de coins récupérer");
             }
         }
-        server.broadcastMessage(ChatColor.GOLD + "------------------------------");
 
-        // Kick players and shutdown the server after 15.30s
-        server.getScheduler().runTaskTimer(plugin, () -> {
+        // Display winners
+        if (!winners.isEmpty()) { // If winners is not empty
+            if (winners.size() < 3) { // If winners size < 3
 
-            server.getOnlinePlayers().forEach(player -> player.kickPlayer("")); // Kick players
-            server.shutdown(); // Shutdown server
+                PlayerPacMan winner = winners.get(0); // Get winner
 
-        }, 310L, 0L);
+                templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getCoins()); // Display player win template
+            } else {
+
+                PlayerPacMan winner = winners.get(0), third = winners.get(1), second = winners.get(2); // Get winners
+
+                templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getCoins(), second.getCoins(), third.getCoins()); // Display players leadboard template
+            }
+        }
+
+        this.handleGameEnd();
+
+        System.out.println(samaGamesAPI.getGameManager().getGameStatus());
     }
 }
