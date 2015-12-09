@@ -183,10 +183,15 @@ public class GameManager extends Game<PlayerPacMan> {
         // Add coins to players
         for (PlayerPacMan playerPacMan : playerPacManList) {
 
-            int percentOfCoins = Math.round(playerPacMan.getCoins() * 100 / globalCoins); // Calculate percent of player coins
-            int coins = percentOfCoins / 5; // Calculate coins for player
+            int percentOfCoins = 0;
 
-            playerPacMan.addCoins(coins, percentOfCoins + "% des coins récupérer");
+            try {
+                percentOfCoins = Math.round(playerPacMan.getCoins() * 100 / globalCoins); // Calculate percent of player coins
+                int coins = percentOfCoins / 5; // Calculate coins for player
+
+                playerPacMan.addCoins(coins, percentOfCoins + "% des coins récupérer");
+            } catch (ArithmeticException ignored) {
+            }
 
             if (winners.contains(playerPacMan)) {
                 if (winners.indexOf(playerPacMan) == 0) {
@@ -219,7 +224,5 @@ public class GameManager extends Game<PlayerPacMan> {
         }
 
         this.handleGameEnd();
-
-        System.out.println(samaGamesAPI.getGameManager().getGameStatus());
     }
 }
