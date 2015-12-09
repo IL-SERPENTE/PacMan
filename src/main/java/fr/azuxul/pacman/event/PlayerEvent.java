@@ -43,8 +43,6 @@ public class PlayerEvent implements Listener {
             playerPacMan = new PlayerPacMan(player);
             gameManager.getPlayerPacManList().add(playerPacMan); // Add this player in list
         }
-
-        playerPacMan.handleLogin(false);
     }
 
     @EventHandler
@@ -95,7 +93,7 @@ public class PlayerEvent implements Listener {
         if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR)) {
 
             // Detect collides with coins
-            player.getNearbyEntities(0, 0, 0).stream().filter(entity -> ((CraftEntity) entity).getHandle() instanceof Coin).forEach(entity -> { // Get entities Coin in radius of 0
+            player.getNearbyEntities(0, 0, 0).stream().filter(entity -> ((CraftEntity) entity).getHandle() instanceof Coin && !entity.isDead()).forEach(entity -> { // Get entities Coin in radius of 0
 
                 Coin coin = ((Coin) ((CraftEntity) entity).getHandle());
 

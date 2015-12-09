@@ -46,7 +46,7 @@ public class PacMan extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerEvent(), this);
 
         // Register timer
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0l, 20l);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0L, 20l);
 
         // Register entity
         registerEntity("Coin", 54, Coin.class);
@@ -78,7 +78,7 @@ public class PacMan extends JavaPlugin {
                 if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block
                     block.setType(Material.AIR); // Set air
 
-                    // Spawn coin normal coin
+                    // Spawn normal coin
                     new Coin(world, x + 0.5, 70.7, z + 0.5, false);
                     globalCoins++;
                 }

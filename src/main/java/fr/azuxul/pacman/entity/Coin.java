@@ -57,10 +57,10 @@ public class Coin extends EntityArmorStand {
             gameManager.getServer().getScheduler().runTaskLater(gameManager.getPlugin(), () -> {
 
                 this.getBukkitEntity().remove(); // Kill coin
-            }, 600l);
+            }, 600L);
 
             // Get randomly velocity
-            velocity = new Vector(RandomUtils.nextInt(4), 2 + RandomUtils.nextInt(3), RandomUtils.nextInt(4)).multiply(RandomUtils.nextBoolean() ? 0.1 : -0.1);
+            velocity = new Vector(1 + RandomUtils.nextInt(4), 3 + RandomUtils.nextInt(4), 1 + RandomUtils.nextInt(3)).multiply(RandomUtils.nextBoolean() ? 0.1 : -0.1);
         }
 
         spawn(world, x, y, z, velocity); // Spawn
