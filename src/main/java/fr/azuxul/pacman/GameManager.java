@@ -212,7 +212,7 @@ public class GameManager extends Game<PlayerPacMan> {
                 templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getCoins()); // Display player win template
             } else {
 
-                PlayerPacMan winner = winners.get(0), third = winners.get(1), second = winners.get(2); // Get winners
+                PlayerPacMan winner = winners.get(0), second = winners.get(1), third = winners.get(2); // Get winners
 
                 templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getCoins(), second.getCoins(), third.getCoins()); // Display players leadboard template
             }

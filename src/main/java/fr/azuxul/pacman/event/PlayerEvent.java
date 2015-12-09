@@ -52,7 +52,8 @@ public class PlayerEvent implements Listener {
 
         PlayerPacMan playerPacMan = PlayerPacMan.getPlayerPacManInList(PacMan.getGameManager().getPlayerPacManList(), event.getPlayer().getUniqueId());
 
-        playerPacMan.handleLogout();
+        if (playerPacMan != null)
+            playerPacMan.handleLogout();
     }
 
     @EventHandler

@@ -43,10 +43,10 @@ public class PacMan extends JavaPlugin {
         samaGamesAPI.getGameManager().getGameProperties(); // Get properties
 
         // Register events
-        gameManager.getServer().getPluginManager().registerEvents(new PlayerEvent(), this);
+        getServer().getPluginManager().registerEvents(new PlayerEvent(), this);
 
         // Register timer
-        gameManager.getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0l, 20l);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0l, 20l);
 
         // Register entity
         registerEntity("Coin", 54, Coin.class);
