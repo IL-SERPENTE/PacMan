@@ -13,9 +13,7 @@ import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -33,6 +31,7 @@ public class GameManager extends Game<PlayerPacMan> {
     private ScoreboardPacMan scoreboard;
     private SamaGamesAPI samaGamesAPI;
     private List<PlayerPacMan> playerPacManList;
+    private Map<Location, Boolean> boosterLocations;
     private int remainingGlobalCoins, globalCoins;
 
     /**
@@ -56,6 +55,18 @@ public class GameManager extends Game<PlayerPacMan> {
         this.samaGamesAPI = SamaGamesAPI.get();
         this.timer = new TimerPacMan(this, samaGamesAPI);
         this.playerPacManList = new ArrayList<>();
+        this.boosterLocations = new HashMap<>();
+    }
+
+    /**
+     * Get map of booster spawn location
+     * Key is location
+     * Value is boolean of isSpawn
+     *
+     * @return boosterLocations
+     */
+    public Map<Location, Boolean> getBoosterLocations() {
+        return boosterLocations;
     }
 
     /**
@@ -185,12 +196,11 @@ public class GameManager extends Game<PlayerPacMan> {
 
             int percentOfCoins = 0;
 
-            try {
-                percentOfCoins = Math.round(playerPacMan.getCoins() * 100 / globalCoins); // Calculate percent of player coins
+            if (playerPacMan.getGameCoins() > 0) {
+                percentOfCoins = Math.round(playerPacMan.getGameCoins() * 100 / globalCoins); // Calculate percent of player coins
                 int coins = percentOfCoins / 5; // Calculate coins for player
 
-                playerPacMan.addCoins(coins, percentOfCoins + "% des coins récupérer");
-            } catch (ArithmeticException ignored) {
+                playerPacMan.addCoins(coins, percentOfCoins + "% des piéces récupérer");
             }
 
             if (winners.contains(playerPacMan)) {
@@ -214,12 +224,12 @@ public class GameManager extends Game<PlayerPacMan> {
 
                 PlayerPacMan winner = winners.get(0); // Get winner
 
-                templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getCoins()); // Display player win template
+                templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getGameCoins()); // Display player win template
             } else {
 
                 PlayerPacMan winner = winners.get(0), second = winners.get(1), third = winners.get(2); // Get winners
 
-                templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getCoins(), second.getCoins(), third.getCoins()); // Display players leadboard template
+                templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getGameCoins(), second.getGameCoins(), third.getGameCoins()); // Display players leadboard template
             }
         }
 

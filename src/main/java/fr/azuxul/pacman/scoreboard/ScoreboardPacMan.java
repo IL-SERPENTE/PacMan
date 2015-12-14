@@ -48,7 +48,7 @@ public class ScoreboardPacMan {
         int score = 0;
 
         List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
-        PlayerPacMan playerPacMan = PlayerPacMan.getPlayerPacManInList(gameManager.getPlayerPacManList(), player.getUniqueId()); // Get playerPacMan
+        PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId()); // Get playerPacMan
 
         objective.setDisplayName(displayName); // Set display name
         objective.setDisplaySlot(DisplaySlot.SIDEBAR); // Set display slot
@@ -76,7 +76,7 @@ public class ScoreboardPacMan {
 
         // Display coins number
         score++;
-        objective.getScore("Coins: " + ChatColor.GOLD + playerPacMan.getCoins()).setScore(score);
+        objective.getScore("Coins: " + ChatColor.GOLD + playerPacMan.getGameCoins()).setScore(score);
 
         score++;
         objective.getScore("  ").setScore(score);
@@ -84,13 +84,15 @@ public class ScoreboardPacMan {
         // Display classement
         Collections.sort(playerPacManList);
         int size = playerPacManList.size() - 1;
-        for (int i = 0; i <= (size >= 5 ? 4 : size); i++) {
+        int maxI = (size >= 5 ? 4 : size);
+
+        for (int i = 0; i <= maxI; i++) {
 
             PlayerPacMan playerPacManDisplay = playerPacManList.get(i); // Get playerPacMan
 
             try {
                 score++;
-                objective.getScore(ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getCoins()).setScore(score);
+                objective.getScore(ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getGameCoins()).setScore(score);
             } catch (NullPointerException e) {
                 throw new NullPointerException("PlayerPacMan values can not be null");
             }

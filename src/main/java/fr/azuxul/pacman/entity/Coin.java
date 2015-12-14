@@ -2,12 +2,18 @@ package fr.azuxul.pacman.entity;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
+import fr.azuxul.pacman.player.PlayerPacMan;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
+import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.World;
+import net.samagames.api.SamaGamesAPI;
+import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -19,13 +25,16 @@ import org.bukkit.util.Vector;
  */
 public class Coin extends EntityArmorStand {
 
-    boolean droopedByPlayer;
+    private boolean droopedByPlayer;
 
     /**
      * Class constructor and
      * spawn coin
      *
      * @param world       world of entity
+     * @param x           X location
+     * @param y           Y location
+     * @param z           Z location
      * @param coinDrooped if true, coins was remove after 30s,
      *                    the coin not subtract of global coin number
      *                    when is catch and spawn effect is special
@@ -42,7 +51,7 @@ public class Coin extends EntityArmorStand {
         nbtTagCompound.setBoolean("Small", true); // Set Small
         nbtTagCompound.setBoolean("NoGravity", !coinDrooped); // Set NoGravity
         nbtTagCompound.setBoolean("Invulnerable", true); // Set Invulnerable
-        nbtTagCompound.setBoolean("Invisible", true); // Set Invulnerable
+        nbtTagCompound.setBoolean("Invisible", true); // Set Invisible
         nbtTagCompound.setInt("DisabledSlots", 31); // Disable slots
 
         f(nbtTagCompound); // Set nbtTagCompound
@@ -53,11 +62,8 @@ public class Coin extends EntityArmorStand {
 
             GameManager gameManager = PacMan.getGameManager();
 
-            // Run task after 600 ticks (30s)
-            gameManager.getServer().getScheduler().runTaskLater(gameManager.getPlugin(), () -> {
-
-                this.getBukkitEntity().remove(); // Kill coin
-            }, 600L);
+            // Kill coin after 600 ticks (30s)
+            gameManager.getServer().getScheduler().runTaskLater(gameManager.getPlugin(), () -> this.getBukkitEntity().remove(), 600L);
 
             // Get randomly velocity
             velocity = new Vector(1 + RandomUtils.nextInt(4), 3 + RandomUtils.nextInt(4), 1 + RandomUtils.nextInt(3)).multiply(RandomUtils.nextBoolean() ? 0.1 : -0.1);
@@ -92,5 +98,41 @@ public class Coin extends EntityArmorStand {
     public boolean isDroopedByPlayer() {
 
         return droopedByPlayer;
+    }
+
+    /**
+     * Detect collides with entity human
+     *
+     * @param entityHuman collided human
+     */
+    @Override
+    public void d(EntityHuman entityHuman) {
+
+        Player player = (Player) entityHuman.getBukkitEntity();
+        GameManager gameManager = PacMan.getGameManager();
+        Status status = SamaGamesAPI.get().getGameManager().getGameStatus();
+        double distanceAtCoin = this.getBukkitEntity().getLocation().distance(player.getLocation()); // Calculate distance
+
+        if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR) && this.isAlive() && distanceAtCoin <= 0.65) {
+
+            die(); // Kill coin
+
+            PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
+            playerPacMan.setGameCoins(playerPacMan.getGameCoins() + 1); // Add coin to player
+
+            // Send scoreboard to player
+            gameManager.getScoreboard().sendScoreboardToPlayer(player, status);
+
+            if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
+
+                // Set global coins
+                int globalCoins = gameManager.getRemainingGlobalCoins() - 1;
+                gameManager.setRemainingGlobalCoins(globalCoins);
+
+                // If remaining coins is equals to 0 and is not end
+                if (globalCoins <= 0 && !status.equals(Status.FINISHED))
+                    gameManager.end(); // End
+            }
+        }
     }
 }

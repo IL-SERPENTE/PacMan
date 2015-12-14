@@ -1,11 +1,14 @@
 package fr.azuxul.pacman;
 
+import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.SamaGamesAPI;
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Difficulty;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
@@ -46,10 +49,11 @@ public class PacMan extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerEvent(), this);
 
         // Register timer
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0L, 20l);
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0L, 20L);
 
         // Register entity
         registerEntity("Coin", 54, Coin.class);
+        registerEntity("Booster", 55, Booster.class);
 
         // Kick players
         getServer().getOnlinePlayers().forEach(player -> player.kickPlayer(""));
@@ -67,20 +71,30 @@ public class PacMan extends JavaPlugin {
      */
     private void mapInitialisation() {
 
-        World world = ((CraftWorld) getServer().getWorlds().get(0)).getHandle();
+        org.bukkit.World world = getServer().getWorlds().get(0);
+        World NMSWorld = ((CraftWorld) world).getHandle();
 
         // Replace gold block with coins
         int globalCoins = 0;
         for (int x = -100; x <= 100; x++) {
             for (int z = -100; z <= 100; z++) {
-                Block block = getServer().getWorlds().get(0).getBlockAt(x, 71, z); // Get block
+                Block block = world.getBlockAt(x, 71, z); // Get block
 
                 if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block
                     block.setType(Material.AIR); // Set air
 
                     // Spawn normal coin
-                    new Coin(world, x + 0.5, 70.7, z + 0.5, false);
+                    new Coin(NMSWorld, x + 0.5, 70.7, z + 0.5, false);
                     globalCoins++;
+
+                } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
+                    block.setType(Material.AIR); // Set air
+
+                    // Get random type
+                    Booster.BoosterTypes type = Booster.BoosterTypes.values()[RandomUtils.nextInt(Booster.BoosterTypes.values().length)];
+
+                    new Booster(NMSWorld, x + 0.5, 70.7, z + 0.5, type); // Spawn booster
+                    gameManager.getBoosterLocations().put(new Location(world, x, 71, z), true); // Add booster in list
                 }
             }
         }

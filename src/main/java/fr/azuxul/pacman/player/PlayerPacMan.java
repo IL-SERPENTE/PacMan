@@ -4,8 +4,6 @@ import net.samagames.api.games.GamePlayer;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * PlayerPacMan
@@ -15,7 +13,7 @@ import java.util.UUID;
  */
 public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
-    int coins;
+    int gameCoins;
 
     public PlayerPacMan(Player player) {
 
@@ -23,42 +21,21 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
     }
 
     /**
-     * Get playerPacMan in list with hir UUID
+     * Get gameCoins number of playerPacMan
      *
-     * @param playerPacManList list of PacManPlayer
-     * @param uuid             UUID of player
-     * @return PlayerPacMan of UUID player
+     * @return gameCoins
      */
-    public static PlayerPacMan getPlayerPacManInList(List<PlayerPacMan> playerPacManList, UUID uuid) {
-
-        PlayerPacMan result = null;
-
-        for (PlayerPacMan p : playerPacManList) {
-            if (p.getUUID().equals(uuid)) {
-                result = p;
-                break;
-            }
-        }
-
-        return result;
+    public int getGameCoins() {
+        return gameCoins;
     }
 
     /**
-     * Get coins number of playerPacMan
+     * Set gameCoins number of playerPacMan
      *
-     * @return coins
+     * @param gameCoins value of gameCoins number
      */
-    public int getCoins() {
-        return coins;
-    }
-
-    /**
-     * Set coins number of playerPacMan
-     *
-     * @param coins value of coins number
-     */
-    public void setCoins(int coins) {
-        this.coins = coins;
+    public void setGameCoins(int gameCoins) {
+        this.gameCoins = gameCoins;
     }
 
     @Override
@@ -67,9 +44,9 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         if (comparePlayerPacMan == null) {
             throw new NullPointerException("The compared object can not be null");
         }
-        if (comparePlayerPacMan.getCoins() == this.getCoins()) {
+        if (comparePlayerPacMan.getGameCoins() == this.getGameCoins()) {
             return 0;
-        } else if (comparePlayerPacMan.getCoins() > this.getCoins()) {
+        } else if (comparePlayerPacMan.getGameCoins() > this.getGameCoins()) {
             return -1;
         } else {
             return 1;
