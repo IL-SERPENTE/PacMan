@@ -2,7 +2,6 @@ package fr.azuxul.pacman.timer;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.entity.Booster;
-import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Location;
@@ -18,19 +17,17 @@ import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 public class TimerPacMan implements Runnable {
 
     private short seconds, minutes;
-    private GameManager gameManager;
-    private Server server;
-    private SamaGamesAPI samaGamesAPI;
+    private final GameManager gameManager;
+    private final Server server;
 
     /**
      * Class constructor
      *
      * @param gameManager game manager
      */
-    public TimerPacMan(GameManager gameManager, SamaGamesAPI samaGamesAPI) {
+    public TimerPacMan(GameManager gameManager) {
         this.gameManager = gameManager;
         this.server = gameManager.getServer();
-        this.samaGamesAPI = samaGamesAPI;
         this.minutes = 20;
     }
 
@@ -42,7 +39,7 @@ public class TimerPacMan implements Runnable {
     @Override
     public void run() {
 
-        Status gameStatus = samaGamesAPI.getGameManager().getGameStatus();
+        Status gameStatus = gameManager.getStatus();
 
         if (gameStatus.equals(Status.IN_GAME)) {
 
@@ -74,10 +71,11 @@ public class TimerPacMan implements Runnable {
             }
         }
 
-        Status status = samaGamesAPI.getGameManager().getGameStatus();
-
-        // Sned scoreboard to all player
-        server.getOnlinePlayers().forEach(player -> gameManager.getScoreboard().sendScoreboardToPlayer(player, status));
+        // Update scoreboard to all player and update player
+        server.getOnlinePlayers().forEach(player -> {
+            gameManager.getScoreboard().sendScoreboardToPlayer(player, gameStatus);
+            gameManager.getPlayer(player.getUniqueId()).update();
+        });
     }
 
     /**

@@ -2,10 +2,11 @@ package fr.azuxul.pacman.event;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
+import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.player.PlayerPacMan;
-import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.Status;
+import net.samagames.tools.ParticleEffect;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -19,6 +20,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -49,10 +51,34 @@ public class PlayerEvent implements Listener {
     }
 
     @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+
+        GameManager gameManager = PacMan.getGameManager();
+        Player player = event.getPlayer();
+        PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
+
+        if (playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.SPEED)) {
+
+            // Get random color
+            ParticleEffect.ParticleColor color = new ParticleEffect.OrdinaryColor(RandomUtils.nextInt(255), RandomUtils.nextInt(255), RandomUtils.nextInt(255));
+
+            Location location = player.getLocation();
+            location.setPitch(0);
+            location.add(0, 0.7, 0);
+
+            // Display particle
+            for (double i = 0; i <= 8; i++) {
+                location.add(0, 0.1, 0);
+                ParticleEffect.REDSTONE.display(color, location, 45D);
+            }
+        }
+    }
+
+    @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
 
         GameManager gameManager = PacMan.getGameManager();
-        Status status = SamaGamesAPI.get().getGameManager().getGameStatus();
+        Status status = gameManager.getStatus();
 
         if (!status.equals(Status.IN_GAME) || event.getEntity() instanceof ArmorStand || event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) // If is not started
             event.setCancelled(true); // Cancel damages

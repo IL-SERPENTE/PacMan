@@ -3,7 +3,6 @@ package fr.azuxul.pacman;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.scoreboard.ScoreboardPacMan;
 import fr.azuxul.pacman.timer.TimerPacMan;
-import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.Game;
 import net.samagames.api.games.themachine.messages.ITemplateManager;
 import org.bukkit.ChatColor;
@@ -24,14 +23,13 @@ import java.util.logging.Logger;
  */
 public class GameManager extends Game<PlayerPacMan> {
 
-    private Server server;
-    private Logger logger;
-    private Plugin plugin;
-    private TimerPacMan timer;
-    private ScoreboardPacMan scoreboard;
-    private SamaGamesAPI samaGamesAPI;
-    private List<PlayerPacMan> playerPacManList;
-    private Map<Location, Boolean> boosterLocations;
+    private final Server server;
+    private final Logger logger;
+    private final Plugin plugin;
+    private final TimerPacMan timer;
+    private final ScoreboardPacMan scoreboard;
+    private final List<PlayerPacMan> playerPacManList;
+    private final Map<Location, Boolean> boosterLocations;
     private int remainingGlobalCoins, globalCoins;
 
     /**
@@ -52,8 +50,7 @@ public class GameManager extends Game<PlayerPacMan> {
         this.logger = logger;
         this.plugin = plugin;
         this.scoreboard = new ScoreboardPacMan(ChatColor.YELLOW + "Pac-Man", this);
-        this.samaGamesAPI = SamaGamesAPI.get();
-        this.timer = new TimerPacMan(this, samaGamesAPI);
+        this.timer = new TimerPacMan(this);
         this.playerPacManList = new ArrayList<>();
         this.boosterLocations = new HashMap<>();
     }
@@ -173,7 +170,7 @@ public class GameManager extends Game<PlayerPacMan> {
      */
     public void end() {
 
-        ITemplateManager templateManager = samaGamesAPI.getGameManager().getCoherenceMachine().getTemplateManager();
+        ITemplateManager templateManager = getCoherenceMachine().getTemplateManager();
         List<PlayerPacMan> winners = new ArrayList<>();
 
         timer.setToZero(); // Set timer to zero
@@ -197,7 +194,7 @@ public class GameManager extends Game<PlayerPacMan> {
             int percentOfCoins = 0;
 
             if (playerPacMan.getGameCoins() > 0) {
-                percentOfCoins = Math.round(playerPacMan.getGameCoins() * 100 / globalCoins); // Calculate percent of player coins
+                percentOfCoins = playerPacMan.getGameCoins() * 100 / globalCoins; // Calculate percent of player coins
                 int coins = percentOfCoins / 5; // Calculate coins for player
 
                 playerPacMan.addCoins(coins, percentOfCoins + "% des piéces récupérer");

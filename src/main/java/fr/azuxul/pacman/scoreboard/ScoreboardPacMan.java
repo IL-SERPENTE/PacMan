@@ -11,7 +11,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.Collections;
-import java.util.IllegalFormatException;
 import java.util.List;
 
 /**
@@ -22,9 +21,9 @@ import java.util.List;
  */
 public class ScoreboardPacMan {
 
-    private GameManager gameManager;
-    private ScoreboardManager scoreboardManager;
-    private String displayName;
+    private final GameManager gameManager;
+    private final ScoreboardManager scoreboardManager;
+    private final String displayName;
 
     public ScoreboardPacMan(String displayName, GameManager gameManager) {
         this.gameManager = gameManager; // Set gameManager
@@ -57,10 +56,8 @@ public class ScoreboardPacMan {
         score++;
         try {
             objective.getScore(ChatColor.GRAY + String.format("%02d:%02d", gameManager.getTimer().getMinutes(), gameManager.getTimer().getSeconds())).setScore(score);
-        } catch (IllegalFormatException e) {
-            for (StackTraceElement stackTraceElement : e.getStackTrace()) {
-                gameManager.getLogger().throwing(stackTraceElement.getClassName(), stackTraceElement.getMethodName(), e.getCause());
-            }
+        } catch (Exception e) {
+            gameManager.getLogger().info(String.valueOf(e));
         }
 
         score++;
@@ -84,7 +81,7 @@ public class ScoreboardPacMan {
         // Display classement
         Collections.sort(playerPacManList);
         int size = playerPacManList.size() - 1;
-        int maxI = (size >= 5 ? 4 : size);
+        int maxI = size >= 5 ? 4 : size;
 
         for (int i = 0; i <= maxI; i++) {
 

@@ -2,21 +2,26 @@ package fr.azuxul.pacman.entity;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
+import fr.azuxul.pacman.player.PlayerPacMan;
 import net.minecraft.server.v1_8_R3.*;
+import net.samagames.api.games.Status;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
 
 /**
- * Class description
+ * Booster entity
  *
  * @author Azuxul
+ * @version 1.0
  */
 public class Booster extends EntityItem {
 
-    private EntityArmorStand armorStand;
-    private BoosterTypes type;
-    private GameManager gameManager;
+    private final EntityArmorStand armorStand;
+    private final BoosterTypes type;
+    private final GameManager gameManager;
 
     /**
      * Constructor of Booster
@@ -32,10 +37,10 @@ public class Booster extends EntityItem {
 
         super(world);
 
-        y += 1.5d;
+        double spawnY = y + 1.5d;
         this.type = type;
         ItemStack itemStack = CraftItemStack.asNMSCopy(new org.bukkit.inventory.ItemStack(type.getMaterial()));
-        armorStand = new EntityArmorStand(world, x, y, z);
+        armorStand = new EntityArmorStand(world, x, spawnY, z);
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         gameManager = PacMan.getGameManager();
 
@@ -51,7 +56,7 @@ public class Booster extends EntityItem {
 
         a(nbtTagCompound); // Set nbtTagCompound
 
-        spawn(world, x, y, z); // Spawn
+        spawn(world, x, spawnY, z); // Spawn
     }
 
     /**
@@ -105,7 +110,20 @@ public class Booster extends EntityItem {
     @Override
     public void d(EntityHuman entityHuman) {
 
-        this.die();
+        Player player = (Player) entityHuman.getBukkitEntity();
+        Status status = gameManager.getStatus();
+
+        if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR) && this.isAlive()) {
+
+            double distanceAtCoin = this.getBukkitEntity().getLocation().distance(player.getLocation()); // Calculate distance
+            PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
+
+            if (distanceAtCoin <= 0.65 && playerPacMan.getActiveBooster() == null) {
+                die();
+                playerPacMan.setActiveBooster(type);
+                playerPacMan.setBoosterRemainingTime(type.getBoosterTime());
+            }
+        }
     }
 
     /**
@@ -116,13 +134,13 @@ public class Booster extends EntityItem {
     @Override
     public void die() {
 
-        super.die();
-        armorStand.die();
+        super.die(); // Kill booster
+        armorStand.die(); // Kill armor stand
 
         Location location = getBukkitEntity().getLocation();
         location.setY(71);
 
-        gameManager.getBoosterLocations().put(location, false);
+        gameManager.getBoosterLocations().put(location, false); // Put booster spawned false in booster location map
     }
 
     /**
@@ -134,17 +152,19 @@ public class Booster extends EntityItem {
      */
     public enum BoosterTypes {
 
-        SPEED("Speed", Material.FEATHER),
-        DOUBLE_COINS("Double coins", Material.GOLD_BLOCK),
-        COINS_MAGNET("Coin magnet", Material.ENDER_PEARL);
+        SPEED("Speed", Material.FEATHER, 20),
+        DOUBLE_COINS("Double coins", Material.GOLD_BLOCK, 15),
+        COINS_MAGNET("Coin magnet", Material.ENDER_PEARL, 15);
 
-        private String name;
-        private Material material;
+        private final String name;
+        private final Material material;
+        private final int boosterTime;
 
-        BoosterTypes(String name, Material material) {
+        BoosterTypes(String name, Material material, int boosterTime) {
 
             this.name = name;
             this.material = material;
+            this.boosterTime = boosterTime;
         }
 
         /**
@@ -163,6 +183,15 @@ public class Booster extends EntityItem {
          */
         public Material getMaterial() {
             return material;
+        }
+
+        /**
+         * Get booster time duration
+         *
+         * @return boosterTime
+         */
+        public int getBoosterTime() {
+            return boosterTime;
         }
     }
 }

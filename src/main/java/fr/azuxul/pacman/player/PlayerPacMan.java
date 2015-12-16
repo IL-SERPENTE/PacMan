@@ -1,5 +1,6 @@
 package fr.azuxul.pacman.player;
 
+import fr.azuxul.pacman.entity.Booster;
 import net.samagames.api.games.GamePlayer;
 import org.bukkit.entity.Player;
 
@@ -13,7 +14,8 @@ import javax.annotation.Nullable;
  */
 public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
-    int gameCoins;
+    private int gameCoins, boosterRemainingTime;
+    private Booster.BoosterTypes activeBooster;
 
     public PlayerPacMan(Player player) {
 
@@ -36,6 +38,56 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
      */
     public void setGameCoins(int gameCoins) {
         this.gameCoins = gameCoins;
+    }
+
+    /**
+     * Get active booster of player
+     *
+     * @return activeBooster
+     */
+    public Booster.BoosterTypes getActiveBooster() {
+        return activeBooster;
+    }
+
+    /**
+     * Set active booster to player
+     *
+     * @param activeBooster new active booster
+     */
+    public void setActiveBooster(Booster.BoosterTypes activeBooster) {
+        this.activeBooster = activeBooster;
+    }
+
+    /**
+     * Get remaining time of active booster
+     * If not active booster return -1
+     *
+     * @return boosterRemainingTime
+     */
+    public int getBoosterRemainingTime() {
+        return boosterRemainingTime;
+    }
+
+    /**
+     * Set remaining time of active booster
+     *
+     * @param boosterRemainingTime new boosterRemainingTime
+     */
+    public void setBoosterRemainingTime(int boosterRemainingTime) {
+        this.boosterRemainingTime = boosterRemainingTime;
+    }
+
+    /**
+     * Update player stats (active effects)
+     * 1 update/s
+     */
+    public void update() {
+
+        if (boosterRemainingTime >= 0) {
+            boosterRemainingTime--;
+            if (boosterRemainingTime < 0)
+                activeBooster = null;
+        }
     }
 
     @Override

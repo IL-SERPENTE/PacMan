@@ -7,7 +7,6 @@ import net.minecraft.server.v1_8_R3.EntityArmorStand;
 import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.World;
-import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.GameMode;
@@ -25,7 +24,7 @@ import org.bukkit.util.Vector;
  */
 public class Coin extends EntityArmorStand {
 
-    private boolean droopedByPlayer;
+    private final boolean droopedByPlayer;
 
     /**
      * Class constructor and
@@ -95,7 +94,7 @@ public class Coin extends EntityArmorStand {
      *
      * @return droopedByPlayer
      */
-    public boolean isDroopedByPlayer() {
+    private boolean isDroopedByPlayer() {
 
         return droopedByPlayer;
     }
@@ -110,28 +109,33 @@ public class Coin extends EntityArmorStand {
 
         Player player = (Player) entityHuman.getBukkitEntity();
         GameManager gameManager = PacMan.getGameManager();
-        Status status = SamaGamesAPI.get().getGameManager().getGameStatus();
+        Status status = gameManager.getStatus();
         double distanceAtCoin = this.getBukkitEntity().getLocation().distance(player.getLocation()); // Calculate distance
 
-        if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR) && this.isAlive() && distanceAtCoin <= 0.65) {
-
-            die(); // Kill coin
+        // If IN_GAME, player game mode is not to spectator, coin is alive and distance at coins is <= 0.65 or player has coins magnet booster
+        if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR) && this.isAlive()) {
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
-            playerPacMan.setGameCoins(playerPacMan.getGameCoins() + 1); // Add coin to player
 
-            // Send scoreboard to player
-            gameManager.getScoreboard().sendScoreboardToPlayer(player, status);
+            if (distanceAtCoin <= 0.65 || playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.COINS_MAGNET)) {
 
-            if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
+                die(); // Kill coin
 
-                // Set global coins
-                int globalCoins = gameManager.getRemainingGlobalCoins() - 1;
-                gameManager.setRemainingGlobalCoins(globalCoins);
+                playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.DOUBLE_COINS) ? 2 : 1)); // Add coin to player
 
-                // If remaining coins is equals to 0 and is not end
-                if (globalCoins <= 0 && !status.equals(Status.FINISHED))
-                    gameManager.end(); // End
+                // Send scoreboard to player
+                gameManager.getScoreboard().sendScoreboardToPlayer(player, status);
+
+                if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
+
+                    // Set global coins
+                    int globalCoins = gameManager.getRemainingGlobalCoins() - 1;
+                    gameManager.setRemainingGlobalCoins(globalCoins);
+
+                    // If remaining coins is equals to 0 and is not end
+                    if (globalCoins <= 0 && !status.equals(Status.FINISHED))
+                        gameManager.end(); // End
+                }
             }
         }
     }

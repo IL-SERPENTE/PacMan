@@ -72,7 +72,7 @@ public class PacMan extends JavaPlugin {
     private void mapInitialisation() {
 
         org.bukkit.World world = getServer().getWorlds().get(0);
-        World NMSWorld = ((CraftWorld) world).getHandle();
+        World worldNMS = ((CraftWorld) world).getHandle();
 
         // Replace gold block with coins
         int globalCoins = 0;
@@ -84,7 +84,7 @@ public class PacMan extends JavaPlugin {
                     block.setType(Material.AIR); // Set air
 
                     // Spawn normal coin
-                    new Coin(NMSWorld, x + 0.5, 70.7, z + 0.5, false);
+                    new Coin(worldNMS, x + 0.5, 70.7, z + 0.5, false);
                     globalCoins++;
 
                 } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
@@ -93,7 +93,7 @@ public class PacMan extends JavaPlugin {
                     // Get random type
                     Booster.BoosterTypes type = Booster.BoosterTypes.values()[RandomUtils.nextInt(Booster.BoosterTypes.values().length)];
 
-                    new Booster(NMSWorld, x + 0.5, 70.7, z + 0.5, type); // Spawn booster
+                    new Booster(worldNMS, x + 0.5, 70.7, z + 0.5, type); // Spawn booster
                     gameManager.getBoosterLocations().put(new Location(world, x, 71, z), true); // Add booster in list
                 }
             }
@@ -112,21 +112,20 @@ public class PacMan extends JavaPlugin {
     private void registerEntity(String name, int id, Class clazz) {
 
         // put entity details in maps of EntityTypes class
-        ((Map) getPrivateFieldOfEntityTypes("c", null)).put(name, clazz);
-        ((Map) getPrivateFieldOfEntityTypes("d", null)).put(clazz, name);
-        ((Map) getPrivateFieldOfEntityTypes("e", null)).put(id, clazz);
-        ((Map) getPrivateFieldOfEntityTypes("f", null)).put(clazz, id);
-        ((Map) getPrivateFieldOfEntityTypes("g", null)).put(name, id);
+        ((Map) getPrivateFieldOfEntityTypes("c")).put(name, clazz);
+        ((Map) getPrivateFieldOfEntityTypes("d")).put(clazz, name);
+        ((Map) getPrivateFieldOfEntityTypes("e")).put(id, clazz);
+        ((Map) getPrivateFieldOfEntityTypes("f")).put(clazz, id);
+        ((Map) getPrivateFieldOfEntityTypes("g")).put(name, id);
     }
 
     /**
      * Get returned object of private field
      *
      * @param fieldName fieldName
-     * @param object    parameter of field
      * @return returned object by field
      */
-    private Object getPrivateFieldOfEntityTypes(String fieldName, Object object) {
+    private Object getPrivateFieldOfEntityTypes(String fieldName) {
 
         Field field;
         Object returnObject = null;
@@ -136,13 +135,10 @@ public class PacMan extends JavaPlugin {
             field = net.minecraft.server.v1_8_R3.EntityTypes.class.getDeclaredField(fieldName);
 
             field.setAccessible(true);
-            returnObject = field.get(object);
+            returnObject = field.get(null);
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
-
-            for (StackTraceElement stackTraceElement : e.getStackTrace()) {
-                gameManager.getLogger().throwing(stackTraceElement.getClassName(), stackTraceElement.getMethodName(), e.getCause());
-            }
+            getLogger().warning(String.valueOf(e));
         }
 
         return returnObject;
