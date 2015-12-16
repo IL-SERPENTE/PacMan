@@ -4,8 +4,10 @@ import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import net.minecraft.server.v1_8_R3.EntityTypes;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.SamaGamesAPI;
+import net.samagames.tools.Reflection;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
@@ -34,7 +36,7 @@ public class PacMan extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        final String gameCodeName = "pacman-test"; // TODO: Change gameCodeName
+        final String gameCodeName = "pacman";
         final String gameName = "PacMan";
         final String gameDescription = "";
 
@@ -131,13 +133,12 @@ public class PacMan extends JavaPlugin {
         Object returnObject = null;
 
         try {
-
-            field = net.minecraft.server.v1_8_R3.EntityTypes.class.getDeclaredField(fieldName);
+            field = Reflection.getField(EntityTypes.class, fieldName);
 
             field.setAccessible(true);
             returnObject = field.get(null);
 
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             getLogger().warning(String.valueOf(e));
         }
 

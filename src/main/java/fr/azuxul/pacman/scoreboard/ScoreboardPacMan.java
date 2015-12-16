@@ -1,6 +1,7 @@
 package fr.azuxul.pacman.scoreboard;
 
 import fr.azuxul.pacman.GameManager;
+import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.api.games.Status;
 import org.bukkit.ChatColor;
@@ -48,6 +49,7 @@ public class ScoreboardPacMan {
 
         List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId()); // Get playerPacMan
+        Booster.BoosterTypes activeBooster = playerPacMan.getActiveBooster();
 
         objective.setDisplayName(displayName); // Set display name
         objective.setDisplaySlot(DisplaySlot.SIDEBAR); // Set display slot
@@ -66,10 +68,16 @@ public class ScoreboardPacMan {
         score++;
         objective.getScore(" ").setScore(score);
 
+        score++;
+        objective.getScore("Booster actif: " + ChatColor.GREEN + (activeBooster == null ? "Aucun (0)" : activeBooster.getName() + " (" + playerPacMan.getBoosterRemainingTime() + ")")).setScore(score);
+
+        score++;
+        objective.getScore("   ").setScore(score);
+
         // Display remaining global coins number
         score++;
         int remainingCoins = gameManager.getRemainingGlobalCoins();
-        objective.getScore("Coins restants: " + ChatColor.GOLD + (remainingCoins < 0 ? 0 : remainingCoins)).setScore(score);
+        objective.getScore("Coins restant: " + ChatColor.GOLD + (remainingCoins < 0 ? 0 : remainingCoins)).setScore(score);
 
         // Display coins number
         score++;

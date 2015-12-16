@@ -3,6 +3,8 @@ package fr.azuxul.pacman.player;
 import fr.azuxul.pacman.entity.Booster;
 import net.samagames.api.games.GamePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nullable;
 
@@ -20,6 +22,8 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
     public PlayerPacMan(Player player) {
 
         super(player);
+        boosterRemainingTime = -1;
+        gameCoins = 0;
     }
 
     /**
@@ -83,11 +87,31 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
      */
     public void update() {
 
-        if (boosterRemainingTime >= 0) {
+        Player player = getPlayerIfOnline();
+
+        if (boosterRemainingTime >= 0 && player != null) {
+
             boosterRemainingTime--;
+            if (activeBooster.equals(Booster.BoosterTypes.SPEED))
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 25, 0));
             if (boosterRemainingTime < 0)
                 activeBooster = null;
         }
+    }
+
+    @Override
+    public boolean equals(Object compareObject) {
+        if (this == compareObject) return true;
+        if (compareObject == null || getClass() != compareObject.getClass()) return false;
+
+        PlayerPacMan that = (PlayerPacMan) compareObject;
+
+        return getUUID() == that.getUUID();
+    }
+
+    @Override
+    public int hashCode() {
+        return getUUID() != null ? getUUID().hashCode() : 0;
     }
 
     @Override

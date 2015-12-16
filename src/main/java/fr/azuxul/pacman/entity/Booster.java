@@ -5,11 +5,16 @@ import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.minecraft.server.v1_8_R3.*;
 import net.samagames.api.games.Status;
+import org.apache.commons.lang.math.RandomUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Booster entity
@@ -112,16 +117,42 @@ public class Booster extends EntityItem {
 
         Player player = (Player) entityHuman.getBukkitEntity();
         Status status = gameManager.getStatus();
+        List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
 
         if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR) && this.isAlive()) {
 
             double distanceAtCoin = this.getBukkitEntity().getLocation().distance(player.getLocation()); // Calculate distance
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-            if (distanceAtCoin <= 0.65 && playerPacMan.getActiveBooster() == null) {
+            if (distanceAtCoin <= 2 && playerPacMan.getActiveBooster() == null) {
                 die();
-                playerPacMan.setActiveBooster(type);
-                playerPacMan.setBoosterRemainingTime(type.getBoosterTime());
+
+                if (type.equals(BoosterTypes.PLAYER_SWAP)) {
+
+                    List<PlayerPacMan> swappablePlayers = playerPacManList.stream().filter(playerFilter -> !playerFilter.equals(playerPacMan) && playerFilter.getPlayerIfOnline() != null).collect(Collectors.toList());
+
+                    if (swappablePlayers.isEmpty()) {
+                        player.sendMessage(ChatColor.RED + "Il n'y pas de joueur avec qui swap !");
+                    } else {
+
+                        PlayerPacMan playerSwapPacMan = swappablePlayers.get(RandomUtils.nextInt(swappablePlayers.size())); // Get random player
+
+                        Player playerSwap = playerSwapPacMan.getPlayerIfOnline();
+
+                        Location locationOfPlayerSwap = playerSwap.getLocation();
+                        Location locationOfPlayer = player.getLocation();
+
+                        player.teleport(locationOfPlayerSwap);
+                        playerSwap.teleport(locationOfPlayer);
+
+                        playerSwap.sendMessage(ChatColor.GREEN + "Vous avez été swap avec un autre joueur");
+                        player.sendMessage(ChatColor.GREEN + "Vous avez été swap avec un autre joueur");
+                    }
+
+                } else {
+                    playerPacMan.setActiveBooster(type);
+                    playerPacMan.setBoosterRemainingTime(type.getBoosterTime());
+                }
             }
         }
     }
@@ -153,8 +184,9 @@ public class Booster extends EntityItem {
     public enum BoosterTypes {
 
         SPEED("Speed", Material.FEATHER, 20),
+        PLAYER_SWAP("Swap", Material.ENDER_PEARL, 0),
         DOUBLE_COINS("Double coins", Material.GOLD_BLOCK, 15),
-        COINS_MAGNET("Coin magnet", Material.ENDER_PEARL, 15);
+        COINS_MAGNET("Coin magnet", Material.EYE_OF_ENDER, 15);
 
         private final String name;
         private final Material material;

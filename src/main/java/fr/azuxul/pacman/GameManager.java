@@ -28,7 +28,6 @@ public class GameManager extends Game<PlayerPacMan> {
     private final Plugin plugin;
     private final TimerPacMan timer;
     private final ScoreboardPacMan scoreboard;
-    private final List<PlayerPacMan> playerPacManList;
     private final Map<Location, Boolean> boosterLocations;
     private int remainingGlobalCoins, globalCoins;
 
@@ -49,9 +48,8 @@ public class GameManager extends Game<PlayerPacMan> {
         this.server = server;
         this.logger = logger;
         this.plugin = plugin;
-        this.scoreboard = new ScoreboardPacMan(ChatColor.YELLOW + "Pac-Man", this);
+        this.scoreboard = new ScoreboardPacMan(ChatColor.YELLOW + "PacMan", this);
         this.timer = new TimerPacMan(this);
-        this.playerPacManList = new ArrayList<>();
         this.boosterLocations = new HashMap<>();
     }
 
@@ -72,7 +70,7 @@ public class GameManager extends Game<PlayerPacMan> {
      * @return playerListPacMan
      */
     public List<PlayerPacMan> getPlayerPacManList() {
-        return playerPacManList;
+        return new ArrayList<>(getRegisteredGamePlayers().values());
     }
 
     /**
@@ -172,11 +170,12 @@ public class GameManager extends Game<PlayerPacMan> {
 
         ITemplateManager templateManager = getCoherenceMachine().getTemplateManager();
         List<PlayerPacMan> winners = new ArrayList<>();
+        List<PlayerPacMan> playerPacManList = getPlayerPacManList();
 
         timer.setToZero(); // Set timer to zero
 
         // Sort playerPacManList
-        Collections.sort(playerPacManList);
+        Collections.sort(getPlayerPacManList());
 
         int playerPacManListSize = playerPacManList.size();
 
@@ -185,7 +184,10 @@ public class GameManager extends Game<PlayerPacMan> {
             if (winners.size() >= playerPacManListSize)
                 break;
 
-            winners.add(playerPacManList.get(playerPacManListSize - i));
+            PlayerPacMan playerPacMan = playerPacManList.get(playerPacManListSize - i);
+
+            if (playerPacMan.getPlayerIfOnline() != null)
+                winners.add(playerPacMan);
         }
 
         // Add coins to players
@@ -202,16 +204,16 @@ public class GameManager extends Game<PlayerPacMan> {
 
             if (winners.contains(playerPacMan)) {
                 if (winners.indexOf(playerPacMan) == 0) {
-                    playerPacMan.addCoins(30, "Partie gagnée");
-                    playerPacMan.addStars(2, "Partie gagnée");
+                    playerPacMan.addCoins(30, "Partie gagné");
+                    playerPacMan.addStars(2, "Partie gagné");
                 } else {
-                    playerPacMan.addCoins(15, "Términer dans le classement");
-                    playerPacMan.addStars(1, "Términer dans le classement");
+                    playerPacMan.addCoins(15, "Términé dans le classement");
+                    playerPacMan.addStars(1, "Términé dans le classement");
                 }
             }
 
             if (percentOfCoins >= 35) {
-                playerPacMan.addStars(1, "Plus de 35% de coins récupérer");
+                playerPacMan.addStars(1, "Plus de 35% de coins récupéré");
             }
         }
 

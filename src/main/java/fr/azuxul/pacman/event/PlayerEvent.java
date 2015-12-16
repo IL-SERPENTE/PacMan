@@ -36,18 +36,9 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
 
-        GameManager gameManager = PacMan.getGameManager();
         Player player = event.getPlayer();
 
         player.setGameMode(GameMode.ADVENTURE);
-
-        PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
-
-        if (playerPacMan == null) { // If player is not in player pacman list
-
-            playerPacMan = new PlayerPacMan(player);
-            gameManager.getPlayerPacManList().add(playerPacMan); // Add this player in list
-        }
     }
 
     @EventHandler
@@ -57,7 +48,7 @@ public class PlayerEvent implements Listener {
         Player player = event.getPlayer();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-        if (playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.SPEED)) {
+        if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.SPEED)) {
 
             // Get random color
             ParticleEffect.ParticleColor color = new ParticleEffect.OrdinaryColor(RandomUtils.nextInt(255), RandomUtils.nextInt(255), RandomUtils.nextInt(255));
@@ -125,7 +116,7 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onWeatherChange(WeatherChangeEvent event) {
 
-        if(!event.getWorld().isThundering()) // If is sunny
+        if (event.toWeatherState()) // If is sunny
             event.setCancelled(true); // Cancel weather change
     }
 

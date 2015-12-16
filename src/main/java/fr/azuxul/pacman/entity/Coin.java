@@ -65,7 +65,7 @@ public class Coin extends EntityArmorStand {
             gameManager.getServer().getScheduler().runTaskLater(gameManager.getPlugin(), () -> this.getBukkitEntity().remove(), 600L);
 
             // Get randomly velocity
-            velocity = new Vector(1 + RandomUtils.nextInt(4), 3 + RandomUtils.nextInt(4), 1 + RandomUtils.nextInt(3)).multiply(RandomUtils.nextBoolean() ? 0.1 : -0.1);
+            velocity = new Vector(2 + RandomUtils.nextInt(4), 5 + RandomUtils.nextInt(4), 2 + RandomUtils.nextInt(3)).multiply(RandomUtils.nextBoolean() ? 0.1 : -0.1);
         }
 
         spawn(world, x, y, z, velocity); // Spawn
@@ -117,11 +117,11 @@ public class Coin extends EntityArmorStand {
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-            if (distanceAtCoin <= 0.65 || playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.COINS_MAGNET)) {
+            if (distanceAtCoin <= 0.65 || (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.COINS_MAGNET))) {
 
                 die(); // Kill coin
 
-                playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.DOUBLE_COINS) ? 2 : 1)); // Add coin to player
+                playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.DOUBLE_COINS) ? 2 : 1)); // Add coin to player
 
                 // Send scoreboard to player
                 gameManager.getScoreboard().sendScoreboardToPlayer(player, status);
@@ -133,8 +133,11 @@ public class Coin extends EntityArmorStand {
                     gameManager.setRemainingGlobalCoins(globalCoins);
 
                     // If remaining coins is equals to 0 and is not end
-                    if (globalCoins <= 0 && !status.equals(Status.FINISHED))
+                    if (globalCoins <= 0 && !status.equals(Status.FINISHED)) {
+
+                        gameManager.getServer().getOnlinePlayers().forEach(p -> gameManager.getScoreboard().sendScoreboardToPlayer(p, status)); // Update scoreboard
                         gameManager.end(); // End
+                    }
                 }
             }
         }

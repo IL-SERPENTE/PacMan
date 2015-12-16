@@ -2,6 +2,7 @@ package fr.azuxul.pacman.timer;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.entity.Booster;
+import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Location;
@@ -54,7 +55,7 @@ public class TimerPacMan implements Runnable {
             }
 
             // If random and boosterLocation contain value with false
-            if (RandomUtils.nextInt(100) <= 15 && gameManager.getBoosterLocations().values().contains(false)) {
+            if (RandomUtils.nextInt(500) <= 30 && gameManager.getBoosterLocations().values().contains(false)) {
 
                 // Get all entry with value is false
                 gameManager.getBoosterLocations().entrySet().stream().filter(mapEntity -> mapEntity.getValue().equals(false)).forEach(mapEntity -> {
@@ -74,7 +75,11 @@ public class TimerPacMan implements Runnable {
         // Update scoreboard to all player and update player
         server.getOnlinePlayers().forEach(player -> {
             gameManager.getScoreboard().sendScoreboardToPlayer(player, gameStatus);
-            gameManager.getPlayer(player.getUniqueId()).update();
+
+            PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
+
+            if (playerPacMan != null)
+                gameManager.getPlayer(player.getUniqueId()).update();
         });
     }
 
