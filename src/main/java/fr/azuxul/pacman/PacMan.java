@@ -8,6 +8,7 @@ import net.minecraft.server.v1_8_R3.EntityTypes;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.SamaGamesAPI;
 import net.samagames.tools.Reflection;
+import net.samagames.tools.scoreboards.TeamHandler;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
@@ -63,6 +64,7 @@ public class PacMan extends JavaPlugin {
         getServer().getWorlds().get(0).setSpawnLocation(0, 73, 0); // Set spawn location
         getServer().getWorlds().get(0).setDifficulty(Difficulty.NORMAL); // Set difficulty
         getServer().getWorlds().get(0).setGameRuleValue("doMobSpawning", "false"); // Set doMobSpawning game rule
+        getServer().getWorlds().get(0).setWeatherDuration(0); // Clear weather
 
         mapInitialisation();
     }
@@ -141,6 +143,10 @@ public class PacMan extends JavaPlugin {
         } catch (IllegalAccessException e) {
             getLogger().warning(String.valueOf(e));
         }
+
+        TeamHandler teamHandler = new TeamHandler();
+
+        //TeamHandler.VTeam vTeam = teamHandler.add
 
         return returnObject;
     }

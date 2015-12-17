@@ -5,11 +5,9 @@ import fr.azuxul.pacman.scoreboard.ScoreboardPacMan;
 import fr.azuxul.pacman.timer.TimerPacMan;
 import net.samagames.api.games.Game;
 import net.samagames.api.games.themachine.messages.ITemplateManager;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Server;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -156,10 +154,13 @@ public class GameManager extends Game<PlayerPacMan> {
         super.startGame();
 
         Location spawn = new Location(getServer().getWorlds().get(0), 0, 78, 0);
+        ItemStack woodenSword = new ItemStack(Material.WOOD_SWORD);
 
         for (Player player : server.getOnlinePlayers()) {
             player.teleport(spawn); // Teleport player to spawn
-            player.setGameMode(GameMode.ADVENTURE); // Set player gamemode
+            player.setGameMode(GameMode.ADVENTURE); // Set player game mode
+            player.getInventory().clear(); // Clear inventory
+            player.getInventory().addItem(woodenSword); // Give wooden sword
         }
     }
 

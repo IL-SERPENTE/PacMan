@@ -5,11 +5,9 @@ import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.api.games.Status;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,8 +41,22 @@ public class ScoreboardPacMan {
         if (!status.equals(Status.IN_GAME)) // If game is not started
             return;
 
-        Scoreboard scoreboard = scoreboardManager.getNewScoreboard(); // Get new scoreboard
-        Objective objective = scoreboard.registerNewObjective("sc", "dummy"); // Register new objective
+        Scoreboard scoreboard = player.getScoreboard();
+        Objective objective;
+
+        if (scoreboard == null || scoreboard.getTeam("global") == null) {
+
+            scoreboard = scoreboardManager.getNewScoreboard(); // Get new scoreboard
+
+            generateGlobalTeam(scoreboard);
+        }
+
+        objective = scoreboard.getObjective("pacManObjective");
+
+        if (objective != null)
+            objective.unregister();
+
+        objective = scoreboard.registerNewObjective("pacManObjective", "dummy"); // Register new objective
         int score = 0;
 
         List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
@@ -107,5 +119,22 @@ public class ScoreboardPacMan {
         objective.getScore("Classement: ").setScore(score);
 
         player.setScoreboard(scoreboard); // Send scoreboard to the player
+    }
+
+    private void generateGlobalTeam(@Nullable Scoreboard scoreboard) {
+
+        Team team = scoreboard.getTeam("global");
+
+        if (team != null)
+            team.unregister();
+
+        team = scoreboard.registerNewTeam("global");
+
+        team.setCanSeeFriendlyInvisibles(true);
+        team.setNameTagVisibility(NameTagVisibility.NEVER);
+
+        for (Player player : gameManager.getServer().getOnlinePlayers())
+            team.addEntry(player.getName());
+
     }
 }

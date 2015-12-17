@@ -16,13 +16,14 @@ import javax.annotation.Nullable;
  */
 public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
-    private int gameCoins, boosterRemainingTime;
+    private int gameCoins, boosterRemainingTime, invulnerableRemainingTime;
     private Booster.BoosterTypes activeBooster;
 
     public PlayerPacMan(Player player) {
 
         super(player);
         boosterRemainingTime = -1;
+        invulnerableRemainingTime = -1;
         gameCoins = 0;
     }
 
@@ -81,6 +82,10 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         this.boosterRemainingTime = boosterRemainingTime;
     }
 
+    public void setInvulnerableRemainingTime(int invulnerableRemainingTime) {
+        this.invulnerableRemainingTime = invulnerableRemainingTime;
+    }
+
     /**
      * Update player stats (active effects)
      * 1 update/s
@@ -93,9 +98,25 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
             boosterRemainingTime--;
             if (activeBooster.equals(Booster.BoosterTypes.SPEED))
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 25, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 39, 0));
             if (boosterRemainingTime < 0)
                 activeBooster = null;
+        }
+
+        if (invulnerableRemainingTime >= 0 && player != null) {
+
+            boolean invisibleEffect = false;
+
+            invulnerableRemainingTime--;
+            for (PotionEffect potionEffect : player.getActivePotionEffects())
+                if (potionEffect.getType().equals(PotionEffectType.INVISIBILITY)) {
+                    invisibleEffect = true;
+                    break;
+                }
+
+            if (!invisibleEffect) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10, 0, true, true));
+            }
         }
     }
 
