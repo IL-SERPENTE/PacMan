@@ -8,6 +8,7 @@ import net.samagames.api.games.themachine.messages.ITemplateManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -155,12 +156,18 @@ public class GameManager extends Game<PlayerPacMan> {
 
         Location spawn = new Location(getServer().getWorlds().get(0), 0, 78, 0);
         ItemStack woodenSword = new ItemStack(Material.WOOD_SWORD);
+        ItemMeta swordMeta = woodenSword.getItemMeta();
+
+        swordMeta.spigot().setUnbreakable(true);
+        woodenSword.setItemMeta(swordMeta);
 
         for (Player player : server.getOnlinePlayers()) {
             player.teleport(spawn); // Teleport player to spawn
             player.setGameMode(GameMode.ADVENTURE); // Set player game mode
             player.getInventory().clear(); // Clear inventory
             player.getInventory().addItem(woodenSword); // Give wooden sword
+
+            getPlayer(player.getUniqueId()).setInvulnerableRespawn();
         }
     }
 
@@ -196,7 +203,7 @@ public class GameManager extends Game<PlayerPacMan> {
 
             int percentOfCoins = 0;
 
-            if (playerPacMan.getGameCoins() > 0) {
+            if (playerPacMan.getGameCoins() > 0 && globalCoins > 0) {
                 percentOfCoins = playerPacMan.getGameCoins() * 100 / globalCoins; // Calculate percent of player coins
                 int coins = percentOfCoins / 5; // Calculate coins for player
 
@@ -220,12 +227,12 @@ public class GameManager extends Game<PlayerPacMan> {
 
         // Display winners
         if (!winners.isEmpty()) { // If winners is not empty
-            if (winners.size() < 3) { // If winners size < 3
+            if (winners.size() < 3 && winners.size() > 0) { // If winners size < 3
 
                 PlayerPacMan winner = winners.get(0); // Get winner
 
                 templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getGameCoins()); // Display player win template
-            } else {
+            } else if (winners.size() > 0) {
 
                 PlayerPacMan winner = winners.get(0), second = winners.get(1), third = winners.get(2); // Get winners
 

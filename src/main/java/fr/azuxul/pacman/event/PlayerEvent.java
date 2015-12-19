@@ -5,6 +5,7 @@ import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
 import net.samagames.tools.ParticleEffect;
 import org.apache.commons.lang.math.RandomUtils;
@@ -21,6 +22,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -78,19 +80,24 @@ public class PlayerEvent implements Listener {
             Player player = (Player) event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-            int coins = playerPacMan.getGameCoins(); // Get player coins
+            if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
+                event.setCancelled(true);
+            } else {
 
-            for (int i = RandomUtils.nextInt(3); i >= 1; i--)
-                if (coins > 0) { // If player coins number > 0
-                    coins--; // Decrement coins of player
+                int coins = playerPacMan.getGameCoins(); // Get player coins
 
-                    Location location = player.getLocation();
+                for (int i = RandomUtils.nextInt(3); i >= 1; i--)
+                    if (coins > 0) { // If player coins number > 0
+                        coins--; // Decrement coins of player
 
-                    // Spawn coin
-                    new Coin(((CraftWorld) player.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+                        Location location = player.getLocation();
 
-                    playerPacMan.setGameCoins(coins); // Set player coins
-                }
+                        // Spawn coin
+                        new Coin(((CraftWorld) player.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+
+                        playerPacMan.setGameCoins(coins); // Set player coins
+                    }
+            }
         }
     }
 
@@ -98,13 +105,51 @@ public class PlayerEvent implements Listener {
     public void onPlayerKillByPlayer(EntityDeathEvent event) {
 
         Player killer = event.getEntity().getKiller();
+        GameManager gameManager = PacMan.getGameManager();
 
-        if (event.getEntity() instanceof Player && killer != null)
-            killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
+        if (gameManager.getStatus().equals(Status.IN_GAME) && event.getEntity() instanceof Player) {
+
+            Player entity = (Player) event.getEntity();
+            PlayerPacMan playerPacMan = gameManager.getPlayer(entity.getUniqueId());
+
+            if (killer != null)
+                killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
+
+            int coins = 0;
+            int playerCoins = playerPacMan.getGameCoins();
+
+            if (playerPacMan.getGameCoins() > 0)
+                coins = (int) Math.round(playerCoins * 0.2); // Calculate percent of player coins
+
+            playerPacMan.setGameCoins(playerCoins - coins);
+            World world = ((CraftWorld) entity.getWorld()).getHandle();
+            Location location = entity.getLocation();
+            double x = location.getX(), y = location.getY(), z = location.getZ();
+
+            for (int i = 0; i <= coins; i++)
+                new Coin(world, x, y, z, true);
+
+            //ParticleEffect.BlockData blockData = new ParticleEffect.BlockData(Material.GOLD_BLOCK, (byte) 0);
+
+            //ParticleEffect.BLOCK_DUST.display(blockData, 5, 5, 5, 500, 500, location, 50);
+        }
     }
 
     @EventHandler
-    public void onPlayerInteractEvent(PlayerInteractEvent event) {
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+
+        Player player = event.getPlayer();
+        GameManager gameManager = PacMan.getGameManager();
+        PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
+
+        if (gameManager.getStatus().equals(Status.IN_GAME)) {
+            playerPacMan.setInvulnerableRespawn();
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
         event.setCancelled(true); // Cancel player interaction
     }
 

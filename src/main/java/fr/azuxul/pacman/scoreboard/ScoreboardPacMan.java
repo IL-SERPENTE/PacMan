@@ -5,7 +5,6 @@ import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.api.games.Status;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
@@ -103,7 +102,7 @@ public class ScoreboardPacMan {
         int size = playerPacManList.size() - 1;
         int maxI = size >= 5 ? 4 : size;
 
-        for (int i = 0; i <= maxI; i++) {
+        for (int i = maxI; i >= 0; i--) {
 
             PlayerPacMan playerPacManDisplay = playerPacManList.get(i); // Get playerPacMan
 
@@ -121,7 +120,7 @@ public class ScoreboardPacMan {
         player.setScoreboard(scoreboard); // Send scoreboard to the player
     }
 
-    private void generateGlobalTeam(@Nullable Scoreboard scoreboard) {
+    private void generateGlobalTeam(Scoreboard scoreboard) {
 
         Team team = scoreboard.getTeam("global");
 

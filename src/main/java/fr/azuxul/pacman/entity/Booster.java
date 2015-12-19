@@ -125,9 +125,9 @@ public class Booster extends EntityItem {
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
             if (distanceAtCoin <= 2 && playerPacMan.getActiveBooster() == null) {
-                die();
+                die(); // Kill booster
 
-                if (type.equals(BoosterTypes.PLAYER_SWAP)) {
+                if (type.equals(BoosterTypes.PLAYER_SWAP)) { // If is swap booster
 
                     List<PlayerPacMan> swappablePlayers = playerPacManList.stream().filter(playerFilter -> !playerFilter.equals(playerPacMan) && playerFilter.getPlayerIfOnline() != null).collect(Collectors.toList());
 

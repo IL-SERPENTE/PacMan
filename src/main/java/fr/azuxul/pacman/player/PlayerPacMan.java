@@ -82,8 +82,21 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         this.boosterRemainingTime = boosterRemainingTime;
     }
 
-    public void setInvulnerableRemainingTime(int invulnerableRemainingTime) {
-        this.invulnerableRemainingTime = invulnerableRemainingTime;
+    /**
+     * Set remaining time of invulnerability to damages
+     */
+    public void setInvulnerableRespawn() {
+        this.invulnerableRemainingTime = 5;
+    }
+
+    /**
+     * Get remaining time of invulnerability to damages
+     * If is not invulnerable return -1
+     *
+     * @return invulnerableRemainingTime
+     */
+    public int getInvulnerableRemainingTime() {
+        return invulnerableRemainingTime;
     }
 
     /**
@@ -98,7 +111,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
             boosterRemainingTime--;
             if (activeBooster.equals(Booster.BoosterTypes.SPEED))
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 39, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 65, 1));
             if (boosterRemainingTime < 0)
                 activeBooster = null;
         }
@@ -122,8 +135,11 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
     @Override
     public boolean equals(Object compareObject) {
-        if (this == compareObject) return true;
-        if (compareObject == null || getClass() != compareObject.getClass()) return false;
+        if (this == compareObject)
+            return true;
+
+        if (compareObject == null || getClass() != compareObject.getClass())
+            return false;
 
         PlayerPacMan that = (PlayerPacMan) compareObject;
 
@@ -140,13 +156,12 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
         if (comparePlayerPacMan == null) {
             throw new NullPointerException("The compared object can not be null");
-        }
-        if (comparePlayerPacMan.getGameCoins() == this.getGameCoins()) {
+        } else if (comparePlayerPacMan.getGameCoins() == this.getGameCoins()) {
             return 0;
         } else if (comparePlayerPacMan.getGameCoins() > this.getGameCoins()) {
-            return -1;
-        } else {
             return 1;
+        } else {
+            return -1;
         }
     }
 }
