@@ -1,14 +1,16 @@
 package fr.azuxul.pacman;
 
-import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import fr.azuxul.pacman.powerup.BasicPowerup;
+import fr.azuxul.pacman.powerup.PowerupEffectType;
+import fr.azuxul.pacman.powerup.PowerupSwap;
 import net.minecraft.server.v1_8_R3.EntityTypes;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.SamaGamesAPI;
 import net.samagames.tools.Reflection;
-import org.apache.commons.lang.math.RandomUtils;
+import net.samagames.tools.powerups.PowerupManager;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -55,7 +57,6 @@ public class PacMan extends JavaPlugin {
 
         // Register entity
         registerEntity("Coin", 54, Coin.class);
-        registerEntity("Booster", 55, Booster.class);
 
         // Kick players
         getServer().getOnlinePlayers().forEach(player -> player.kickPlayer(""));
@@ -69,7 +70,21 @@ public class PacMan extends JavaPlugin {
         getServer().getWorlds().get(0).setThunderDuration(0); // Clear weather
         getServer().getWorlds().get(0).setWeatherDuration(0); // Clear weather
 
+        powerupInitialisation();
         mapInitialisation();
+    }
+
+    private void powerupInitialisation() {
+
+        PowerupManager powerupManager = gameManager.getPowerupManager();
+
+        // Register powerups
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, 10));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_COINS, 8));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.COINS_MAGNET, 10));
+        powerupManager.registerPowerup(new PowerupSwap());
+
+        powerupManager.setInverseFrequency(230);
     }
 
     /**
@@ -80,6 +95,7 @@ public class PacMan extends JavaPlugin {
 
         org.bukkit.World world = getServer().getWorlds().get(0);
         World worldNMS = ((CraftWorld) world).getHandle();
+        PowerupManager powerupManager = gameManager.getPowerupManager();
 
         // Replace gold block with coins
         int globalCoins = 0;
@@ -97,11 +113,7 @@ public class PacMan extends JavaPlugin {
                 } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
                     block.setType(Material.AIR); // Set air
 
-                    // Get random type
-                    Booster.BoosterTypes type = Booster.BoosterTypes.values()[RandomUtils.nextInt(Booster.BoosterTypes.values().length)];
-
-                    new Booster(worldNMS, x + 0.5, 70.7, z + 0.5, type); // Spawn booster
-                    gameManager.getBoosterLocations().put(new Location(world, x, 71, z), true); // Add booster in list
+                    powerupManager.registerLocation(new Location(world, x + 0.5, 71, z + 0.5)); // Register booster location
                 }
             }
         }

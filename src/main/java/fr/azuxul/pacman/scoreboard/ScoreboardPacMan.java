@@ -1,8 +1,8 @@
 package fr.azuxul.pacman.scoreboard;
 
 import fr.azuxul.pacman.GameManager;
-import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.samagames.api.games.Status;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -60,7 +60,7 @@ public class ScoreboardPacMan {
 
         List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId()); // Get playerPacMan
-        Booster.BoosterTypes activeBooster = playerPacMan.getActiveBooster();
+        PowerupEffectType activeBooster = playerPacMan.getActiveBooster();
 
         objective.setDisplayName(displayName); // Set display name
         objective.setDisplaySlot(DisplaySlot.SIDEBAR); // Set display slot

@@ -3,6 +3,7 @@ package fr.azuxul.pacman.entity;
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.minecraft.server.v1_8_R3.EntityArmorStand;
 import net.minecraft.server.v1_8_R3.EntityHuman;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;
@@ -117,11 +118,11 @@ public class Coin extends EntityArmorStand {
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-            if (distanceAtCoin <= 0.65 || (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.COINS_MAGNET))) {
+            if (distanceAtCoin <= 0.65 || (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.COINS_MAGNET))) {
 
                 die(); // Kill coin
 
-                playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.DOUBLE_COINS) ? 2 : 1)); // Add coin to player
+                playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_COINS) ? 2 : 1)); // Add coin to player
 
                 // Send scoreboard to player
                 gameManager.getScoreboard().sendScoreboardToPlayer(player, status);

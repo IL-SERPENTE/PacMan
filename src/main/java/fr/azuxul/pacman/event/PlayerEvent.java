@@ -2,9 +2,9 @@ package fr.azuxul.pacman.event;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
-import fr.azuxul.pacman.entity.Booster;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
 import net.samagames.tools.ParticleEffect;
@@ -50,7 +50,7 @@ public class PlayerEvent implements Listener {
         Player player = event.getPlayer();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-        if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(Booster.BoosterTypes.SPEED)) {
+        if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.SPEED)) {
 
             // Get random color
             ParticleEffect.ParticleColor color = new ParticleEffect.OrdinaryColor(RandomUtils.nextInt(255), RandomUtils.nextInt(255), RandomUtils.nextInt(255));

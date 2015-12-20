@@ -1,6 +1,6 @@
 package fr.azuxul.pacman.player;
 
-import fr.azuxul.pacman.entity.Booster;
+import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.samagames.api.games.GamePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
     private int gameCoins, boosterRemainingTime, invulnerableRemainingTime;
-    private Booster.BoosterTypes activeBooster;
+    private PowerupEffectType activeBooster;
 
     public PlayerPacMan(Player player) {
 
@@ -50,16 +50,16 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
      *
      * @return activeBooster
      */
-    public Booster.BoosterTypes getActiveBooster() {
+    public PowerupEffectType getActiveBooster() {
         return activeBooster;
     }
 
     /**
      * Set active booster to player
      *
-     * @param activeBooster new active booster
+     * @param activeBooster PowerupEffectType
      */
-    public void setActiveBooster(Booster.BoosterTypes activeBooster) {
+    public void setActiveBooster(PowerupEffectType activeBooster) {
         this.activeBooster = activeBooster;
     }
 
@@ -110,8 +110,8 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         if (boosterRemainingTime >= 0 && player != null) {
 
             boosterRemainingTime--;
-            if (activeBooster.equals(Booster.BoosterTypes.SPEED))
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 65, 1));
+            if (activeBooster.equals(PowerupEffectType.SPEED))
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 85, 1));
             if (boosterRemainingTime < 0)
                 activeBooster = null;
         }

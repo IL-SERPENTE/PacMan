@@ -5,13 +5,17 @@ import fr.azuxul.pacman.scoreboard.ScoreboardPacMan;
 import fr.azuxul.pacman.timer.TimerPacMan;
 import net.samagames.api.games.Game;
 import net.samagames.api.games.themachine.messages.ITemplateManager;
+import net.samagames.tools.powerups.PowerupManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -27,7 +31,7 @@ public class GameManager extends Game<PlayerPacMan> {
     private final Plugin plugin;
     private final TimerPacMan timer;
     private final ScoreboardPacMan scoreboard;
-    private final Map<Location, Boolean> boosterLocations;
+    private final PowerupManager powerupManager;
     private int remainingGlobalCoins, globalCoins;
 
     /**
@@ -40,7 +44,7 @@ public class GameManager extends Game<PlayerPacMan> {
      * @param gameDescription game description
      * @param gamePlayerClass game players class
      */
-    public GameManager(Logger logger, Plugin plugin, Server server, String gameCodeName, String gameName, String gameDescription, Class<PlayerPacMan> gamePlayerClass) {
+    public GameManager(Logger logger, JavaPlugin plugin, Server server, String gameCodeName, String gameName, String gameDescription, Class<PlayerPacMan> gamePlayerClass) {
 
         super(gameCodeName, gameName, gameDescription, gamePlayerClass);
 
@@ -49,18 +53,7 @@ public class GameManager extends Game<PlayerPacMan> {
         this.plugin = plugin;
         this.scoreboard = new ScoreboardPacMan(ChatColor.YELLOW + "PacMan", this);
         this.timer = new TimerPacMan(this);
-        this.boosterLocations = new HashMap<>();
-    }
-
-    /**
-     * Get map of booster spawn location
-     * Key is location
-     * Value is boolean of isSpawn
-     *
-     * @return boosterLocations
-     */
-    public Map<Location, Boolean> getBoosterLocations() {
-        return boosterLocations;
+        this.powerupManager = new PowerupManager(plugin);
     }
 
     /**
@@ -118,6 +111,15 @@ public class GameManager extends Game<PlayerPacMan> {
     }
 
     /**
+     * Get powerup manager
+     *
+     * @return powerupManager
+     */
+    public PowerupManager getPowerupManager() {
+        return powerupManager;
+    }
+
+    /**
      * Get number of global coins remaining
      *
      * @return remainingGlobalCoins
@@ -169,6 +171,8 @@ public class GameManager extends Game<PlayerPacMan> {
 
             getPlayer(player.getUniqueId()).setInvulnerableRespawn();
         }
+
+        powerupManager.start();
     }
 
     /**
@@ -181,6 +185,7 @@ public class GameManager extends Game<PlayerPacMan> {
         List<PlayerPacMan> winners = getWinners(playerPacManList);
 
         timer.setToZero(); // Set timer to zero
+        powerupManager.stop();
 
         // Add coins to players
         for (PlayerPacMan playerPacMan : playerPacManList) {
