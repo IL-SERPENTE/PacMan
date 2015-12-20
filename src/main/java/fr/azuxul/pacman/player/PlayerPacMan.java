@@ -159,9 +159,9 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         } else if (comparePlayerPacMan.getGameCoins() == this.getGameCoins()) {
             return 0;
         } else if (comparePlayerPacMan.getGameCoins() > this.getGameCoins()) {
-            return 1;
-        } else {
             return -1;
+        } else {
+            return 1;
         }
     }
 }

@@ -177,26 +177,10 @@ public class GameManager extends Game<PlayerPacMan> {
     public void end() {
 
         ITemplateManager templateManager = getCoherenceMachine().getTemplateManager();
-        List<PlayerPacMan> winners = new ArrayList<>();
         List<PlayerPacMan> playerPacManList = getPlayerPacManList();
+        List<PlayerPacMan> winners = getWinners(playerPacManList);
 
         timer.setToZero(); // Set timer to zero
-
-        // Sort playerPacManList
-        Collections.sort(getPlayerPacManList());
-
-        int playerPacManListSize = playerPacManList.size();
-
-        // Get winners
-        for (int i = 1; i <= 3; i++) {
-            if (winners.size() >= playerPacManListSize)
-                break;
-
-            PlayerPacMan playerPacMan = playerPacManList.get(playerPacManListSize - i);
-
-            if (playerPacMan.getPlayerIfOnline() != null)
-                winners.add(playerPacMan);
-        }
 
         // Add coins to players
         for (PlayerPacMan playerPacMan : playerPacManList) {
@@ -227,19 +211,48 @@ public class GameManager extends Game<PlayerPacMan> {
 
         // Display winners
         if (!winners.isEmpty()) { // If winners is not empty
-            if (winners.size() < 3 && winners.size() > 0) { // If winners size < 3
+
+            int winnerSize = winners.size();
+
+            if (winnerSize < 3) { // If winners size < 3
 
                 PlayerPacMan winner = winners.get(0); // Get winner
 
                 templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getGameCoins()); // Display player win template
-            } else if (winners.size() > 0) {
+            } else {
 
-                PlayerPacMan winner = winners.get(0), second = winners.get(1), third = winners.get(2); // Get winners
+                PlayerPacMan winner = winners.get(2), second = winners.get(1), third = winners.get(0); // Get winners
 
                 templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getGameCoins(), second.getGameCoins(), third.getGameCoins()); // Display players leadboard template
             }
         }
 
         this.handleGameEnd();
+    }
+
+    private List<PlayerPacMan> getWinners(List<PlayerPacMan> playerPacManList) {
+
+        List<PlayerPacMan> winners = new ArrayList<>();
+
+        // Sort playerPacManList
+        Collections.sort(playerPacManList);
+
+        int playerPacManListSize = playerPacManList.size();
+
+        // Get winners
+        for (int i = 1; i <= 3; i++) {
+            if (winners.size() >= playerPacManListSize)
+                break;
+
+            PlayerPacMan playerPacMan = playerPacManList.get(playerPacManListSize - i);
+
+            if (playerPacMan.getPlayerIfOnline() != null)
+                winners.add(playerPacMan);
+
+        }
+
+        Collections.sort(winners);
+
+        return winners;
     }
 }
