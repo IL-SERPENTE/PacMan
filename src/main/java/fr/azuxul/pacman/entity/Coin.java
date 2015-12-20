@@ -11,7 +11,9 @@ import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.GameMode;
+import org.bukkit.Instrument;
 import org.bukkit.Material;
+import org.bukkit.Note;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -121,6 +123,8 @@ public class Coin extends EntityArmorStand {
             if (distanceAtCoin <= 0.65 || (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.COINS_MAGNET))) {
 
                 die(); // Kill coin
+
+                player.playNote(player.getLocation(), Instrument.PIANO, new Note(22));
 
                 playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_COINS) ? 2 : 1)); // Add coin to player
 

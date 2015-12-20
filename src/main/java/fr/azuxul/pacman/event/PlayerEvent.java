@@ -129,9 +129,7 @@ public class PlayerEvent implements Listener {
             for (int i = 0; i <= coins; i++)
                 new Coin(world, x, y, z, true);
 
-            //ParticleEffect.BlockData blockData = new ParticleEffect.BlockData(Material.GOLD_BLOCK, (byte) 0);
-
-            //ParticleEffect.BLOCK_DUST.display(blockData, 5, 5, 5, 500, 500, location, 50);
+            ParticleEffect.FIREWORKS_SPARK.display(2.0f, 2.0f, 2.0f, 0.0f, 50, location, 50.0f);
         }
     }
 
