@@ -23,6 +23,8 @@ public class ScoreboardPacMan {
     private final ScoreboardManager scoreboardManager;
     private final String displayName;
 
+    private final String TEAM_NAME = "global";
+
     public ScoreboardPacMan(String displayName, GameManager gameManager) {
         this.gameManager = gameManager; // Set gameManager
         this.scoreboardManager = gameManager.getServer().getScoreboardManager(); // Set scoreboard manager
@@ -43,19 +45,20 @@ public class ScoreboardPacMan {
         Scoreboard scoreboard = player.getScoreboard();
         Objective objective;
 
-        if (scoreboard == null || scoreboard.getTeam("global") == null) {
+        if (scoreboard == null || scoreboard.getTeam(TEAM_NAME) == null) {
 
             scoreboard = scoreboardManager.getNewScoreboard(); // Get new scoreboard
 
             generateGlobalTeam(scoreboard);
         }
 
-        objective = scoreboard.getObjective("pacManObjective");
+        String OBJECTIVE_NAME = "pacManObjective";
+        objective = scoreboard.getObjective(OBJECTIVE_NAME);
 
         if (objective != null)
             objective.unregister();
 
-        objective = scoreboard.registerNewObjective("pacManObjective", "dummy"); // Register new objective
+        objective = scoreboard.registerNewObjective(OBJECTIVE_NAME, "dummy"); // Register new objective
         int score = 0;
 
         List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
@@ -122,12 +125,12 @@ public class ScoreboardPacMan {
 
     private void generateGlobalTeam(Scoreboard scoreboard) {
 
-        Team team = scoreboard.getTeam("global");
+        Team team = scoreboard.getTeam(TEAM_NAME);
 
         if (team != null)
             team.unregister();
 
-        team = scoreboard.registerNewTeam("global");
+        team = scoreboard.registerNewTeam(TEAM_NAME);
 
         team.setCanSeeFriendlyInvisibles(true);
         team.setNameTagVisibility(NameTagVisibility.NEVER);

@@ -9,7 +9,6 @@ import fr.azuxul.pacman.powerup.PowerupSwap;
 import net.minecraft.server.v1_8_R3.EntityTypes;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.SamaGamesAPI;
-import net.samagames.tools.Reflection;
 import net.samagames.tools.powerups.PowerupManager;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
@@ -18,8 +17,8 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Field;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Main class of PacMan plugin for SpigotMC 1.8.8-R0.1-SNAPSHOT
@@ -56,7 +55,7 @@ public class PacMan extends JavaPlugin {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0L, 20L);
 
         // Register entity
-        registerEntity("Coin", 54, Coin.class);
+        registerEntity("Coin", 69, Coin.class);
 
         // Kick players
         getServer().getOnlinePlayers().forEach(player -> player.kickPlayer(""));
@@ -130,35 +129,13 @@ public class PacMan extends JavaPlugin {
     @SuppressWarnings("unchecked")
     private void registerEntity(String name, int id, Class clazz) {
 
-        // put entity details in maps of EntityTypes class
-        ((Map) getPrivateFieldOfEntityTypes("c")).put(name, clazz);
-        ((Map) getPrivateFieldOfEntityTypes("d")).put(clazz, name);
-        ((Map) getPrivateFieldOfEntityTypes("e")).put(id, clazz);
-        ((Map) getPrivateFieldOfEntityTypes("f")).put(clazz, id);
-        ((Map) getPrivateFieldOfEntityTypes("g")).put(name, id);
-    }
-
-    /**
-     * Get returned object of private field
-     *
-     * @param fieldName fieldName
-     * @return returned object by field
-     */
-    private Object getPrivateFieldOfEntityTypes(String fieldName) {
-
-        Field field;
-        Object returnObject = null;
-
         try {
-            field = Reflection.getField(EntityTypes.class, fieldName);
+            Method method = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, int.class); // Get method
+            method.setAccessible(true); // Set accessible
+            method.invoke(null, clazz, name, id); // Invoke
 
-            field.setAccessible(true);
-            returnObject = field.get(null);
-
-        } catch (IllegalAccessException e) {
+        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             getLogger().warning(String.valueOf(e));
         }
-
-        return returnObject;
     }
 }
