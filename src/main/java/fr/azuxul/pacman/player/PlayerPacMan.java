@@ -111,7 +111,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
             boosterRemainingTime--;
             if (activeBooster.equals(PowerupEffectType.SPEED))
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 85, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 90, 1));
             if (boosterRemainingTime < 0)
                 activeBooster = null;
         }
@@ -128,7 +128,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
                 }
 
             if (!invisibleEffect) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 10, 0, true, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 30, 0, true, true));
             }
         }
     }

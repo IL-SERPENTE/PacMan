@@ -113,7 +113,7 @@ public class ScoreboardPacMan {
                 score++;
                 objective.getScore(ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getGameCoins()).setScore(score);
             } catch (NullPointerException e) {
-                throw new NullPointerException("PlayerPacMan values can not be null");
+                gameManager.getLogger().warning(String.valueOf(e));
             }
         }
 

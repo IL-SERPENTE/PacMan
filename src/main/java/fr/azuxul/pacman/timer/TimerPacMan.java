@@ -25,7 +25,7 @@ public class TimerPacMan implements Runnable {
     public TimerPacMan(GameManager gameManager) {
         this.gameManager = gameManager;
         this.server = gameManager.getServer();
-        this.minutes = 20;
+        this.minutes = 5;
     }
 
     /**
