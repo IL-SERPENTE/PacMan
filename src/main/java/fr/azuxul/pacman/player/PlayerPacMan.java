@@ -128,7 +128,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
                 }
 
             if (!invisibleEffect) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 30, 0, true, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 40, 0, true, true));
             }
         }
     }

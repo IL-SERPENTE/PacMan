@@ -62,7 +62,7 @@ public class GameManager extends Game<PlayerPacMan> {
      * @return playerListPacMan
      */
     public List<PlayerPacMan> getPlayerPacManList() {
-        return new ArrayList<>(getRegisteredGamePlayers().values());
+        return new ArrayList<>(getInGamePlayers().values());
     }
 
     /**
@@ -163,13 +163,18 @@ public class GameManager extends Game<PlayerPacMan> {
         swordMeta.spigot().setUnbreakable(true);
         woodenSword.setItemMeta(swordMeta);
 
-        for (Player player : server.getOnlinePlayers()) {
-            player.teleport(spawn); // Teleport player to spawn
-            player.setGameMode(GameMode.ADVENTURE); // Set player game mode
-            player.getInventory().clear(); // Clear inventory
-            player.getInventory().addItem(woodenSword); // Give wooden sword
+        for (PlayerPacMan playerPacMan : getPlayerPacManList()) {
 
-            getPlayer(player.getUniqueId()).setInvulnerableRespawn();
+            Player player = playerPacMan.getPlayerIfOnline();
+
+            if (player != null) {
+                player.teleport(spawn); // Teleport player to spawn
+                player.setGameMode(GameMode.ADVENTURE); // Set player game mode
+                player.getInventory().clear(); // Clear inventory
+                player.getInventory().addItem(woodenSword); // Give wooden sword
+
+                playerPacMan.setInvulnerableRespawn();
+            }
         }
 
         powerupManager.start();
