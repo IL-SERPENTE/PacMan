@@ -32,7 +32,7 @@ public class GameManager extends Game<PlayerPacMan> {
     private final TimerPacMan timer;
     private final ScoreboardPacMan scoreboard;
     private final PowerupManager powerupManager;
-    private int remainingGlobalCoins, globalCoins;
+    private final CoinManager coinManager;
 
     /**
      * Class constructor
@@ -54,6 +54,7 @@ public class GameManager extends Game<PlayerPacMan> {
         this.scoreboard = new ScoreboardPacMan(ChatColor.YELLOW + "PacMan", this);
         this.timer = new TimerPacMan(this);
         this.powerupManager = new PowerupManager(plugin);
+        this.coinManager = new CoinManager(this);
     }
 
     /**
@@ -119,32 +120,8 @@ public class GameManager extends Game<PlayerPacMan> {
         return powerupManager;
     }
 
-    /**
-     * Get number of global coins remaining
-     *
-     * @return remainingGlobalCoins
-     */
-    public int getRemainingGlobalCoins() {
-        return remainingGlobalCoins;
-    }
-
-    /**
-     * Set number of global coins remaining
-     *
-     * @param remainingGlobalCoins global coins remaining
-     */
-    public void setRemainingGlobalCoins(int remainingGlobalCoins) {
-        this.remainingGlobalCoins = remainingGlobalCoins;
-    }
-
-    /**
-     * Set number of global coins
-     *
-     * @param globalCoins global coins
-     */
-    public void setGlobalCoins(int globalCoins) {
-        this.setRemainingGlobalCoins(globalCoins);
-        this.globalCoins = globalCoins;
+    public CoinManager getCoinManager() {
+        return coinManager;
     }
 
     /**
@@ -197,8 +174,8 @@ public class GameManager extends Game<PlayerPacMan> {
 
             int percentOfCoins = 0;
 
-            if (playerPacMan.getGameCoins() > 0 && globalCoins > 0) {
-                percentOfCoins = playerPacMan.getGameCoins() * 100 / globalCoins; // Calculate percent of player coins
+            if (playerPacMan.getGameCoins() > 0 && coinManager.getGlobalCoins() > 0) {
+                percentOfCoins = playerPacMan.getGameCoins() * 100 / coinManager.getGlobalCoins(); // Calculate percent of player coins
                 int coins = percentOfCoins / 5; // Calculate coins for player
 
                 playerPacMan.addCoins(coins, percentOfCoins + "% des piéces récupérer");

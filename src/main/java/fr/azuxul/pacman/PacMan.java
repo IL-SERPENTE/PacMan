@@ -116,7 +116,7 @@ public class PacMan extends JavaPlugin {
                 }
             }
         }
-        gameManager.setGlobalCoins(globalCoins); // Set global coins
+        gameManager.getCoinManager().setGlobalCoins(globalCoins); // Set global coins
     }
 
     /**

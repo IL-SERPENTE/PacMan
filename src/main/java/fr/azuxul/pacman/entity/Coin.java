@@ -134,15 +134,8 @@ public class Coin extends EntityArmorStand {
                 if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
 
                     // Set global coins
-                    int globalCoins = gameManager.getRemainingGlobalCoins() - 1;
-                    gameManager.setRemainingGlobalCoins(globalCoins);
-
-                    // If remaining coins is equals to 0 and is not end
-                    if (globalCoins <= 0 && !status.equals(Status.FINISHED)) {
-
-                        gameManager.getServer().getOnlinePlayers().forEach(p -> gameManager.getScoreboard().sendScoreboardToPlayer(p, status)); // Update scoreboard
-                        gameManager.end(); // End
-                    }
+                    int globalCoins = gameManager.getCoinManager().getRemainingGlobalCoins() - 1;
+                    gameManager.getCoinManager().setRemainingGlobalCoins(globalCoins);
                 }
             }
         }

@@ -90,7 +90,7 @@ public class ScoreboardPacMan {
 
         // Display remaining global coins number
         score++;
-        int remainingCoins = gameManager.getRemainingGlobalCoins();
+        int remainingCoins = gameManager.getCoinManager().getRemainingGlobalCoins();
         objective.getScore("Coins restant: " + ChatColor.GOLD + (remainingCoins < 0 ? 0 : remainingCoins)).setScore(score);
 
         // Display coins number
