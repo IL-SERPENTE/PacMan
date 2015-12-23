@@ -55,14 +55,16 @@ public class PacMan extends JavaPlugin {
         // Kick players
         getServer().getOnlinePlayers().forEach(player -> player.kickPlayer(""));
 
-        getServer().getWorlds().get(0).setSpawnLocation(0, 73, 0); // Set spawn location
-        getServer().getWorlds().get(0).setDifficulty(Difficulty.NORMAL); // Set difficulty
-        getServer().getWorlds().get(0).setGameRuleValue("doMobSpawning", "false"); // Set doMobSpawning game rule
-        getServer().getWorlds().get(0).setGameRuleValue("keepInventory", "true"); // Set keepInventory game rule
-        getServer().getWorlds().get(0).setStorm(false); // Clear storm
-        getServer().getWorlds().get(0).setThundering(false); // Clear weather
-        getServer().getWorlds().get(0).setThunderDuration(0); // Clear weather
-        getServer().getWorlds().get(0).setWeatherDuration(0); // Clear weather
+        org.bukkit.World world = getServer().getWorlds().get(0);
+
+        world.setSpawnLocation(0, 73, 0); // Set spawn location
+        world.setDifficulty(Difficulty.NORMAL); // Set difficulty
+        world.setGameRuleValue("doMobSpawning", "false"); // Set doMobSpawning game rule
+        world.setGameRuleValue("keepInventory", "true"); // Set keepInventory game rule
+        world.setStorm(false); // Clear storm
+        world.setThundering(false); // Clear weather
+        world.setThunderDuration(0); // Clear weather
+        world.setWeatherDuration(0); // Clear weather
 
         powerupInitialisation();
         mapInitialisation();

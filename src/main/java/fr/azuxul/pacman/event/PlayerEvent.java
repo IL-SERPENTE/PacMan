@@ -87,17 +87,17 @@ public class PlayerEvent implements Listener {
 
                 int coins = playerPacMan.getGameCoins(); // Get player coins
 
-                for (int i = RandomUtils.nextInt(3); i >= 1; i--)
-                    if (coins > 0) { // If player coins number > 0
-                        coins--; // Decrement coins of player
+                for (int i = RandomUtils.nextInt(3); i >= 1 || coins < 1; i--) {
 
-                        Location location = player.getLocation();
+                    coins--; // Decrement coins of player
 
-                        // Spawn coin
-                        coinManager.spawnCoin(((CraftWorld) player.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+                    Location location = player.getLocation();
 
-                        playerPacMan.setGameCoins(coins); // Set player coins
-                    }
+                    // Spawn coin
+                    coinManager.spawnCoin(((CraftWorld) player.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+
+                    playerPacMan.setGameCoins(coins); // Set player coins
+                }
             }
         }
     }
