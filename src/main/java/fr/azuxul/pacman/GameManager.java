@@ -37,19 +37,14 @@ public class GameManager extends Game<PlayerPacMan> {
     /**
      * Class constructor
      *
-     * @param logger          plugin logger
-     * @param server          server
-     * @param gameCodeName    unique id for game
-     * @param gameName        game name
-     * @param gameDescription game description
-     * @param gamePlayerClass game players class
+     * @param plugin    PacMan plugin
      */
-    public GameManager(Logger logger, JavaPlugin plugin, Server server, String gameCodeName, String gameName, String gameDescription, Class<PlayerPacMan> gamePlayerClass) {
+    public GameManager(JavaPlugin plugin) {
 
-        super(gameCodeName, gameName, gameDescription, gamePlayerClass);
+        super("pacman", "PacMan", "", PlayerPacMan.class);
 
-        this.server = server;
-        this.logger = logger;
+        this.server = plugin.getServer();
+        this.logger = plugin.getLogger();
         this.plugin = plugin;
         this.scoreboard = new ScoreboardPacMan(ChatColor.YELLOW + "PacMan", this);
         this.timer = new TimerPacMan(this);

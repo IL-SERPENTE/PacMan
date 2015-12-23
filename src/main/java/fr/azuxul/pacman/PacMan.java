@@ -2,7 +2,6 @@ package fr.azuxul.pacman;
 
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.event.PlayerEvent;
-import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.powerup.BasicPowerup;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import fr.azuxul.pacman.powerup.PowerupSwap;
@@ -37,13 +36,9 @@ public class PacMan extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        final String gameCodeName = "pacman";
-        final String gameName = "PacMan";
-        final String gameDescription = "";
-
         SamaGamesAPI samaGamesAPI = SamaGamesAPI.get();
 
-        gameManager = new GameManager(getLogger(), this, getServer(), gameCodeName, gameName, gameDescription, PlayerPacMan.class); // Register GameManager
+        gameManager = new GameManager(this); // Register GameManager
 
         samaGamesAPI.getGameManager().registerGame(gameManager); // Register game on SamaGameAPI
         samaGamesAPI.getGameManager().getGameProperties(); // Get properties
