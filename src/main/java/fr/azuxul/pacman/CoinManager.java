@@ -1,6 +1,12 @@
 package fr.azuxul.pacman;
 
+import fr.azuxul.pacman.entity.Coin;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Coin manager
@@ -12,10 +18,12 @@ public class CoinManager {
 
     private final GameManager gameManager;
     private int remainingGlobalCoins, globalCoins;
+    private List<Coin> coinList;
 
     public CoinManager(GameManager gameManager) {
 
         this.gameManager = gameManager;
+        this.coinList = new ArrayList<>();
     }
 
     /**
@@ -58,5 +66,14 @@ public class CoinManager {
     public void setGlobalCoins(int globalCoins) {
         this.remainingGlobalCoins = globalCoins;
         this.globalCoins = globalCoins;
+    }
+
+    public void spawnCoin(World world, double x, double y, double z, boolean dopedByPlayer) {
+
+        coinList.add(new Coin(world, x, y, z, dopedByPlayer));
+    }
+
+    public void killAllCoin() {
+        coinList.forEach(Entity::die);
     }
 }

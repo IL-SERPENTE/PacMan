@@ -73,6 +73,11 @@ public class PacMan extends JavaPlugin {
         mapInitialisation();
     }
 
+    @Override
+    public void onDisable() {
+        gameManager.getCoinManager().killAllCoin();
+    }
+
     private void powerupInitialisation() {
 
         PowerupManager powerupManager = gameManager.getPowerupManager();
@@ -95,6 +100,7 @@ public class PacMan extends JavaPlugin {
         org.bukkit.World world = getServer().getWorlds().get(0);
         World worldNMS = ((CraftWorld) world).getHandle();
         PowerupManager powerupManager = gameManager.getPowerupManager();
+        CoinManager coinManager = gameManager.getCoinManager();
 
         // Replace gold block with coins
         int globalCoins = 0;
@@ -106,7 +112,7 @@ public class PacMan extends JavaPlugin {
                     block.setType(Material.AIR); // Set air
 
                     // Spawn normal coin
-                    new Coin(worldNMS, x + 0.5, 70.7, z + 0.5, false);
+                    coinManager.spawnCoin(worldNMS, x + 0.5, 70.7, z + 0.5, false);
                     globalCoins++;
 
                 } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {

@@ -1,8 +1,8 @@
 package fr.azuxul.pacman.event;
 
+import fr.azuxul.pacman.CoinManager;
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
-import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.minecraft.server.v1_8_R3.World;
@@ -79,6 +79,7 @@ public class PlayerEvent implements Listener {
 
             Player player = (Player) event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
+            CoinManager coinManager = gameManager.getCoinManager();
 
             if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
                 event.setCancelled(true);
@@ -93,7 +94,7 @@ public class PlayerEvent implements Listener {
                         Location location = player.getLocation();
 
                         // Spawn coin
-                        new Coin(((CraftWorld) player.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+                        coinManager.spawnCoin(((CraftWorld) player.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
 
                         playerPacMan.setGameCoins(coins); // Set player coins
                     }
@@ -111,6 +112,7 @@ public class PlayerEvent implements Listener {
 
             Player entity = (Player) event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(entity.getUniqueId());
+            CoinManager coinManager = gameManager.getCoinManager();
 
             if (killer != null)
                 killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
@@ -127,7 +129,7 @@ public class PlayerEvent implements Listener {
             double x = location.getX(), y = location.getY(), z = location.getZ();
 
             for (int i = 0; i <= coins; i++)
-                new Coin(world, x, y, z, true);
+                coinManager.spawnCoin(world, x, y, z, true);
 
             ParticleEffect.FIREWORKS_SPARK.display(2.0f, 2.0f, 2.0f, 0.0f, 50, location, 50.0f);
         }
