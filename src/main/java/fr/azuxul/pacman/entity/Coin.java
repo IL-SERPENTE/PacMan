@@ -120,7 +120,7 @@ public class Coin extends EntityArmorStand {
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-            if (distanceAtCoin <= 0.65 || (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.COINS_MAGNET))) {
+            if (distanceAtCoin <= 0.65) {
 
                 die(); // Kill coin
 
@@ -137,6 +137,14 @@ public class Coin extends EntityArmorStand {
                     int globalCoins = gameManager.getCoinManager().getRemainingGlobalCoins() - 1;
                     gameManager.getCoinManager().setRemainingGlobalCoins(globalCoins);
                 }
+
+            } else if ((playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.COINS_MAGNET))) {
+
+                Vector vector = player.getLocation().toVector().subtract(new Vector(locX, locY, locZ)).multiply(1.1);
+
+                setGravity(true);
+                getBukkitEntity().setVelocity(vector);
+                setGravity(false);
             }
         }
     }

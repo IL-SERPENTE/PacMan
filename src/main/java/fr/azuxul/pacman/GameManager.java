@@ -145,7 +145,7 @@ public class GameManager extends Game<PlayerPacMan> {
                 player.getInventory().clear(); // Clear inventory
                 player.getInventory().addItem(woodenSword); // Give wooden sword
 
-                playerPacMan.setInvulnerableRespawn();
+                playerPacMan.setInvulnerableTime(5);
             }
         }
 
@@ -198,7 +198,7 @@ public class GameManager extends Game<PlayerPacMan> {
 
             if (winnerSize < 3) { // If winners size < 3
 
-                PlayerPacMan winner = winners.get(0); // Get winner
+                PlayerPacMan winner = winners.get(winnerSize - 1); // Get winner
 
                 templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getGameCoins()); // Display player win template
             } else {

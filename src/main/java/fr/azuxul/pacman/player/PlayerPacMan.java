@@ -85,8 +85,9 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
     /**
      * Set remaining time of invulnerability to damages
      */
-    public void setInvulnerableRespawn() {
-        this.invulnerableRemainingTime = 5;
+    public void setInvulnerableTime(int time) {
+        this.invulnerableRemainingTime = time;
+        getPlayerIfOnline().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20 * time, 0, true, true));
     }
 
     /**
@@ -110,6 +111,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         if (boosterRemainingTime >= 0 && player != null) {
 
             boosterRemainingTime--;
+            player.setLevel(boosterRemainingTime);
             if (activeBooster.equals(PowerupEffectType.SPEED))
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 90, 1));
             if (boosterRemainingTime < 0)
@@ -117,19 +119,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         }
 
         if (invulnerableRemainingTime >= 0 && player != null) {
-
-            boolean invisibleEffect = false;
-
             invulnerableRemainingTime--;
-            for (PotionEffect potionEffect : player.getActivePotionEffects())
-                if (potionEffect.getType().equals(PotionEffectType.INVISIBILITY)) {
-                    invisibleEffect = true;
-                    break;
-                }
-
-            if (!invisibleEffect) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 40, 0, true, true));
-            }
         }
     }
 
