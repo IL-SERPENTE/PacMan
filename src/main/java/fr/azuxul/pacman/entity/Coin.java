@@ -138,7 +138,7 @@ public class Coin extends EntityArmorStand {
                     gameManager.getCoinManager().setRemainingGlobalCoins(globalCoins);
                 }
 
-            } else if ((playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.COINS_MAGNET))) {
+            } else if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.COINS_MAGNET)) {
 
                 Vector vector = player.getLocation().toVector().subtract(new Vector(locX, locY, locZ)).multiply(1.1);
 
@@ -147,5 +147,27 @@ public class Coin extends EntityArmorStand {
                 setGravity(false);
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object compareObject) {
+        if (this == compareObject)
+            return true;
+        if (!(compareObject instanceof Coin))
+            return false;
+        if (!super.equals(compareObject))
+            return false;
+
+        Coin coin = (Coin) compareObject;
+
+        return isDroopedByPlayer() == coin.isDroopedByPlayer();
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (isDroopedByPlayer() ? 1 : 0);
+        return result;
     }
 }

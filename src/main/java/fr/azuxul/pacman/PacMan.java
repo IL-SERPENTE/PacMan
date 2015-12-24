@@ -38,7 +38,9 @@ public class PacMan extends JavaPlugin {
 
         SamaGamesAPI samaGamesAPI = SamaGamesAPI.get();
 
-        gameManager = new GameManager(this); // Register GameManager
+        synchronized (this) {
+            gameManager = new GameManager(this); // Register GameManager
+        }
 
         samaGamesAPI.getGameManager().registerGame(gameManager); // Register game on SamaGameAPI
         samaGamesAPI.getGameManager().getGameProperties(); // Get properties
@@ -129,7 +131,6 @@ public class PacMan extends JavaPlugin {
      * @param id    entity id
      * @param clazz entity class
      */
-    @SuppressWarnings("unchecked")
     private void registerEntity(String name, int id, Class clazz) {
 
         try {
