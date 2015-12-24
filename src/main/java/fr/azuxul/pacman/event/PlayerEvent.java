@@ -80,14 +80,13 @@ public class PlayerEvent implements Listener {
             Player player = (Player) event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
             CoinManager coinManager = gameManager.getCoinManager();
+            int coins = playerPacMan.getGameCoins(); // Get player coins
 
             if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
                 event.setCancelled(true);
-            } else {
+            } else if (coins > 0) {
 
-                int coins = playerPacMan.getGameCoins(); // Get player coins
-
-                for (int i = RandomUtils.nextInt(3); i >= 1 || coins < 1; i--) {
+                for (int i = RandomUtils.nextInt(3); i >= 1; i--) {
 
                     coins--; // Decrement coins of player
 

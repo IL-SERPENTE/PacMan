@@ -87,7 +87,6 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
      */
     public void setInvulnerableTime(int time) {
         this.invulnerableRemainingTime = time;
-        getPlayerIfOnline().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20 * time, 0, true, true));
     }
 
     /**
@@ -120,6 +119,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
         if (invulnerableRemainingTime >= 0 && player != null) {
             invulnerableRemainingTime--;
+            getPlayerIfOnline().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20 * invulnerableRemainingTime, 0, true, true));
         }
     }
 
