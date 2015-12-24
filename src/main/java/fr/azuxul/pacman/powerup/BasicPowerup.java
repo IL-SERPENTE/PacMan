@@ -15,8 +15,8 @@ import org.bukkit.inventory.ItemStack;
  */
 public class BasicPowerup implements Powerup {
 
-    PowerupEffectType type;
-    double chance;
+    private final PowerupEffectType type;
+    private final double chance;
 
     public BasicPowerup(PowerupEffectType type, double chance) {
 

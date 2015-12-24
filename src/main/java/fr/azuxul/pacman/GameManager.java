@@ -121,8 +121,8 @@ public class GameManager extends Game<PlayerPacMan> {
 
     /**
      * Start the game
+     * Init players
      */
-    @SuppressWarnings("deprecation")
     @Override
     public void startGame() {
 
@@ -154,6 +154,8 @@ public class GameManager extends Game<PlayerPacMan> {
 
     /**
      * Set end of game
+     * Reward players
+     * Display winners
      */
     public void end() {
 
@@ -212,6 +214,12 @@ public class GameManager extends Game<PlayerPacMan> {
         this.handleGameEnd();
     }
 
+    /**
+     * Get list of winners
+     *
+     * @param playerPacManList players
+     * @return winners list
+     */
     private List<PlayerPacMan> getWinners(List<PlayerPacMan> playerPacManList) {
 
         List<PlayerPacMan> winners = new ArrayList<>();

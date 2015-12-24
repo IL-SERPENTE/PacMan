@@ -77,6 +77,11 @@ public class PacMan extends JavaPlugin {
         gameManager.getCoinManager().killAllCoin();
     }
 
+    /**
+     * Initialize powerup manager
+     * Registry powerups
+     * Set spawn frequency
+     */
     private void powerupInitialisation() {
 
         PowerupManager powerupManager = gameManager.getPowerupManager();
@@ -134,7 +139,7 @@ public class PacMan extends JavaPlugin {
     private void registerEntity(String name, int id, Class clazz) {
 
         try {
-            Method method = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, int.class); // Get method
+            Method method = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, int.class); // Get method for register new entity
             method.setAccessible(true); // Set accessible
             method.invoke(null, clazz, name, id); // Invoke
 

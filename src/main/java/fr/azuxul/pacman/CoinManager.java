@@ -17,8 +17,8 @@ import java.util.List;
 public class CoinManager {
 
     private final GameManager gameManager;
+    private final List<Coin> coinList;
     private int remainingGlobalCoins, globalCoins;
-    private List<Coin> coinList;
 
     public CoinManager(GameManager gameManager) {
 

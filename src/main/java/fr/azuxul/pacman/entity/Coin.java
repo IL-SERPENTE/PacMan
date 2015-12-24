@@ -151,7 +151,10 @@ public class Coin extends EntityArmorStand {
 
     @Override
     public boolean equals(Object compareObject) {
-        if (this == compareObject)
+
+        if (compareObject == null) {
+            throw new NullPointerException("The compared object can not be null");
+        } else if (this == compareObject)
             return true;
         if (!(compareObject instanceof Coin))
             return false;
