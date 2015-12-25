@@ -64,7 +64,7 @@ public class PowerupSwap implements Powerup {
      */
     @Override
     public String getName() {
-        return "Swap";
+        return ChatColor.DARK_PURPLE + "Swap";
     }
 
     /**

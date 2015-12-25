@@ -1,5 +1,6 @@
 package fr.azuxul.pacman.powerup;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 /**
@@ -10,9 +11,9 @@ import org.bukkit.Material;
  */
 public enum PowerupEffectType {
 
-    SPEED("Speed", Material.FEATHER, 20),
-    DOUBLE_COINS("Double coins", Material.GOLD_BLOCK, 15),
-    COINS_MAGNET("Coin magnet", Material.EYE_OF_ENDER, 15);
+    SPEED(ChatColor.AQUA + "Speed", Material.FEATHER, 20),
+    DOUBLE_COINS(ChatColor.YELLOW + "Double coins", Material.GOLD_BLOCK, 15),
+    COINS_MAGNET(ChatColor.LIGHT_PURPLE + "Coin magnet", Material.EYE_OF_ENDER, 15);
 
     private final String name;
     private final Material icon;

@@ -17,8 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -102,14 +102,14 @@ public class PlayerEvent implements Listener {
     }
 
     @EventHandler
-    public void onPlayerKillByPlayer(EntityDeathEvent event) {
+    public void onPlayerKillByPlayer(PlayerDeathEvent event) {
 
         Player killer = event.getEntity().getKiller();
         GameManager gameManager = PacMan.getGameManager();
 
-        if (gameManager.getStatus().equals(Status.IN_GAME) && event.getEntity() instanceof Player) {
+        if (gameManager.getStatus().equals(Status.IN_GAME)) {
 
-            Player entity = (Player) event.getEntity();
+            Player entity = event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(entity.getUniqueId());
             CoinManager coinManager = gameManager.getCoinManager();
 
@@ -131,6 +131,8 @@ public class PlayerEvent implements Listener {
                 coinManager.spawnCoin(world, x, y, z, true);
 
             ParticleEffect.FIREWORKS_SPARK.display(2.0f, 2.0f, 2.0f, 0.0f, 50, location, 50.0f);
+
+            event.setDeathMessage("");
         }
     }
 
