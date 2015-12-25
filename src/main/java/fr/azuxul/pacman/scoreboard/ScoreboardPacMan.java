@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Scoreboard for PacMan plugin
@@ -50,6 +51,20 @@ public class ScoreboardPacMan {
             scoreboard = scoreboardManager.getNewScoreboard(); // Get new scoreboard
 
             generateGlobalTeam(scoreboard);
+
+        } else {
+
+            Set<String> entries = scoreboard.getTeam(TEAM_NAME).getEntries();
+            boolean regenerate = false;
+
+            for (Player p : gameManager.getServer().getOnlinePlayers())
+                if (!entries.contains(p.getName())) {
+                    regenerate = true;
+                    break;
+                }
+
+            if (regenerate)
+                generateGlobalTeam(scoreboard);
         }
 
         String OBJECTIVE_NAME = "pacManObjective";

@@ -6,10 +6,12 @@ import fr.azuxul.pacman.timer.TimerPacMan;
 import net.samagames.api.games.Game;
 import net.samagames.api.games.themachine.messages.ITemplateManager;
 import net.samagames.tools.powerups.PowerupManager;
+import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -139,14 +141,36 @@ public class GameManager extends Game<PlayerPacMan> {
 
             Player player = playerPacMan.getPlayerIfOnline();
 
-            if (player != null) {
-                player.teleport(spawn); // Teleport player to spawn
-                player.setGameMode(GameMode.ADVENTURE); // Set player game mode
-                player.getInventory().clear(); // Clear inventory
-                player.getInventory().addItem(woodenSword); // Give wooden sword
+            // Get leather armor set
+            ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+            ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
+            ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+            ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
 
-                playerPacMan.setInvulnerableTime(5);
-            }
+            // Get meta
+            LeatherArmorMeta meta = (LeatherArmorMeta) boots.getItemMeta();
+            meta.setColor(Color.fromBGR(RandomUtils.nextInt(255), RandomUtils.nextInt(255), RandomUtils.nextInt(255))); // Get random color for armor meta
+            meta.spigot().setUnbreakable(true); // Set unbreakable
+
+            // Set meta on armor set
+            boots.setItemMeta(meta);
+            leggings.setItemMeta(meta);
+            chestplate.setItemMeta(meta);
+            helmet.setItemMeta(meta);
+
+            player.teleport(spawn); // Teleport player to spawn
+            player.setGameMode(GameMode.ADVENTURE); // Set player game mode
+            player.setExp(0.0f); // Clear XP
+            player.getInventory().clear(); // Clear inventory
+            player.getInventory().addItem(woodenSword); // Give wooden sword
+            // Equip armor
+            player.getInventory().setBoots(boots);
+            player.getInventory().setLeggings(leggings);
+            player.getInventory().setChestplate(chestplate);
+            player.getInventory().setHelmet(helmet);
+
+            playerPacMan.setInvulnerableTime(5);
+
         }
 
         powerupManager.start();
