@@ -73,6 +73,11 @@ public class CoinManager {
         coinList.add(new Coin(world, x, y, z, dopedByPlayer));
     }
 
+    public void spawnBigCoin(World world, double x, double y, double z, boolean dopedByPlayer, int coinValue) {
+
+        coinList.add(new Coin(world, x, y, z, dopedByPlayer, coinValue));
+    }
+
     public void killAllCoin() {
         coinList.forEach(Entity::die);
     }

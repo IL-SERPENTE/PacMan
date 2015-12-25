@@ -27,7 +27,8 @@ import org.bukkit.util.Vector;
  */
 public class Coin extends EntityArmorStand {
 
-    private final boolean droopedByPlayer;
+    private final boolean droopedByPlayer, big;
+    private final int coinValue;
 
     /**
      * Class constructor and
@@ -47,6 +48,8 @@ public class Coin extends EntityArmorStand {
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         Vector velocity = null;
         droopedByPlayer = coinDrooped;
+        big = false;
+        coinValue = 1;
 
         c(nbtTagCompound); // Init nbtTagCompound
 
@@ -59,6 +62,55 @@ public class Coin extends EntityArmorStand {
         f(nbtTagCompound); // Set nbtTagCompound
 
         setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.GOLD_BLOCK))); // Set helmet
+
+        if (coinDrooped) { // If is drooped by player
+
+            GameManager gameManager = PacMan.getGameManager();
+
+            // Kill coin after 600 ticks (30s)
+            gameManager.getServer().getScheduler().runTaskLater(gameManager.getPlugin(), () -> this.getBukkitEntity().remove(), 600L);
+
+            // Get randomly velocity
+            velocity = new Vector(2 + RandomUtils.nextInt(4), 5 + RandomUtils.nextInt(4), 2 + RandomUtils.nextInt(3)).multiply(RandomUtils.nextBoolean() ? 0.1 : -0.1);
+        }
+
+        spawn(world, x, y, z, velocity); // Spawn
+    }
+
+    /**
+     * Class constructor and
+     * spawn big coin
+     *
+     * @param world       world of entity
+     * @param x           X location
+     * @param y           Y location
+     * @param z           Z location
+     * @param coinDrooped if true, coins was remove after 30s,
+     *                    the coin not subtract of global coin number
+     *                    when is catch and spawn effect is special
+     * @param coinValue   number of coin added to player coin count
+     *                    when is picked up
+     */
+    public Coin(World world, double x, double y, double z, boolean coinDrooped, int coinValue) {
+        super(world);
+
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        Vector velocity = null;
+        droopedByPlayer = coinDrooped;
+        big = true;
+        this.coinValue = coinValue;
+
+        c(nbtTagCompound); // Init nbtTagCompound
+
+        nbtTagCompound.setBoolean("Small", false); // Set Normal
+        nbtTagCompound.setBoolean("NoGravity", !coinDrooped); // Set NoGravity
+        nbtTagCompound.setBoolean("Invulnerable", true); // Set Invulnerable
+        nbtTagCompound.setBoolean("Invisible", true); // Set Invisible
+        nbtTagCompound.setInt("DisabledSlots", 31); // Disable slots
+
+        f(nbtTagCompound); // Set nbtTagCompound
+
+        setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.EMERALD_BLOCK))); // Set helmet
 
         if (coinDrooped) { // If is drooped by player
 
@@ -88,8 +140,11 @@ public class Coin extends EntityArmorStand {
         this.setPosition(x, y, z); // Set location
         world.addEntity(this); // Spawn
 
-        if (velocity != null)
+        if (velocity != null) {
             this.getBukkitEntity().setVelocity(velocity); // Set velocity
+            this.setPosition(x, y - 0.3, z);
+            this.setGravity(false);
+        }
     }
 
     /**
@@ -120,13 +175,13 @@ public class Coin extends EntityArmorStand {
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-            if (distanceAtCoin <= 0.65) {
+            if (distanceAtCoin <= 0.65 || big) {
 
                 die(); // Kill coin
 
                 player.playNote(player.getLocation(), Instrument.PIANO, new Note(22));
 
-                playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_COINS) ? 2 : 1)); // Add coin to player
+                playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_COINS) ? coinValue * 2 : coinValue)); // Add coin to player
 
                 // Send scoreboard to player
                 gameManager.getScoreboard().sendScoreboardToPlayer(player, status);
@@ -134,7 +189,7 @@ public class Coin extends EntityArmorStand {
                 if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
 
                     // Set global coins
-                    int globalCoins = gameManager.getCoinManager().getRemainingGlobalCoins() - 1;
+                    int globalCoins = gameManager.getCoinManager().getRemainingGlobalCoins() - coinValue;
                     gameManager.getCoinManager().setRemainingGlobalCoins(globalCoins);
                 }
 

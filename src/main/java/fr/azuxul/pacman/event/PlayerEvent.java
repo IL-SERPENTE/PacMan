@@ -128,8 +128,8 @@ public class PlayerEvent implements Listener {
             Location location = entity.getLocation();
             double x = location.getX(), y = location.getY(), z = location.getZ();
 
-            for (int i = 0; i <= coins; i++)
-                coinManager.spawnCoin(world, x, y, z, true);
+            if (coins > 0)
+                coinManager.spawnBigCoin(world, x, y, z, true, coins);
 
             ParticleEffect.FIREWORKS_SPARK.display(2.0f, 2.0f, 2.0f, 0.0f, 50, location, 50.0f);
 

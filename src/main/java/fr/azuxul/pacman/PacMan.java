@@ -92,7 +92,7 @@ public class PacMan extends JavaPlugin {
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.COINS_MAGNET, 10));
         powerupManager.registerPowerup(new PowerupSwap());
 
-        powerupManager.setInverseFrequency(230);
+        powerupManager.setInverseFrequency(230); // Set spawn frequency
     }
 
     /**
@@ -108,24 +108,25 @@ public class PacMan extends JavaPlugin {
 
         // Replace gold block with coins
         int globalCoins = 0;
-        for (int x = -100; x <= 100; x++) {
-            for (int z = -100; z <= 100; z++) {
-                Block block = world.getBlockAt(x, 71, z); // Get block
+        for (int x = -100; x <= 100; x++)
+            for (int z = -100; z <= 100; z++)
+                for (int y = 1; y <= 200; y++) {
+                    Block block = world.getBlockAt(x, y, z); // Get block
 
-                if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block
-                    block.setType(Material.AIR); // Set air
+                    if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block
+                        block.setType(Material.AIR); // Set air
 
-                    // Spawn normal coin
-                    coinManager.spawnCoin(worldNMS, x + 0.5, 70.7, z + 0.5, false);
-                    globalCoins++;
+                        // Spawn normal coin
+                        coinManager.spawnCoin(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
+                        globalCoins++;
 
-                } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
-                    block.setType(Material.AIR); // Set air
+                    } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
+                        block.setType(Material.AIR); // Set air
 
-                    powerupManager.registerLocation(new Location(world, x + 0.5, 71, z + 0.5)); // Register booster location
+                        powerupManager.registerLocation(new Location(world, x + 0.5, y, z + 0.5)); // Register booster location
+                    }
                 }
-            }
-        }
+
         gameManager.getCoinManager().setGlobalCoins(globalCoins); // Set global coins
     }
 
