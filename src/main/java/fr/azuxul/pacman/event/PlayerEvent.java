@@ -3,16 +3,14 @@ package fr.azuxul.pacman.event;
 import fr.azuxul.pacman.CoinManager;
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
+import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
 import net.samagames.tools.ParticleEffect;
 import org.apache.commons.lang.math.RandomUtils;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -20,6 +18,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -47,6 +46,8 @@ public class PlayerEvent implements Listener {
         Player player = event.getPlayer();
 
         player.setGameMode(GameMode.ADVENTURE);
+        player.getInventory().clear();
+        player.getInventory().addItem(Utils.getRulesBook());
     }
 
     @EventHandler
@@ -172,7 +173,9 @@ public class PlayerEvent implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        event.setCancelled(true); // Cancel player interaction
+
+        if (!event.getItem().getType().equals(Material.WRITTEN_BOOK) && !(event.getAction().equals(Action.RIGHT_CLICK_BLOCK) || event.getAction().equals(Action.RIGHT_CLICK_AIR)))
+            event.setCancelled(true); // Cancel player interaction
     }
 
     @EventHandler
