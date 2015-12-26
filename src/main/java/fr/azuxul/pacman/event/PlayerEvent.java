@@ -9,10 +9,14 @@ import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
 import net.samagames.tools.ParticleEffect;
 import org.apache.commons.lang.math.RandomUtils;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,6 +29,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -110,8 +115,8 @@ public class PlayerEvent implements Listener {
 
         if (gameManager.getStatus().equals(Status.IN_GAME)) {
 
-            Player entity = event.getEntity();
-            PlayerPacMan playerPacMan = gameManager.getPlayer(entity.getUniqueId());
+            Player player = event.getEntity();
+            PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
             CoinManager coinManager = gameManager.getCoinManager();
 
             if (killer != null)
@@ -124,14 +129,24 @@ public class PlayerEvent implements Listener {
                 coins = (int) Math.round(playerCoins * 0.2); // Calculate percent of player coins
 
             playerPacMan.setGameCoins(playerCoins - coins);
-            World world = ((CraftWorld) entity.getWorld()).getHandle();
-            Location location = entity.getLocation();
+            World world = ((CraftWorld) player.getWorld()).getHandle();
+            Location location = player.getLocation();
             double x = location.getX(), y = location.getY(), z = location.getZ();
 
             if (coins > 0)
                 coinManager.spawnBigCoin(world, x, y, z, true, coins);
 
             ParticleEffect.FIREWORKS_SPARK.display(2.0f, 2.0f, 2.0f, 0.0f, 50, location, 50.0f);
+
+            Firework firework = (Firework) player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK);
+            FireworkMeta fireworkMeta = firework.getFireworkMeta();
+
+            FireworkEffect effect = FireworkEffect.builder().with(FireworkEffect.Type.STAR).trail(true).flicker(true).withColor(Color.ORANGE, Color.RED).withFade(Color.BLUE, Color.GREEN).build();
+
+            fireworkMeta.addEffect(effect);
+            fireworkMeta.setPower(2);
+
+            firework.setFireworkMeta(fireworkMeta);
 
             event.setDeathMessage("");
         }

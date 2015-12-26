@@ -10,10 +10,7 @@ import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
-import org.bukkit.GameMode;
-import org.bukkit.Instrument;
-import org.bukkit.Material;
-import org.bukkit.Note;
+import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -166,9 +163,10 @@ public class Coin extends EntityArmorStand {
     public void d(EntityHuman entityHuman) {
 
         Player player = (Player) entityHuman.getBukkitEntity();
+        Location playerLocation = player.getLocation();
         GameManager gameManager = PacMan.getGameManager();
         Status status = gameManager.getStatus();
-        double distanceAtCoin = this.getBukkitEntity().getLocation().distance(player.getLocation()); // Calculate distance
+        double distanceAtCoin = this.getBukkitEntity().getLocation().distance(playerLocation); // Calculate distance
 
         // If IN_GAME, player game mode is not to spectator, coin is alive and distance at coins is <= 0.65 or player has coins magnet booster
         if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR) && this.isAlive()) {
@@ -177,31 +175,44 @@ public class Coin extends EntityArmorStand {
 
             if (distanceAtCoin <= 0.65 || big) {
 
-                die(); // Kill coin
-
-                player.playNote(player.getLocation(), Instrument.PIANO, new Note(22));
-
-                playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_COINS) ? coinValue * 2 : coinValue)); // Add coin to player
-
-                // Send scoreboard to player
-                gameManager.getScoreboard().sendScoreboardToPlayer(player, status);
-
-                if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
-
-                    // Set global coins
-                    int globalCoins = gameManager.getCoinManager().getRemainingGlobalCoins() - coinValue;
-                    gameManager.getCoinManager().setRemainingGlobalCoins(globalCoins);
-                }
+                addCoinToPlayer(player, playerPacMan);
 
             } else if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.COINS_MAGNET)) {
 
-                Vector vector = player.getLocation().toVector().subtract(new Vector(locX, locY, locZ)).multiply(1.1);
-
-                setGravity(true);
-                getBukkitEntity().setVelocity(vector);
-                setGravity(false);
+                attractCoin(playerLocation);
             }
         }
+    }
+
+    private void addCoinToPlayer(Player player, PlayerPacMan playerPacMan) {
+
+        GameManager gameManager = PacMan.getGameManager();
+        Location playerLocation = player.getLocation();
+
+        die(); // Kill coin
+
+        player.playNote(playerLocation, Instrument.PIANO, new Note(22));
+
+        playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_COINS) ? coinValue * 2 : coinValue)); // Add coin to player
+
+        // Send scoreboard to player
+        gameManager.getScoreboard().sendScoreboardToPlayer(player, gameManager.getStatus());
+
+        if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
+
+            // Set global coins
+            int globalCoins = gameManager.getCoinManager().getRemainingGlobalCoins() - coinValue;
+            gameManager.getCoinManager().setRemainingGlobalCoins(globalCoins);
+        }
+    }
+
+    private void attractCoin(Location location) {
+
+        Vector vector = location.toVector().subtract(new Vector(locX, locY, locZ)).multiply(1.1);
+
+        setGravity(true);
+        getBukkitEntity().setVelocity(vector);
+        setGravity(false);
     }
 
     @Override
