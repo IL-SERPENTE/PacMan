@@ -107,19 +107,21 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
         Player player = getPlayerIfOnline();
 
-        if (boosterRemainingTime >= 0 && player != null) {
+        if (boosterRemainingTime >= 0 && activeBooster != null) {
 
             boosterRemainingTime--;
             player.setLevel(boosterRemainingTime);
             if (activeBooster.equals(PowerupEffectType.SPEED))
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 90, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 40, 1), true);
+            else if (activeBooster.equals(PowerupEffectType.JUMP_BOOST))
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 40, 2), true);
             if (boosterRemainingTime < 0)
                 activeBooster = null;
         }
 
         if (invulnerableRemainingTime >= 0 && player != null) {
             invulnerableRemainingTime--;
-            getPlayerIfOnline().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 20 * (invulnerableRemainingTime + 1), 0, true, true));
+            getPlayerIfOnline().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 40, 0, true, true), true);
         }
     }
 

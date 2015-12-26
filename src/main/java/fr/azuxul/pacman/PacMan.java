@@ -3,6 +3,7 @@ package fr.azuxul.pacman;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.powerup.BasicPowerup;
+import fr.azuxul.pacman.powerup.PowerupBlindness;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import fr.azuxul.pacman.powerup.PowerupSwap;
 import net.minecraft.server.v1_8_R3.EntityTypes;
@@ -88,9 +89,11 @@ public class PacMan extends JavaPlugin {
 
         // Register powerups
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, 10));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, 10));
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_COINS, 8));
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.COINS_MAGNET, 10));
         powerupManager.registerPowerup(new PowerupSwap());
+        powerupManager.registerPowerup(new PowerupBlindness());
 
         powerupManager.setInverseFrequency(230); // Set spawn frequency
     }

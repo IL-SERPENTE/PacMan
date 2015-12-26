@@ -12,6 +12,7 @@ import org.bukkit.Material;
 public enum PowerupEffectType {
 
     SPEED(ChatColor.AQUA + "Speed", Material.FEATHER, 20),
+    JUMP_BOOST(ChatColor.GREEN + "Sauts améliorés", Material.RABBIT_FOOT, 20),
     DOUBLE_COINS(ChatColor.YELLOW + "Double coins", Material.GOLD_BLOCK, 15),
     COINS_MAGNET(ChatColor.LIGHT_PURPLE + "Coin magnet", Material.EYE_OF_ENDER, 15);
 
