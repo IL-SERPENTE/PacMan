@@ -60,6 +60,38 @@ public class GameManager extends Game<PlayerPacMan> {
     }
 
     /**
+     * Get list of winners
+     *
+     * @param playerPacManList players
+     * @return winners list
+     */
+    private static List<PlayerPacMan> getWinners(List<PlayerPacMan> playerPacManList) {
+
+        List<PlayerPacMan> winners = new ArrayList<>();
+
+        // Sort playerPacManList
+        Collections.sort(playerPacManList);
+
+        int playerPacManListSize = playerPacManList.size();
+
+        // Get winners
+        for (int i = 1; i <= 3; i++) {
+            if (winners.size() >= playerPacManListSize)
+                break;
+
+            PlayerPacMan playerPacMan = playerPacManList.get(playerPacManListSize - i);
+
+            if (playerPacMan.getPlayerIfOnline() != null)
+                winners.add(playerPacMan);
+
+        }
+
+        Collections.sort(winners);
+
+        return winners;
+    }
+
+    /**
      * Get spawn platform location
      *
      * @return spawn location
@@ -238,37 +270,5 @@ public class GameManager extends Game<PlayerPacMan> {
         }
 
         this.handleGameEnd();
-    }
-
-    /**
-     * Get list of winners
-     *
-     * @param playerPacManList players
-     * @return winners list
-     */
-    private List<PlayerPacMan> getWinners(List<PlayerPacMan> playerPacManList) {
-
-        List<PlayerPacMan> winners = new ArrayList<>();
-
-        // Sort playerPacManList
-        Collections.sort(playerPacManList);
-
-        int playerPacManListSize = playerPacManList.size();
-
-        // Get winners
-        for (int i = 1; i <= 3; i++) {
-            if (winners.size() >= playerPacManListSize)
-                break;
-
-            PlayerPacMan playerPacMan = playerPacManList.get(playerPacManListSize - i);
-
-            if (playerPacMan.getPlayerIfOnline() != null)
-                winners.add(playerPacMan);
-
-        }
-
-        Collections.sort(winners);
-
-        return winners;
     }
 }

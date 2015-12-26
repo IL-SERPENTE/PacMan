@@ -20,11 +20,10 @@ import java.util.Set;
  */
 public class ScoreboardPacMan {
 
+    private static final String TEAM_NAME = "global";
     private final GameManager gameManager;
     private final ScoreboardManager scoreboardManager;
     private final String displayName;
-
-    private final String TEAM_NAME = "global";
 
     public ScoreboardPacMan(String displayName, GameManager gameManager) {
         this.gameManager = gameManager; // Set gameManager
@@ -67,13 +66,13 @@ public class ScoreboardPacMan {
                 generateGlobalTeam(scoreboard);
         }
 
-        String OBJECTIVE_NAME = "pacManObjective";
-        objective = scoreboard.getObjective(OBJECTIVE_NAME);
+        final String objectiveName = "pacManObjective";
+        objective = scoreboard.getObjective(objectiveName);
 
         if (objective != null)
             objective.unregister();
 
-        objective = scoreboard.registerNewObjective(OBJECTIVE_NAME, "dummy"); // Register new objective
+        objective = scoreboard.registerNewObjective(objectiveName, "dummy"); // Register new objective
         int score = 0;
 
         List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();

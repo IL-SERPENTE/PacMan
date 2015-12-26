@@ -35,6 +35,75 @@ public class PacMan extends JavaPlugin {
         return gameManager;
     }
 
+    /**
+     * Initialize powerup manager
+     * Registry powerups
+     * Set spawn frequency
+     */
+    private static void powerupInitialisation() {
+
+        PowerupManager powerupManager = gameManager.getPowerupManager();
+        int spawnFrequency = SamaGamesAPI.get().getGameManager().getGameProperties().getOption("powerup-frequency", new JsonPrimitive("230")).getAsInt();
+
+        // Register powerups
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, "speed"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, "jump-boost"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_COINS, "double-coins"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.COINS_MAGNET, "coins-magnet"));
+        powerupManager.registerPowerup(new PowerupSwap());
+        powerupManager.registerPowerup(new PowerupBlindness());
+
+        powerupManager.setInverseFrequency(spawnFrequency); // Set spawn frequency
+    }
+
+    /**
+     * Initialise the map :
+     * Replace gold block with coins
+     */
+    private static void mapInitialisation() {
+
+        PowerupManager powerupManager = gameManager.getPowerupManager();
+        CoinManager coinManager = gameManager.getCoinManager();
+        Location baseLocation = gameManager.getMapCenter();
+        if (baseLocation == null)
+            return;
+        org.bukkit.World world = baseLocation.getWorld();
+        World worldNMS = ((CraftWorld) world).getHandle();
+
+
+        // Replace gold block with coins
+        int globalCoins = 0;
+        int xMin = baseLocation.getBlockX() - 100, xMax = baseLocation.getBlockX() + 100;
+        int yMin = baseLocation.getBlockY() - 20, yMax = baseLocation.getBlockY() + 70;
+        int zMin = baseLocation.getBlockZ() - 100, zMax = baseLocation.getBlockZ() + 100;
+
+        if (yMin <= 0)
+            yMin = 1;
+        if (yMax > 255)
+            yMax = 255;
+
+        for (int x = xMin; x <= xMax; x++)
+            for (int z = zMin; z <= zMax; z++)
+                for (int y = yMin; y <= yMax; y++) {
+                    Block block = world.getBlockAt(x, y, z); // Get block
+
+                    if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block
+                        block.setType(Material.AIR); // Set air
+
+                        // Spawn normal coin
+                        coinManager.spawnCoin(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
+                        globalCoins++;
+
+                    } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
+                        block.setType(Material.AIR); // Set air
+
+                        powerupManager.registerLocation(new Location(world, x + 0.5, y, z + 0.5)); // Register booster location
+                    }
+                }
+
+        gameManager.getCoinManager().setGlobalCoins(globalCoins); // Set global coins
+    }
+
     @Override
     public void onEnable() {
 
@@ -78,75 +147,6 @@ public class PacMan extends JavaPlugin {
     @Override
     public void onDisable() {
         gameManager.getCoinManager().killAllCoin();
-    }
-
-    /**
-     * Initialize powerup manager
-     * Registry powerups
-     * Set spawn frequency
-     */
-    private void powerupInitialisation() {
-
-        PowerupManager powerupManager = gameManager.getPowerupManager();
-        int spawnFrequency = SamaGamesAPI.get().getGameManager().getGameProperties().getOption("powerup-frequency", new JsonPrimitive("230")).getAsInt();
-
-        // Register powerups
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, "speed"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, "jump-boost"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_COINS, "double-coins"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.COINS_MAGNET, "coins-magnet"));
-        powerupManager.registerPowerup(new PowerupSwap());
-        powerupManager.registerPowerup(new PowerupBlindness());
-
-        powerupManager.setInverseFrequency(spawnFrequency); // Set spawn frequency
-    }
-
-    /**
-     * Initialise the map :
-     * Replace gold block with coins
-     */
-    private void mapInitialisation() {
-
-        PowerupManager powerupManager = gameManager.getPowerupManager();
-        CoinManager coinManager = gameManager.getCoinManager();
-        Location baseLocation = gameManager.getMapCenter();
-        if (baseLocation == null)
-            return;
-        org.bukkit.World world = baseLocation.getWorld();
-        World worldNMS = ((CraftWorld) world).getHandle();
-
-
-        // Replace gold block with coins
-        int globalCoins = 0;
-        int xMin = baseLocation.getBlockX() - 100, xMax = baseLocation.getBlockX() + 100;
-        int yMin = baseLocation.getBlockY() - 20, yMax = baseLocation.getBlockY() + 70;
-        int zMin = baseLocation.getBlockZ() - 100, zMax = baseLocation.getBlockZ() + 100;
-
-        if (yMin <= 0)
-            yMin = 1;
-        if (yMax > 255)
-            yMax = 255;
-
-        for (int x = xMin; x <= xMax; x++)
-            for (int z = zMin; z <= zMax; z++)
-                for (int y = yMin; y <= yMax; y++) {
-                    Block block = world.getBlockAt(x, y, z); // Get block
-
-                    if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block
-                        block.setType(Material.AIR); // Set air
-
-                        // Spawn normal coin
-                        coinManager.spawnCoin(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
-                        globalCoins++;
-
-                    } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
-                        block.setType(Material.AIR); // Set air
-
-                        powerupManager.registerLocation(new Location(world, x + 0.5, y, z + 0.5)); // Register booster location
-                    }
-                }
-
-        gameManager.getCoinManager().setGlobalCoins(globalCoins); // Set global coins
     }
 
     /**
