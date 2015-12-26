@@ -2,6 +2,7 @@ package fr.azuxul.pacman.powerup;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
+import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.tools.powerups.Powerup;
 import org.bukkit.ChatColor;
@@ -20,7 +21,13 @@ import org.bukkit.potion.PotionEffectType;
 public class PowerupBlindness implements Powerup {
 
     private final ItemStack icon = new ItemStack(Material.INK_SACK);
+    private final int chance = Utils.getChanceForPowerup("blindness");
 
+    /**
+     * When player pickup booster
+     *
+     * @param player pickup player
+     */
     @Override
     public void onPickup(Player player) {
 
@@ -37,21 +44,41 @@ public class PowerupBlindness implements Powerup {
         gameManager.getServer().broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.BLACK + " vient de lancer de la poudre aveuglante !");
     }
 
+    /**
+     * Return name of powerup
+     *
+     * @return "Poudre aveuglante"
+     */
     @Override
     public String getName() {
         return ChatColor.DARK_GRAY + "Poudre aveuglante";
     }
 
+    /**
+     * Return used item stack for icon
+     *
+     * @return Ink sack
+     */
     @Override
     public ItemStack getIcon() {
         return icon;
     }
 
+    /**
+     * Return chance of spawn
+     *
+     * @return chance of spawn in game.json
+     */
     @Override
     public double getWeight() {
-        return 9;
+        return chance;
     }
 
+    /**
+     * Return is special
+     *
+     * @return true
+     */
     @Override
     public boolean isSpecial() {
         return false;

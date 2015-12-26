@@ -2,6 +2,7 @@ package fr.azuxul.pacman.powerup;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
+import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.tools.powerups.Powerup;
 import org.bukkit.entity.Player;
@@ -18,10 +19,10 @@ public class BasicPowerup implements Powerup {
     private final PowerupEffectType type;
     private final double chance;
 
-    public BasicPowerup(PowerupEffectType type, double chance) {
+    public BasicPowerup(PowerupEffectType type, String jsonIndex) {
 
         this.type = type;
-        this.chance = chance;
+        chance = Utils.getChanceForPowerup(jsonIndex);
     }
 
     /**

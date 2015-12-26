@@ -1,5 +1,6 @@
 package fr.azuxul.pacman;
 
+import com.google.gson.JsonPrimitive;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.powerup.BasicPowerup;
@@ -58,9 +59,10 @@ public class PacMan extends JavaPlugin {
         // Kick players
         getServer().getOnlinePlayers().forEach(player -> player.kickPlayer(""));
 
-        org.bukkit.World world = getServer().getWorlds().get(0);
+        Location spawn = gameManager.getSpawn();
+        org.bukkit.World world = spawn.getWorld();
 
-        world.setSpawnLocation(0, 73, 0); // Set spawn location
+        world.setSpawnLocation(spawn.getBlockX(), spawn.getBlockY() + 3, spawn.getBlockZ()); // Set spawn location
         world.setDifficulty(Difficulty.NORMAL); // Set difficulty
         world.setGameRuleValue("doMobSpawning", "false"); // Set doMobSpawning game rule
         world.setGameRuleValue("keepInventory", "true"); // Set keepInventory game rule
@@ -86,16 +88,17 @@ public class PacMan extends JavaPlugin {
     private void powerupInitialisation() {
 
         PowerupManager powerupManager = gameManager.getPowerupManager();
+        int spawnFrequency = SamaGamesAPI.get().getGameManager().getGameProperties().getOption("powerup-frequency", new JsonPrimitive("230")).getAsInt();
 
         // Register powerups
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, 10));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, 10));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_COINS, 8));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.COINS_MAGNET, 10));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, "speed"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, "jump-boost"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_COINS, "double-coins"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.COINS_MAGNET, "coins-magnet"));
         powerupManager.registerPowerup(new PowerupSwap());
         powerupManager.registerPowerup(new PowerupBlindness());
 
-        powerupManager.setInverseFrequency(230); // Set spawn frequency
+        powerupManager.setInverseFrequency(spawnFrequency); // Set spawn frequency
     }
 
     /**
@@ -104,16 +107,29 @@ public class PacMan extends JavaPlugin {
      */
     private void mapInitialisation() {
 
-        org.bukkit.World world = getServer().getWorlds().get(0);
-        World worldNMS = ((CraftWorld) world).getHandle();
         PowerupManager powerupManager = gameManager.getPowerupManager();
         CoinManager coinManager = gameManager.getCoinManager();
+        Location baseLocation = gameManager.getMapCenter();
+        if (baseLocation == null)
+            return;
+        org.bukkit.World world = baseLocation.getWorld();
+        World worldNMS = ((CraftWorld) world).getHandle();
+
 
         // Replace gold block with coins
         int globalCoins = 0;
-        for (int x = -100; x <= 100; x++)
-            for (int z = -100; z <= 100; z++)
-                for (int y = 1; y <= 200; y++) {
+        int xMin = baseLocation.getBlockX() - 100, xMax = baseLocation.getBlockX() + 100;
+        int yMin = baseLocation.getBlockY() - 20, yMax = baseLocation.getBlockY() + 70;
+        int zMin = baseLocation.getBlockZ() - 100, zMax = baseLocation.getBlockZ() + 100;
+
+        if (yMin <= 0)
+            yMin = 1;
+        if (yMax > 255)
+            yMax = 255;
+
+        for (int x = xMin; x <= xMax; x++)
+            for (int z = zMin; z <= zMax; z++)
+                for (int y = yMin; y <= yMax; y++) {
                     Block block = world.getBlockAt(x, y, z); // Get block
 
                     if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block

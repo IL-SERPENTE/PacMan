@@ -2,6 +2,7 @@ package fr.azuxul.pacman.powerup;
 
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
+import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.tools.powerups.Powerup;
 import org.apache.commons.lang.math.RandomUtils;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class PowerupSwap implements Powerup {
 
     private final ItemStack icon = new ItemStack(Material.ENDER_PEARL);
+    private final int chance = Utils.getChanceForPowerup("swap");
 
     /**
      * When player pickup booster
@@ -80,11 +82,11 @@ public class PowerupSwap implements Powerup {
     /**
      * Return chance of spawn
      *
-     * @return 5
+     * @return chance of spawn in game.json
      */
     @Override
     public double getWeight() {
-        return 5;
+        return chance;
     }
 
     /**

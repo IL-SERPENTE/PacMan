@@ -1,0 +1,19 @@
+{
+  "map-name": "default",
+  "min-slots": 8,
+  "max-slots": 18,
+  "options": {
+    "wating-lobby": "world, 0, 90, 0, 0, 0",
+    "map-center": "world, 0, 70, 0, 0, 0",
+    "powerup-frequency": 230,
+    "powerup-chance": {
+      "swap": 5,
+      "blindness": 9,
+      "speed": 10,
+      "jump-boost": 10,
+      "double-coins": 8,
+      "coins-magnet": 10
+    },
+    "timer": 5
+  }
+}

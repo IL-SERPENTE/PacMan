@@ -1,10 +1,13 @@
 package fr.azuxul.pacman;
 
+import com.google.gson.JsonPrimitive;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.scoreboard.ScoreboardPacMan;
 import fr.azuxul.pacman.timer.TimerPacMan;
+import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.Game;
 import net.samagames.api.games.themachine.messages.ITemplateManager;
+import net.samagames.tools.LocationUtils;
 import net.samagames.tools.powerups.PowerupManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -33,6 +36,8 @@ public class GameManager extends Game<PlayerPacMan> {
     private final ScoreboardPacMan scoreboard;
     private final PowerupManager powerupManager;
     private final CoinManager coinManager;
+    private final Location spawn;
+    private final Location mapCenter;
 
     /**
      * Class constructor
@@ -50,6 +55,26 @@ public class GameManager extends Game<PlayerPacMan> {
         this.timer = new TimerPacMan(this);
         this.powerupManager = new PowerupManager(plugin);
         this.coinManager = new CoinManager(this);
+        this.spawn = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getOption("wating-lobby", new JsonPrimitive("world, 0, 90, 0, 0, 0")).getAsString());
+        this.mapCenter = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getOption("map-center", new JsonPrimitive("world, 0, 70, 0, 0, 0")).getAsString());
+    }
+
+    /**
+     * Get spawn platform location
+     *
+     * @return spawn location
+     */
+    public Location getSpawn() {
+        return spawn;
+    }
+
+    /**
+     * Get map center location
+     *
+     * @return map center location
+     */
+    public Location getMapCenter() {
+        return mapCenter;
     }
 
     /**
@@ -128,7 +153,7 @@ public class GameManager extends Game<PlayerPacMan> {
 
         super.startGame();
 
-        Location spawn = new Location(getServer().getWorlds().get(0), 0, 78, 0);
+        Location spawn = mapCenter.add(0, 5, 0);
         ItemStack woodenSword = new ItemStack(Material.WOOD_SWORD);
         ItemMeta swordMeta = woodenSword.getItemMeta();
 
