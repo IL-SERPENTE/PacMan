@@ -77,7 +77,7 @@ public class PowerupBlindness implements Powerup {
     /**
      * Return is special
      *
-     * @return true
+     * @return false
      */
     @Override
     public boolean isSpecial() {
