@@ -11,6 +11,9 @@ import net.samagames.api.games.IGameProperties;
  */
 public class Utils {
 
+    private Utils() {
+    }
+
     public static int getChanceForPowerup(String powerupJsonName) {
 
         IGameProperties gameProperties = SamaGamesAPI.get().getGameManager().getGameProperties();

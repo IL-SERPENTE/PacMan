@@ -153,7 +153,8 @@ public class GameManager extends Game<PlayerPacMan> {
 
         super.startGame();
 
-        Location spawn = mapCenter.add(0, 5, 0);
+        Location spawn = mapCenter;
+        spawn.add(0, 5, 0);
         ItemStack woodenSword = new ItemStack(Material.WOOD_SWORD);
         ItemMeta swordMeta = woodenSword.getItemMeta();
 
