@@ -70,7 +70,6 @@ public class PacMan extends JavaPlugin {
         org.bukkit.World world = baseLocation.getWorld();
         World worldNMS = ((CraftWorld) world).getHandle();
 
-
         // Replace gold block with coins
         int globalCoins = 0;
         int xMin = baseLocation.getBlockX() - 100, xMax = baseLocation.getBlockX() + 100;
@@ -135,6 +134,7 @@ public class PacMan extends JavaPlugin {
         world.setDifficulty(Difficulty.NORMAL); // Set difficulty
         world.setGameRuleValue("doMobSpawning", "false"); // Set doMobSpawning game rule
         world.setGameRuleValue("keepInventory", "true"); // Set keepInventory game rule
+        world.setGameRuleValue("reducedDebugInfo", "true"); // Reduce debug info (Mask location)
         world.setStorm(false); // Clear storm
         world.setThundering(false); // Clear weather
         world.setThunderDuration(0); // Clear weather

@@ -163,6 +163,7 @@ public class PlayerEvent implements Listener {
         if (gameManager.getStatus().equals(Status.IN_GAME)) {
             playerPacMan.setInvulnerableTime(5);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
+            player.teleport(gameManager.getMapCenter().add(0, 5, 0));
         }
     }
 
