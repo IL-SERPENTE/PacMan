@@ -32,8 +32,6 @@ public class TimerPacMan implements Runnable {
 
     /**
      * When is run, timer decrement second if is started
-     * else if minimum player number are reached, start
-     * timer before game start
      */
     @Override
     public void run() {
