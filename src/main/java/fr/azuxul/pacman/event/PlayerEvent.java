@@ -23,10 +23,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
@@ -188,6 +185,19 @@ public class PlayerEvent implements Listener {
 
         if (event.toWeatherState()) // If is sunny
             event.setCancelled(true); // Cancel weather change
+    }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        event.setCancelled(true); // Cancel player drop item
+    }
+
+    @EventHandler
+    public void onPlayerEnterPortal(PlayerPortalEvent event) {
+
+        event.setCancelled(true);
+
+
     }
 
 }
