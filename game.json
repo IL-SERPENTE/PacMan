@@ -14,6 +14,22 @@
       "double-coins": 8,
       "coins-magnet": 10
     },
+    "portals": [
+      {
+        "name": "portal0",
+        "location": "world, 0, 71, 24, 180, 0",
+        "linkedPortals": [
+          "portal1"
+        ]
+      },
+      {
+        "name": "portal1",
+        "location": "world, 0, 71, -24, 0, 0",
+        "linkedPortals": [
+          "portal0"
+        ]
+      }
+    ],
     "timer": 5
   }
 }

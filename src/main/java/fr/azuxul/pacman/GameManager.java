@@ -2,6 +2,7 @@ package fr.azuxul.pacman;
 
 import com.google.gson.JsonPrimitive;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import fr.azuxul.pacman.portal.PortalManager;
 import fr.azuxul.pacman.scoreboard.ScoreboardPacMan;
 import fr.azuxul.pacman.timer.TimerPacMan;
 import net.samagames.api.SamaGamesAPI;
@@ -36,6 +37,7 @@ public class GameManager extends Game<PlayerPacMan> {
     private final ScoreboardPacMan scoreboard;
     private final PowerupManager powerupManager;
     private final CoinManager coinManager;
+    private final PortalManager portalManager;
     private final Location spawn;
     private final Location mapCenter;
 
@@ -55,6 +57,7 @@ public class GameManager extends Game<PlayerPacMan> {
         this.timer = new TimerPacMan(this);
         this.powerupManager = new PowerupManager(plugin);
         this.coinManager = new CoinManager(this);
+        this.portalManager = new PortalManager(this);
         this.spawn = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getOption("wating-lobby", new JsonPrimitive("world, 0, 90, 0, 0, 0")).getAsString());
         this.mapCenter = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getOption("map-center", new JsonPrimitive("world, 0, 70, 0, 0, 0")).getAsString());
     }
@@ -89,6 +92,15 @@ public class GameManager extends Game<PlayerPacMan> {
         Collections.sort(winners);
 
         return winners;
+    }
+
+    /**
+     * Get portal manager
+     *
+     * @return portalManager
+     */
+    public PortalManager getPortalManager() {
+        return portalManager;
     }
 
     /**
