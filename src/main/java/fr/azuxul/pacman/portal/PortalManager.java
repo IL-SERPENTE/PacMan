@@ -115,10 +115,11 @@ public class PortalManager {
         Portal result = null;
 
         for (Portal portal : portals)
-            if (portal.getLocation().distance(location) <= 0) {
+            if (portal.getLocation().distance(location) <= 5) {
                 result = portal;
                 break;
             }
+
 
         return result;
     }

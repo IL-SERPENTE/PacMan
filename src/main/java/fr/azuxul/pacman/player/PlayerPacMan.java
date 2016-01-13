@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  */
 public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
-    private int gameCoins, boosterRemainingTime, invulnerableRemainingTime;
+    private int gameCoins, boosterRemainingTime, invulnerableRemainingTime, portalTicks;
     private PowerupEffectType activeBooster;
 
     public PlayerPacMan(Player player) {
@@ -100,6 +100,24 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
     }
 
     /**
+     * Get remaining before player can't use portals
+     *
+     * @return portalTick
+     */
+    public int getPortalTicks() {
+        return portalTicks;
+    }
+
+    /**
+     * Set portal ticks
+     *
+     * @param portalTicks new portalTicks
+     */
+    public void setPortalTicks(int portalTicks) {
+        this.portalTicks = portalTicks;
+    }
+
+    /**
      * Update player stats (active effects)
      * 1 update/s
      */
@@ -123,6 +141,9 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
             invulnerableRemainingTime--;
             getPlayerIfOnline().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 40, 0, true, true), true);
         }
+
+        if (portalTicks > 0)
+            portalTicks--;
     }
 
     @Override

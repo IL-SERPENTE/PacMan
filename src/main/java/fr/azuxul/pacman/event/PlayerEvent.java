@@ -5,12 +5,14 @@ import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
+import fr.azuxul.pacman.portal.Portal;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
 import net.samagames.tools.ParticleEffect;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
@@ -52,6 +54,7 @@ public class PlayerEvent implements Listener {
 
         GameManager gameManager = PacMan.getGameManager();
         Player player = event.getPlayer();
+        Block block = event.getFrom().getBlock();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
         if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.SPEED)) {
@@ -68,6 +71,15 @@ public class PlayerEvent implements Listener {
                 location.add(0, 0.1, 0);
                 ParticleEffect.REDSTONE.display(color, location, 45D);
             }
+        }
+
+        if (gameManager.getStatus().equals(Status.IN_GAME) && block.getType().equals(Material.PORTAL)) {
+
+            Portal portal = gameManager.getPortalManager().getPortalAtLocation(event.getFrom());
+
+            if (portal != null)
+                portal.teleportPlayer(player);
+
         }
     }
 
@@ -194,10 +206,7 @@ public class PlayerEvent implements Listener {
 
     @EventHandler
     public void onPlayerEnterPortal(PlayerPortalEvent event) {
-
         event.setCancelled(true);
-
-
     }
 
 }

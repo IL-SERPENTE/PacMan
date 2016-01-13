@@ -158,6 +158,8 @@ public class PacMan extends JavaPlugin {
      */
     private void registerEntity(String name, int id, Class clazz) {
 
+        // Exception when plugin are reloaded
+
         try {
             Method method = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, int.class); // Get method for register new entity
             method.setAccessible(true); // Set accessible
