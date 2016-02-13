@@ -87,7 +87,7 @@ public class ScoreboardPacMan {
         try {
             objective.getScore(ChatColor.GRAY + String.format("%02d:%02d", gameManager.getTimer().getMinutes(), gameManager.getTimer().getSeconds())).setScore(score);
         } catch (Exception e) {
-            gameManager.getLogger().info(String.valueOf(e));
+            gameManager.getServer().getLogger().info(String.valueOf(e));
         }
 
         score++;
@@ -127,7 +127,7 @@ public class ScoreboardPacMan {
                 score++;
                 objective.getScore(ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getGameCoins()).setScore(score);
             } catch (NullPointerException e) {
-                gameManager.getLogger().warning(String.valueOf(e));
+                gameManager.getServer().getLogger().warning(String.valueOf(e));
             }
         }
 

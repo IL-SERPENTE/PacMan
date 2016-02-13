@@ -20,7 +20,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * GameManager for PacMan plugin
@@ -31,7 +30,6 @@ import java.util.logging.Logger;
 public class GameManager extends Game<PlayerPacMan> {
 
     private final Server server;
-    private final Logger logger;
     private final Plugin plugin;
     private final TimerPacMan timer;
     private final ScoreboardPacMan scoreboard;
@@ -51,7 +49,6 @@ public class GameManager extends Game<PlayerPacMan> {
         super("pacman", "PacMan", "", PlayerPacMan.class);
 
         this.server = plugin.getServer();
-        this.logger = plugin.getLogger();
         this.plugin = plugin;
         this.scoreboard = new ScoreboardPacMan(ChatColor.YELLOW + "PacMan", this);
         this.timer = new TimerPacMan(this);
@@ -155,15 +152,6 @@ public class GameManager extends Game<PlayerPacMan> {
      */
     public Server getServer() {
         return server;
-    }
-
-    /**
-     * Get logger of plugin
-     *
-     * @return logger
-     */
-    public Logger getLogger() {
-        return logger;
     }
 
     /**
