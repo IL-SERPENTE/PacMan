@@ -79,7 +79,7 @@ public class GameManager extends Game<PlayerPacMan> {
 
         // Get winners
         for (int i = 1; i <= 3; i++) {
-            if (winners.size() >= playerPacManListSize)
+            if (playerPacManListSize <= 0 || winners.size() >= playerPacManListSize || playerPacManListSize - i >= playerPacManListSize || playerPacManListSize - i < 0)
                 break;
 
             PlayerPacMan playerPacMan = playerPacManList.get(playerPacManListSize - i);

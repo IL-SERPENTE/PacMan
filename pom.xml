@@ -29,7 +29,7 @@
                                 <configuration>
                                     <target>
                                         <copy file="${project.build.directory}\${project.name}-${project.version}.jar"
-                                              tofile="C:\Users\azuxu\Documents\DebugBukkitServer\plugins\${project.name}-lasted.jar"/>
+                                              tofile="E:\Dev\Samagames\Servers\LocalPacMan\plugins\${project.name}-lasted.jar"/>
                                     </target>
                                 </configuration>
                                 <goals>

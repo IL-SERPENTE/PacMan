@@ -41,7 +41,7 @@ public class PowerupSwap implements Powerup {
         List<PlayerPacMan> swappablePlayers = playerPacManList.stream().filter(playerFilter -> !playerFilter.equals(playerPacMan) && playerFilter.getPlayerIfOnline() != null).collect(Collectors.toList());
 
         if (swappablePlayers.isEmpty()) {
-            player.sendMessage(ChatColor.RED + "Il n'y pas de joueur avec qui swap !");
+            player.sendMessage(gameManager.getCoherenceMachine().getGameTag() + " " + ChatColor.RED + "Il n'y pas de joueur avec qui swap !");
         } else {
 
             PlayerPacMan playerSwapPacMan = swappablePlayers.get(RandomUtils.nextInt(swappablePlayers.size())); // Get random player
@@ -54,8 +54,8 @@ public class PowerupSwap implements Powerup {
             player.teleport(locationOfPlayerSwap);
             playerSwap.teleport(locationOfPlayer);
 
-            playerSwap.sendMessage(ChatColor.GREEN + "Vous avez été swap avec un autre joueur");
-            player.sendMessage(ChatColor.GREEN + "Vous avez été swap avec un autre joueur");
+            playerSwap.sendMessage(gameManager.getCoherenceMachine().getGameTag() + " " + ChatColor.GREEN + "Vous avez été swap avec un autre joueur");
+            player.sendMessage(gameManager.getCoherenceMachine().getGameTag() + " " + ChatColor.GREEN + "Vous avez été swap avec un autre joueur");
         }
     }
 

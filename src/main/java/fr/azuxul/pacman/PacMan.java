@@ -116,7 +116,7 @@ public class PacMan extends JavaPlugin {
         samaGamesAPI.getGameManager().getGameProperties(); // Get properties
 
         // Register events
-        getServer().getPluginManager().registerEvents(new PlayerEvent(), this);
+        getServer().getPluginManager().registerEvents(new PlayerEvent(gameManager), this);
 
         // Register timer
         getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0L, 20L);

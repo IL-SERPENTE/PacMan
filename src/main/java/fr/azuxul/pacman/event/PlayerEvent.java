@@ -2,7 +2,6 @@ package fr.azuxul.pacman.event;
 
 import fr.azuxul.pacman.CoinManager;
 import fr.azuxul.pacman.GameManager;
-import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.portal.Portal;
@@ -39,6 +38,13 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class PlayerEvent implements Listener {
 
+    private GameManager gameManager;
+
+    public PlayerEvent(GameManager gameManager) {
+
+        this.gameManager = gameManager;
+    }
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
 
@@ -47,12 +53,13 @@ public class PlayerEvent implements Listener {
         player.setGameMode(GameMode.ADVENTURE);
         player.getInventory().clear();
         player.getInventory().addItem(Utils.getRulesBook());
+
+        player.teleport(gameManager.getSpawn());
     }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        GameManager gameManager = PacMan.getGameManager();
         Player player = event.getPlayer();
         Block block = event.getFrom().getBlock();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
@@ -86,7 +93,6 @@ public class PlayerEvent implements Listener {
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
 
-        GameManager gameManager = PacMan.getGameManager();
         Status status = gameManager.getStatus();
 
         if (!status.equals(Status.IN_GAME) || event.getEntity() instanceof ArmorStand || event.getCause().equals(EntityDamageEvent.DamageCause.FALL)) // If is not started
@@ -121,7 +127,6 @@ public class PlayerEvent implements Listener {
     public void onPlayerKillByPlayer(PlayerDeathEvent event) {
 
         Player killer = event.getEntity().getKiller();
-        GameManager gameManager = PacMan.getGameManager();
 
         if (gameManager.getStatus().equals(Status.IN_GAME)) {
 
@@ -166,7 +171,6 @@ public class PlayerEvent implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
 
         Player player = event.getPlayer();
-        GameManager gameManager = PacMan.getGameManager();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
         if (gameManager.getStatus().equals(Status.IN_GAME)) {

@@ -41,7 +41,7 @@ public class PowerupBlindness implements Powerup {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 120, 1));
         }
 
-        gameManager.getServer().broadcastMessage(ChatColor.GOLD + player.getName() + ChatColor.BLACK + " vient de lancer de la poudre aveuglante !");
+        gameManager.getServer().broadcastMessage(gameManager.getCoherenceMachine().getGameTag() + " " + ChatColor.GOLD + player.getName() + ChatColor.GRAY + " vient de lancer de la poudre aveuglante !");
     }
 
     /**
