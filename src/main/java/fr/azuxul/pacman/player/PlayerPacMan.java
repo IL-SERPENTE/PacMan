@@ -16,7 +16,11 @@ import javax.annotation.Nullable;
  */
 public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
-    private int gameCoins, boosterRemainingTime, invulnerableRemainingTime, portalTicks;
+    private int gameCoins;
+    private int boosterRemainingTime;
+    private int invulnerableRemainingTime;
+    private int portalTicks;
+    private int kills;
     private PowerupEffectType activeBooster;
 
     public PlayerPacMan(Player player) {
@@ -25,6 +29,25 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         boosterRemainingTime = -1;
         invulnerableRemainingTime = -1;
         gameCoins = 0;
+        kills = 0;
+    }
+
+    /**
+     * Get kills number
+     *
+     * @return kills
+     */
+    public int getKills() {
+        return kills;
+    }
+
+    /**
+     * Set kills number
+     *
+     * @param kills number
+     */
+    public void setKills(int kills) {
+        this.kills = kills;
     }
 
     /**
@@ -139,7 +162,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
         if (invulnerableRemainingTime >= 0 && player != null) {
             invulnerableRemainingTime--;
-            getPlayerIfOnline().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 40, 0, true, true), true);
+            getPlayerIfOnline().addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 30, 0, true, true), true);
         }
 
         if (portalTicks > 0)

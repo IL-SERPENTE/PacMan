@@ -20,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -104,6 +105,14 @@ public class PlayerEvent implements Listener {
             CoinManager coinManager = gameManager.getCoinManager();
             int coins = playerPacMan.getGameCoins(); // Get player coins
 
+            if (player.getLastDamageCause() instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager() instanceof Player) {
+
+                Player damager = (Player) ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager();
+                PlayerPacMan damgerPacMan = gameManager.getPlayer(damager.getUniqueId());
+
+                damgerPacMan.setInvulnerableTime(0);
+            }
+
             if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
                 event.setCancelled(true);
             } else if (coins > 0) {
@@ -134,8 +143,13 @@ public class PlayerEvent implements Listener {
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
             CoinManager coinManager = gameManager.getCoinManager();
 
-            if (killer != null)
+            if (killer != null) {
+                killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 30, 3, true));
                 killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
+
+                PlayerPacMan killerPacMan = gameManager.getPlayer(killer.getUniqueId());
+                killerPacMan.setKills(killerPacMan.getKills() + 1);
+            }
 
             int coins = 0;
             int playerCoins = playerPacMan.getGameCoins();
@@ -143,7 +157,9 @@ public class PlayerEvent implements Listener {
             if (playerPacMan.getGameCoins() > 0)
                 coins = (int) Math.round(playerCoins * 0.2); // Calculate percent of player coins
 
-            playerPacMan.setGameCoins(playerCoins - coins);
+            if (playerCoins - coins >= 0)
+                playerPacMan.setGameCoins(playerCoins - coins);
+
             World world = ((CraftWorld) player.getWorld()).getHandle();
             Location location = player.getLocation();
             double x = location.getX(), y = location.getY(), z = location.getZ();
@@ -174,7 +190,7 @@ public class PlayerEvent implements Listener {
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
         if (gameManager.getStatus().equals(Status.IN_GAME)) {
-            playerPacMan.setInvulnerableTime(5);
+            playerPacMan.setInvulnerableTime(15);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
         }
     }
