@@ -1,7 +1,11 @@
 package fr.azuxul.pacman.player;
 
+import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.samagames.api.games.GamePlayer;
+import org.apache.commons.lang.math.RandomUtils;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -167,6 +171,20 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
         if (portalTicks > 0)
             portalTicks--;
+    }
+
+    public void damage() {
+        for (int i = RandomUtils.nextInt(3); i >= 1; i--) {
+
+            coins--; // Decrement coins of player
+
+            Location location = getPlayerIfOnline().getLocation();
+
+            // Spawn coin
+            PacMan.getGameManager().getCoinManager().spawnCoin(((CraftWorld) location.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+
+            setGameCoins(coins); // Set player coins
+        }
     }
 
     @Override

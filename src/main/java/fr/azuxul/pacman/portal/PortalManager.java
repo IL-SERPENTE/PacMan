@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Portal manager
@@ -43,12 +42,15 @@ public class PortalManager {
 
         IGameProperties gameProperties = SamaGamesAPI.get().getGameManager().getGameProperties();
 
-        final String locationProperty = "location", linkedPortalsProperty = "linkedPortals";
+        final String locationProperty = "location";
+        final String linkedPortalsProperty = "linkedPortals";
 
         JsonArray portalsArray = new JsonArray();
 
-        JsonObject portal0 = new JsonObject(), portal1 = new JsonObject();
-        JsonArray portalLinked0 = new JsonArray(), portalLinked1 = new JsonArray();
+        JsonObject portal0 = new JsonObject();
+        JsonObject portal1 = new JsonObject();
+        JsonArray portalLinked0 = new JsonArray();
+        JsonArray portalLinked1 = new JsonArray();
 
         portalLinked1.add(new JsonPrimitive("portal0"));
         portalLinked0.add(new JsonPrimitive("portal1"));
@@ -102,8 +104,10 @@ public class PortalManager {
             Portal portal = entry.getKey();
             List<Portal> linkedPortals = portal.getLinkedPortals();
 
-            for (String name : entry.getValue())
-                linkedPortals.addAll(portalsList.stream().filter(p -> p.getName().equals(name)).map(p -> portal).collect(Collectors.toList()));
+            for (String name : entry.getValue()) {
+
+                portalsList.stream().filter(p -> p.getName().equals(name)).forEach(linkedPortals::add);
+            }
 
             portals.add(portal);
         }

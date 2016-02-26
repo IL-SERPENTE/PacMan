@@ -87,7 +87,6 @@ public class PlayerEvent implements Listener {
 
             if (portal != null)
                 portal.teleportPlayer(player);
-
         }
     }
 
@@ -102,7 +101,6 @@ public class PlayerEvent implements Listener {
 
             Player player = (Player) event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
-            CoinManager coinManager = gameManager.getCoinManager();
             int coins = playerPacMan.getGameCoins(); // Get player coins
 
             if (player.getLastDamageCause() instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager() instanceof Player) {
@@ -110,24 +108,14 @@ public class PlayerEvent implements Listener {
                 Player damager = (Player) ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager();
                 PlayerPacMan damgerPacMan = gameManager.getPlayer(damager.getUniqueId());
 
-                damgerPacMan.setInvulnerableTime(0);
+                damgerPacMan.setInvulnerableTime(-1);
             }
 
             if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
                 event.setCancelled(true);
             } else if (coins > 0) {
 
-                for (int i = RandomUtils.nextInt(3); i >= 1; i--) {
-
-                    coins--; // Decrement coins of player
-
-                    Location location = player.getLocation();
-
-                    // Spawn coin
-                    coinManager.spawnCoin(((CraftWorld) player.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
-
-                    playerPacMan.setGameCoins(coins); // Set player coins
-                }
+                playerPacMan.damage();
             }
         }
     }
