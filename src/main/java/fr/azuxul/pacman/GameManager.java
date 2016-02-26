@@ -235,21 +235,21 @@ public class GameManager extends Game<PlayerPacMan> {
                 percentOfCoins = playerPacMan.getGameCoins() * 100 / coinManager.getGlobalCoins(); // Calculate percent of player coins
                 int coins = percentOfCoins / 5; // Calculate coins for player
 
-                playerPacMan.addCoins(coins, percentOfCoins + "% des piéces récupérer");
+                playerPacMan.addCoins(coins, percentOfCoins + "% des piéces récupérée");
             }
 
             if (winners.contains(playerPacMan)) {
                 if (winners.indexOf(playerPacMan) == 0) {
-                    playerPacMan.addCoins(30, "Partie gagné");
-                    playerPacMan.addStars(2, "Partie gagné");
+                    playerPacMan.addCoins(30, "Partie gagnée");
+                    playerPacMan.addStars(2, "Partie gagnée");
                 } else {
-                    playerPacMan.addCoins(15, "Términé dans le classement");
-                    playerPacMan.addStars(1, "Términé dans le classement");
+                    playerPacMan.addCoins(15, "Terminé dans le classement");
+                    playerPacMan.addStars(1, "Terminé dans le classement");
                 }
             }
 
             if (percentOfCoins >= 35) {
-                playerPacMan.addStars(1, "Plus de 35% de coins récupéré");
+                playerPacMan.addStars(1, "Plus de 35% de piéces récupérée");
             }
         }
 

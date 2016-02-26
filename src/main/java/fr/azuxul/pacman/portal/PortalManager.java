@@ -115,16 +115,11 @@ public class PortalManager {
 
     public Portal getPortalAtLocation(Location location) {
 
-        Portal result = null;
-
         for (Portal portal : portals)
-            if (portal.getLocation().distance(location) <= 5) {
-                result = portal;
-                break;
-            }
+            if (portal.getLocation().distance(location) <= 5)
+                return portal;
 
-
-        return result;
+        return null;
     }
 
     public List<Portal> getPortals() {
