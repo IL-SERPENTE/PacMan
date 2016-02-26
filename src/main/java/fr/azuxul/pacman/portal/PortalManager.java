@@ -102,11 +102,10 @@ public class PortalManager {
         for (Map.Entry<Portal, List<String>> entry : portalMap.entrySet()) {
 
             Portal portal = entry.getKey();
-            List<Portal> linkedPortals = portal.getLinkedPortals();
 
             for (String name : entry.getValue()) {
 
-                portalsList.stream().filter(p -> p.getName().equals(name)).forEach(linkedPortals::add);
+                portalsList.stream().filter(p -> p.getName().equals(name)).forEach(portal.getLinkedPortals()::add);
             }
 
             portals.add(portal);
