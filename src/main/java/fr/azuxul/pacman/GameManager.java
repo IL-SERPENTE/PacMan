@@ -176,6 +176,15 @@ public class GameManager extends Game<PlayerPacMan> {
         return coinManager;
     }
 
+    @Override
+    public void handleLogout(Player player) {
+        super.handleLogout(player);
+
+        if (getInGamePlayers().size() - 1 <= 0) {
+            end();
+        }
+    }
+
     /**
      * Start the game
      * Init players
