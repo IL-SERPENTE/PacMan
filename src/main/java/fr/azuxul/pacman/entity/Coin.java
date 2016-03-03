@@ -4,14 +4,14 @@ import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
-import net.minecraft.server.v1_9_R1.EntityArmorStand;
-import net.minecraft.server.v1_9_R1.EntityHuman;
-import net.minecraft.server.v1_9_R1.NBTTagCompound;
-import net.minecraft.server.v1_9_R1.World;
+import net.minecraft.server.v1_8_R3.EntityArmorStand;
+import net.minecraft.server.v1_8_R3.EntityHuman;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_9_R1.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -24,8 +24,7 @@ import org.bukkit.util.Vector;
  */
 public class Coin extends EntityArmorStand {
 
-    private final boolean droopedByPlayer;
-    private final boolean big;
+    private final boolean droopedByPlayer, big;
     private final int coinValue;
 
     /**
@@ -59,7 +58,7 @@ public class Coin extends EntityArmorStand {
 
         f(nbtTagCompound); // Set nbtTagCompound
 
-        ((CraftArmorStand) getBukkitEntity()).setHelmet(new ItemStack(Material.GOLD_BLOCK)); // Set helmet
+        setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.GOLD_BLOCK))); // Set helmet
 
         if (coinDrooped) { // If is drooped by player
 
@@ -108,7 +107,7 @@ public class Coin extends EntityArmorStand {
 
         f(nbtTagCompound); // Set nbtTagCompound
 
-        ((CraftArmorStand) getBukkitEntity()).setHelmet(new ItemStack(Material.EMERALD_BLOCK)); // Set helmet
+        setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.EMERALD_BLOCK))); // Set helmet
 
         if (coinDrooped) { // If is drooped by player
 
