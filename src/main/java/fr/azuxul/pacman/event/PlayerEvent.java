@@ -1,6 +1,5 @@
 package fr.azuxul.pacman.event;
 
-import fr.azuxul.pacman.CoinManager;
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
@@ -129,10 +128,9 @@ public class PlayerEvent implements Listener {
 
             Player player = event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
-            CoinManager coinManager = gameManager.getCoinManager();
 
             if (killer != null) {
-                killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 30, 3, true));
+                killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 10, 255, true));
                 killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
 
                 PlayerPacMan killerPacMan = gameManager.getPlayer(killer.getUniqueId());
@@ -142,7 +140,7 @@ public class PlayerEvent implements Listener {
             int coins = 0;
             int playerCoins = playerPacMan.getGameCoins();
 
-            if (playerPacMan.getGameCoins() > 0)
+            if (playerPacMan.getGameCoins() > 4)
                 coins = (int) Math.round(playerCoins * 0.2); // Calculate percent of player coins
 
             if (playerCoins - coins >= 0)
@@ -150,10 +148,12 @@ public class PlayerEvent implements Listener {
 
             World world = ((CraftWorld) player.getWorld()).getHandle();
             Location location = player.getLocation();
-            double x = location.getX(), y = location.getY(), z = location.getZ();
+            double x = location.getX();
+            double y = location.getY();
+            double z = location.getZ();
 
             if (coins > 0)
-                coinManager.spawnBigCoin(world, x, y, z, true, coins);
+                gameManager.getCoinManager().spawnBigCoin(world, x, y, z, true, coins);
 
             ParticleEffect.FIREWORKS_SPARK.display(2.0f, 2.0f, 2.0f, 0.0f, 50, location, 50.0f);
 

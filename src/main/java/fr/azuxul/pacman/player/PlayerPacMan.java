@@ -174,16 +174,16 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
     }
 
     public void damage() {
-        for (int i = RandomUtils.nextInt(3); i >= 1; i--) {
+        for (int i = RandomUtils.nextInt(3); i >= 1 && gameCoins > 0; i--) {
 
-            coins--; // Decrement coins of player
+            gameCoins--; // Decrement coins of player
 
             Location location = getPlayerIfOnline().getLocation();
 
             // Spawn coin
             PacMan.getGameManager().getCoinManager().spawnCoin(((CraftWorld) location.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
 
-            setGameCoins(coins); // Set player coins
+            setGameCoins(gameCoins); // Set player coins
         }
     }
 
