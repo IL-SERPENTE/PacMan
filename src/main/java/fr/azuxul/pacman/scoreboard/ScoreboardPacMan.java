@@ -109,7 +109,7 @@ public class ScoreboardPacMan {
 
         // Display coins number
         score++;
-        objective.getScore("Coins: " + ChatColor.GOLD + playerPacMan.getGameCoins()).setScore(score);
+        objective.getScore("Pièces: " + ChatColor.GOLD + playerPacMan.getGameCoins()).setScore(score);
 
         score++;
         objective.getScore("  ").setScore(score);
@@ -133,6 +133,9 @@ public class ScoreboardPacMan {
 
         score++;
         objective.getScore("Classement: ").setScore(score);
+
+        score++;
+        objective.getScore("    ").setScore(score);
 
         player.setScoreboard(scoreboard); // Send scoreboard to the player
     }
