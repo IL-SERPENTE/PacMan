@@ -1,6 +1,5 @@
 package fr.azuxul.pacman;
 
-import com.google.gson.JsonPrimitive;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.portal.PortalManager;
 import fr.azuxul.pacman.scoreboard.ScoreboardPacMan;
@@ -55,8 +54,8 @@ public class GameManager extends Game<PlayerPacMan> {
         this.powerupManager = new PowerupManager(plugin);
         this.coinManager = new CoinManager(this);
         this.portalManager = new PortalManager(this);
-        this.spawn = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getOption("wating-lobby", new JsonPrimitive("world, 0, 90, 0, 0, 0")).getAsString());
-        this.mapCenter = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getOption("map-center", new JsonPrimitive("world, 0, 70, 0, 0, 0")).getAsString());
+        this.spawn = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("wating-lobby").getAsString());
+        this.mapCenter = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("map-center").getAsString());
     }
 
     /**

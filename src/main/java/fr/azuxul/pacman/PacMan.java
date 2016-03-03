@@ -1,6 +1,5 @@
 package fr.azuxul.pacman;
 
-import com.google.gson.JsonPrimitive;
 import fr.azuxul.pacman.entity.Coin;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.powerup.BasicPowerup;
@@ -43,7 +42,7 @@ public class PacMan extends JavaPlugin {
     private static void powerupInitialisation() {
 
         PowerupManager powerupManager = gameManager.getPowerupManager();
-        int spawnFrequency = SamaGamesAPI.get().getGameManager().getGameProperties().getOption("powerup-frequency", new JsonPrimitive("230")).getAsInt();
+        int spawnFrequency = SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("powerup-frequency").getAsInt();
 
         // Register powerups
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, "speed"));

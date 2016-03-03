@@ -1,0 +1,30 @@
+{
+  "wating-lobby": "world, 0, 90, 0, 0, 0",
+  "map-center": "world, 0, 70, 0, 0, 0",
+  "powerup-frequency": 230,
+  "powerup-chance": {
+    "swap": 5,
+    "blindness": 9,
+    "speed": 10,
+    "jump-boost": 10,
+    "double-coins": 8,
+    "coins-magnet": 10
+  },
+  "portals": [
+    {
+      "name": "portal0",
+      "location": "world, 0, 71, 24, 180, 0",
+      "linkedPortals": [
+        "portal1"
+      ]
+    },
+    {
+      "name": "portal1",
+      "location": "world, 0, 71, -24, 0, 0",
+      "linkedPortals": [
+        "portal0"
+      ]
+    }
+  ],
+  "timer": 5
+}

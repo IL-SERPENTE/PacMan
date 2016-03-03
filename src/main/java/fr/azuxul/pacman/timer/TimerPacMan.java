@@ -1,6 +1,5 @@
 package fr.azuxul.pacman.timer;
 
-import com.google.gson.JsonPrimitive;
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.api.SamaGamesAPI;
@@ -17,7 +16,8 @@ public class TimerPacMan implements Runnable {
 
     private final GameManager gameManager;
     private final Server server;
-    private short seconds, minutes;
+    private short seconds;
+    private short minutes;
 
     /**
      * Class constructor
@@ -27,7 +27,7 @@ public class TimerPacMan implements Runnable {
     public TimerPacMan(GameManager gameManager) {
         this.gameManager = gameManager;
         this.server = gameManager.getServer();
-        this.minutes = SamaGamesAPI.get().getGameManager().getGameProperties().getOption("timer", new JsonPrimitive("5")).getAsShort();
+        this.minutes = SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("timer").getAsShort();
     }
 
     /**

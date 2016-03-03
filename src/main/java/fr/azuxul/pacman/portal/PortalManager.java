@@ -66,7 +66,7 @@ public class PortalManager {
         portalsArray.add(portal0);
         portalsArray.add(portal1);
 
-        JsonArray jsonPortals = gameProperties.getOption("portals", portalsArray).getAsJsonArray();
+        JsonArray jsonPortals = gameProperties.getConfigs().get("portals").getAsJsonArray();
 
         Map<Portal, List<String>> portalMap = new HashMap<>();
 
