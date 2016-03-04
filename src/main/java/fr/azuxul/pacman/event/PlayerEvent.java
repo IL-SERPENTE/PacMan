@@ -108,6 +108,7 @@ public class PlayerEvent implements Listener {
                 PlayerPacMan damgerPacMan = gameManager.getPlayer(damager.getUniqueId());
 
                 damgerPacMan.setInvulnerableTime(-1);
+                damager.sendMessage(gameManager.getCoherenceMachine().getGameTag() + ChatColor.GRAY + " Vous n'êtes plus invulnérable aux dégats.");
             }
 
             if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
