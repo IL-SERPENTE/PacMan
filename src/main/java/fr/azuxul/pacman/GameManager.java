@@ -37,6 +37,7 @@ public class GameManager extends Game<PlayerPacMan> {
     private final PortalManager portalManager;
     private final Location spawn;
     private final Location mapCenter;
+    private final List<Location> spawns;
 
     /**
      * Class constructor
@@ -56,6 +57,10 @@ public class GameManager extends Game<PlayerPacMan> {
         this.portalManager = new PortalManager(this);
         this.spawn = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("wating-lobby").getAsString());
         this.mapCenter = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("map-center").getAsString());
+        this.spawns = new ArrayList<>();
+
+        SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("spawn-locations").getAsJsonArray().forEach(location -> spawn.add(LocationUtils.str2loc(location.getAsString())));
+        Collections.shuffle(spawns);
     }
 
     /**
@@ -192,18 +197,24 @@ public class GameManager extends Game<PlayerPacMan> {
         swordMeta.spigot().setUnbreakable(true);
         woodenSword.setItemMeta(swordMeta);
 
+        int spawnIndex = 0;
+
         for (PlayerPacMan playerPacMan : getPlayerPacManList()) {
 
             Player player = playerPacMan.getPlayerIfOnline();
 
-            player.teleport(playerSpawn); // Teleport player to spawn
             player.setGameMode(GameMode.ADVENTURE); // Set player game mode
             player.setExp(0.0f); // Clear XP
             player.getInventory().clear(); // Clear inventory
             player.getInventory().addItem(woodenSword); // Give wooden sword
+            player.teleport(spawns.get(spawnIndex));
+            spawnIndex++;
 
             playerPacMan.setInvulnerableTime(5);
 
+            if (spawnIndex >= spawns.size()) {
+                spawnIndex = 0;
+            }
         }
 
         playerSpawn.getWorld().setSpawnLocation(playerSpawn.getBlockX(), playerSpawn.getBlockY(), playerSpawn.getBlockZ());

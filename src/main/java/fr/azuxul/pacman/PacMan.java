@@ -71,9 +71,12 @@ public class PacMan extends JavaPlugin {
 
         // Replace gold block with coins
         int globalCoins = 0;
-        int xMin = baseLocation.getBlockX() - 100, xMax = baseLocation.getBlockX() + 100;
-        int yMin = baseLocation.getBlockY() - 20, yMax = baseLocation.getBlockY() + 70;
-        int zMin = baseLocation.getBlockZ() - 100, zMax = baseLocation.getBlockZ() + 100;
+        int xMin = baseLocation.getBlockX() - 100;
+        int xMax = baseLocation.getBlockX() + 100;
+        int yMin = baseLocation.getBlockY() - 20;
+        int yMax = baseLocation.getBlockY() + 70;
+        int zMin = baseLocation.getBlockZ() - 100;
+        int zMax = baseLocation.getBlockZ() + 100;
 
         if (yMin <= 0)
             yMin = 1;
@@ -130,7 +133,7 @@ public class PacMan extends JavaPlugin {
         org.bukkit.World world = spawn.getWorld();
 
         world.setSpawnLocation(spawn.getBlockX(), spawn.getBlockY() + 3, spawn.getBlockZ()); // Set spawn location
-        world.setDifficulty(Difficulty.NORMAL); // Set difficulty
+        world.setDifficulty(Difficulty.EASY); // Set difficulty
         world.setGameRuleValue("doMobSpawning", "false"); // Set doMobSpawning game rule
         world.setGameRuleValue("keepInventory", "true"); // Set keepInventory game rule
         world.setGameRuleValue("reducedDebugInfo", "true"); // Reduce debug info (Mask location)
