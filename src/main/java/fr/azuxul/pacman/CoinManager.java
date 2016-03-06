@@ -18,7 +18,8 @@ public class CoinManager {
 
     private final GameManager gameManager;
     private final List<Coin> coinList;
-    private int remainingGlobalCoins, globalCoins;
+    private int remainingGlobalCoins;
+    private int globalCoins;
 
     public CoinManager(GameManager gameManager) {
 
@@ -49,7 +50,7 @@ public class CoinManager {
         // If remaining coins is equals to 0 and is not end
         if (remainingGlobalCoins <= 0 && !status.equals(Status.FINISHED)) {
 
-            gameManager.getServer().getOnlinePlayers().forEach(p -> gameManager.getScoreboard().sendScoreboardToPlayer(p, status)); // Update scoreboard
+            gameManager.getServer().getOnlinePlayers().forEach(gameManager.getScoreboard()::sendScoreboardToPlayer); // Update scoreboard
             gameManager.end(); // End
         }
     }

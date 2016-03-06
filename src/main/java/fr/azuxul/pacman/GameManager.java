@@ -59,7 +59,7 @@ public class GameManager extends Game<PlayerPacMan> {
         this.mapCenter = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("map-center").getAsString());
         this.spawns = new ArrayList<>();
 
-        SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("spawn-locations").getAsJsonArray().forEach(location -> spawn.add(LocationUtils.str2loc(location.getAsString())));
+        SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("spawn-points").getAsJsonArray().forEach(location -> spawns.add(LocationUtils.str2loc(location.getAsString())));
         Collections.shuffle(spawns);
     }
 
@@ -275,7 +275,10 @@ public class GameManager extends Game<PlayerPacMan> {
                 templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getGameCoins()); // Display player win template
             } else {
 
-                PlayerPacMan winner = winners.get(2), second = winners.get(1), third = winners.get(0); // Get winners
+                // Get winners
+                PlayerPacMan winner = winners.get(2);
+                PlayerPacMan second = winners.get(1);
+                PlayerPacMan third = winners.get(0);
 
                 templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getGameCoins(), second.getGameCoins(), third.getGameCoins()); // Display players leadboard template
             }

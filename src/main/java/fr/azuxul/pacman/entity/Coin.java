@@ -24,7 +24,8 @@ import org.bukkit.util.Vector;
  */
 public class Coin extends EntityArmorStand {
 
-    private final boolean droopedByPlayer, big;
+    private final boolean droopedByPlayer;
+    private final boolean big;
     private final int coinValue;
 
     /**
@@ -196,7 +197,7 @@ public class Coin extends EntityArmorStand {
         playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_COINS) ? coinValue * 2 : coinValue)); // Add coin to player
 
         // Send scoreboard to player
-        gameManager.getScoreboard().sendScoreboardToPlayer(player, gameManager.getStatus());
+        gameManager.getScoreboard().sendScoreboardToPlayer(player);
 
         if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
 

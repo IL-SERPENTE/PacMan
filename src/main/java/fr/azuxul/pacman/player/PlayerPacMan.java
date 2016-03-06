@@ -3,6 +3,7 @@ package fr.azuxul.pacman.player;
 import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.samagames.api.games.GamePlayer;
+import net.samagames.tools.scoreboards.ObjectiveSign;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
@@ -26,6 +27,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
     private int portalTicks;
     private int kills;
     private PowerupEffectType activeBooster;
+    private ObjectiveSign objectiveSign;
 
     public PlayerPacMan(Player player) {
 
@@ -34,6 +36,15 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         invulnerableRemainingTime = -1;
         gameCoins = 0;
         kills = 0;
+        objectiveSign = null;
+    }
+
+    public ObjectiveSign getObjectiveSign() {
+        return objectiveSign;
+    }
+
+    public void setObjectiveSign(ObjectiveSign objectiveSign) {
+        this.objectiveSign = objectiveSign;
     }
 
     /**

@@ -53,7 +53,7 @@ public class TimerPacMan implements Runnable {
 
         // Update scoreboard to all player and update player
         server.getOnlinePlayers().forEach(player -> {
-            gameManager.getScoreboard().sendScoreboardToPlayer(player, gameStatus);
+            gameManager.getScoreboard().sendScoreboardToPlayer(player);
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 

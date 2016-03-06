@@ -4,9 +4,15 @@ import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.samagames.api.games.Status;
+import net.samagames.tools.chat.ActionBarAPI;
+import net.samagames.tools.scoreboards.ObjectiveSign;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.NameTagVisibility;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,19 +37,36 @@ public class ScoreboardPacMan {
         this.displayName = displayName; // Set display name
     }
 
+    private ObjectiveSign generateObjectiveSign() {
+
+        ObjectiveSign objectiveSign = new ObjectiveSign("BombermanSc", displayName);
+
+        objectiveSign.setLine(0, ChatColor.GRAY + "00:00");
+        objectiveSign.setLine(1, "Temps restant:");
+        objectiveSign.setLine(2, " ");
+        objectiveSign.setLine(3, "Booster actif: " + ChatColor.GREEN + "Aucun (0)");
+        objectiveSign.setLine(4, "   ");
+        objectiveSign.setLine(5, "Coins restant: -1");
+        objectiveSign.setLine(6, "Pièces: -1");
+        objectiveSign.setLine(7, "  ");
+        objectiveSign.setLine(8, "Classement: ");
+        objectiveSign.setLine(9, "    ");
+
+        return objectiveSign;
+    }
+
     /**
      * Send scoreboard to param player
      *
      * @param player Receive scoreboard
-     * @param status Game status
      */
-    public void sendScoreboardToPlayer(Player player, Status status) {
+    public void sendScoreboardToPlayer(Player player) {
 
-        if (!status.equals(Status.IN_GAME)) // If game is not started
+        if (!gameManager.getStatus().equals(Status.IN_GAME)) // If game is not started
             return;
 
+        List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
         Scoreboard scoreboard = player.getScoreboard();
-        Objective objective;
 
         if (scoreboard == null || scoreboard.getTeam(TEAM_NAME) == null) {
 
@@ -56,8 +79,8 @@ public class ScoreboardPacMan {
             Set<String> entries = scoreboard.getTeam(TEAM_NAME).getEntries();
             boolean regenerate = false;
 
-            for (Player p : gameManager.getServer().getOnlinePlayers())
-                if (!entries.contains(p.getName())) {
+            for (PlayerPacMan p : playerPacManList)
+                if (!entries.contains(p.getPlayerIfOnline().getName())) {
                     regenerate = true;
                     break;
                 }
@@ -66,78 +89,60 @@ public class ScoreboardPacMan {
                 generateGlobalTeam(scoreboard);
         }
 
-        final String objectiveName = "pacManObjective";
-        objective = scoreboard.getObjective(objectiveName);
-
-        if (objective != null)
-            objective.unregister();
-
-        objective = scoreboard.registerNewObjective(objectiveName, "dummy"); // Register new objective
-        int score = 0;
-
-        List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId()); // Get playerPacMan
+        ObjectiveSign objectiveSign = playerPacMan.getObjectiveSign();
+
+        if (objectiveSign == null) {
+
+            objectiveSign = generateObjectiveSign();
+            playerPacMan.setObjectiveSign(objectiveSign);
+            objectiveSign.addReceiver(player);
+        }
+
         PowerupEffectType activeBooster = playerPacMan.getActiveBooster();
 
-        objective.setDisplayName(displayName); // Set display name
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR); // Set display slot
-
         // Display remaining time
-        score++;
         try {
-            objective.getScore(ChatColor.GRAY + String.format("%02d:%02d", gameManager.getTimer().getMinutes(), gameManager.getTimer().getSeconds())).setScore(score);
+            objectiveSign.setLine(0, ChatColor.GRAY + String.format("%02d:%02d", gameManager.getTimer().getMinutes(), gameManager.getTimer().getSeconds()));
         } catch (Exception e) {
             gameManager.getServer().getLogger().info(String.valueOf(e));
         }
 
-        score++;
-        objective.getScore("Temps restant:").setScore(score);
-
-        score++;
-        objective.getScore(" ").setScore(score);
-
-        score++;
-        objective.getScore("Booster actif: " + ChatColor.GREEN + (activeBooster == null ? "Aucun (0)" : activeBooster.getName() + " (" + playerPacMan.getBoosterRemainingTime() + ")")).setScore(score);
-
-        score++;
-        objective.getScore("   ").setScore(score);
+        objectiveSign.setLine(3, "Booster actif: " + ChatColor.GREEN + (activeBooster == null ? "Aucun (0)" : activeBooster.getName() + " (" + playerPacMan.getBoosterRemainingTime() + ")"));
 
         // Display remaining global coins number
-        score++;
         int remainingCoins = gameManager.getCoinManager().getRemainingGlobalCoins();
-        objective.getScore("Coins restant: " + ChatColor.GOLD + (remainingCoins < 0 ? 0 : remainingCoins)).setScore(score);
+        objectiveSign.setLine(5, "Coins restant: " + ChatColor.GOLD + (remainingCoins < 0 ? 0 : remainingCoins));
 
         // Display coins number
-        score++;
-        objective.getScore("Pièces: " + ChatColor.GOLD + playerPacMan.getGameCoins()).setScore(score);
-
-        score++;
-        objective.getScore("  ").setScore(score);
+        objectiveSign.setLine(6, "Pièces: " + ChatColor.GOLD + playerPacMan.getGameCoins());
 
         // Display classement
         Collections.sort(playerPacManList);
         int size = playerPacManList.size() - 1;
         int maxI = size >= 5 ? 4 : size;
+        int line = 7;
 
         for (int i = 0; i <= maxI; i++) {
 
             PlayerPacMan playerPacManDisplay = playerPacManList.get(i); // Get playerPacMan
 
             try {
-                score++;
-                objective.getScore(ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getGameCoins()).setScore(score);
+                line++;
+                objectiveSign.setLine(line, ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getGameCoins());
             } catch (NullPointerException e) {
                 gameManager.getServer().getLogger().warning(String.valueOf(e));
             }
         }
 
-        score++;
-        objective.getScore("Classement: ").setScore(score);
+        line++;
+        objectiveSign.setLine(line, "Classement: ");
 
-        score++;
-        objective.getScore("    ").setScore(score);
+        if (!player.getGameMode().equals(GameMode.SPECTATOR) && activeBooster != null)
+            ActionBarAPI.sendMessage(player, ChatColor.GREEN + "Booster : " + ChatColor.GOLD + activeBooster.getName());
 
         player.setScoreboard(scoreboard); // Send scoreboard to the player
+        objectiveSign.updateLines(false);
     }
 
     private void generateGlobalTeam(Scoreboard scoreboard) {
