@@ -3,7 +3,6 @@ package fr.azuxul.pacman.portal;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import fr.azuxul.pacman.GameManager;
 import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.IGameProperties;
@@ -44,27 +43,6 @@ public class PortalManager {
 
         final String locationProperty = "location";
         final String linkedPortalsProperty = "linkedPortals";
-
-        JsonArray portalsArray = new JsonArray();
-
-        JsonObject portal0 = new JsonObject();
-        JsonObject portal1 = new JsonObject();
-        JsonArray portalLinked0 = new JsonArray();
-        JsonArray portalLinked1 = new JsonArray();
-
-        portalLinked1.add(new JsonPrimitive("portal0"));
-        portalLinked0.add(new JsonPrimitive("portal1"));
-
-        portal0.addProperty("name", "portal0");
-        portal0.addProperty(locationProperty, "world, 0, 71, 24, 180, 0");
-        portal0.add(linkedPortalsProperty, portalLinked0);
-
-        portal0.addProperty("name", "portal1");
-        portal0.addProperty(locationProperty, "world, 0, 71, -24, 0, 0");
-        portal0.add(linkedPortalsProperty, portalLinked1);
-
-        portalsArray.add(portal0);
-        portalsArray.add(portal1);
 
         JsonArray jsonPortals = gameProperties.getConfigs().get("portals").getAsJsonArray();
 
