@@ -140,7 +140,7 @@ public class PlayerEvent implements Listener {
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
             if (killer != null) {
-                killer.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 10, 255, true));
+                killer.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 20, 19, true));
                 killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, 0));
 
                 PlayerPacMan killerPacMan = gameManager.getPlayer(killer.getUniqueId());
