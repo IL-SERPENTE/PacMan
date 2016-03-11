@@ -86,6 +86,9 @@ public class PlayerEvent implements Listener {
 
             if (portal != null)
                 portal.teleportPlayer(player);
+        } else if (event.getTo().getY() <= 0) {
+
+            player.teleport(gameManager.getSpawn());
         }
     }
 
