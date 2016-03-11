@@ -17,42 +17,42 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
 /**
- * Coin entity
+ * Gomme entity
  *
  * @author Azuxul
  * @version 1.0
  */
-public class Coin extends EntityArmorStand {
+public class Gomme extends EntityArmorStand {
 
     private final boolean droopedByPlayer;
     private final boolean big;
-    private final int coinValue;
+    private final int gommeValue;
 
     /**
      * Class constructor and
-     * spawn coin
+     * spawn gomme
      *
      * @param world       world of entity
      * @param x           X location
      * @param y           Y location
      * @param z           Z location
-     * @param coinDrooped if true, coins was remove after 30s,
+     * @param gommeDrooped if true, coins was remove after 30s,
      *                    the coin not subtract of global coin number
      *                    when is catch and spawn effect is special
      */
-    public Coin(World world, double x, double y, double z, boolean coinDrooped) {
+    public Gomme(World world, double x, double y, double z, boolean gommeDrooped) {
         super(world);
 
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         Vector velocity = null;
-        droopedByPlayer = coinDrooped;
+        droopedByPlayer = gommeDrooped;
         big = false;
-        coinValue = 1;
+        gommeValue = 1;
 
         c(nbtTagCompound); // Init nbtTagCompound
 
         nbtTagCompound.setBoolean("Small", true); // Set Small
-        nbtTagCompound.setBoolean("NoGravity", !coinDrooped); // Set NoGravity
+        nbtTagCompound.setBoolean("NoGravity", !gommeDrooped); // Set NoGravity
         nbtTagCompound.setBoolean("Invulnerable", true); // Set Invulnerable
         nbtTagCompound.setBoolean("Invisible", true); // Set Invisible
         nbtTagCompound.setInt("DisabledSlots", 31); // Disable slots
@@ -61,7 +61,7 @@ public class Coin extends EntityArmorStand {
 
         setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.GOLD_BLOCK))); // Set helmet
 
-        if (coinDrooped) { // If is drooped by player
+        if (gommeDrooped) { // If is drooped by player
 
             GameManager gameManager = PacMan.getGameManager();
 
@@ -77,31 +77,31 @@ public class Coin extends EntityArmorStand {
 
     /**
      * Class constructor and
-     * spawn big coin
+     * spawn big gomme
      *
      * @param world       world of entity
      * @param x           X location
      * @param y           Y location
      * @param z           Z location
-     * @param coinDrooped if true, coins was remove after 30s,
+     * @param gommeDrooped if true, coins was remove after 30s,
      *                    the coin not subtract of global coin number
      *                    when is catch and spawn effect is special
-     * @param coinValue   number of coin added to player coin count
+     * @param gommeValue   number of coin added to player coin count
      *                    when is picked up
      */
-    public Coin(World world, double x, double y, double z, boolean coinDrooped, int coinValue) {
+    public Gomme(World world, double x, double y, double z, boolean gommeDrooped, int gommeValue) {
         super(world);
 
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         Vector velocity = null;
-        droopedByPlayer = coinDrooped;
+        droopedByPlayer = gommeDrooped;
         big = true;
-        this.coinValue = coinValue;
+        this.gommeValue = gommeValue;
 
         c(nbtTagCompound); // Init nbtTagCompound
 
         nbtTagCompound.setBoolean("Small", false); // Set Normal
-        nbtTagCompound.setBoolean("NoGravity", !coinDrooped); // Set NoGravity
+        nbtTagCompound.setBoolean("NoGravity", !gommeDrooped); // Set NoGravity
         nbtTagCompound.setBoolean("Invulnerable", true); // Set Invulnerable
         nbtTagCompound.setBoolean("Invisible", true); // Set Invisible
         nbtTagCompound.setInt("DisabledSlots", 31); // Disable slots
@@ -110,7 +110,7 @@ public class Coin extends EntityArmorStand {
 
         setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.EMERALD_BLOCK))); // Set helmet
 
-        if (coinDrooped) { // If is drooped by player
+        if (gommeDrooped) { // If is drooped by player
 
             GameManager gameManager = PacMan.getGameManager();
 
@@ -167,47 +167,47 @@ public class Coin extends EntityArmorStand {
         Location playerLocation = player.getLocation();
         GameManager gameManager = PacMan.getGameManager();
         Status status = gameManager.getStatus();
-        double distanceAtCoin = this.getBukkitEntity().getLocation().distance(playerLocation); // Calculate distance
+        double distanceAtGomme = this.getBukkitEntity().getLocation().distance(playerLocation); // Calculate distance
 
         // If IN_GAME, player game mode is not to spectator, coin is alive and distance at coins is <= 0.65 or player has coins magnet booster
         if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR) && this.isAlive()) {
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-            if (distanceAtCoin <= 0.65 || big) {
+            if (distanceAtGomme <= 0.65 || big) {
 
-                addCoinToPlayer(player, playerPacMan);
+                addGommeToPlayer(player, playerPacMan);
 
-            } else if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.COINS_MAGNET)) {
+            } else if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.GOMME_MAGNET)) {
 
-                attractCoin(playerLocation);
+                attractGomme(playerLocation);
             }
         }
     }
 
-    private void addCoinToPlayer(Player player, PlayerPacMan playerPacMan) {
+    private void addGommeToPlayer(Player player, PlayerPacMan playerPacMan) {
 
         GameManager gameManager = PacMan.getGameManager();
         Location playerLocation = player.getLocation();
 
-        die(); // Kill coin
+        die(); // Kill gomme
 
         player.playNote(playerLocation, Instrument.PIANO, new Note(22));
 
-        playerPacMan.setGameCoins(playerPacMan.getGameCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_COINS) ? coinValue * 2 : coinValue)); // Add coin to player
+        playerPacMan.setGomme(playerPacMan.getGommeCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_GOMMES) ? gommeValue * 2 : gommeValue)); // Add gommes to player
 
         // Send scoreboard to player
         gameManager.getScoreboard().sendScoreboardToPlayer(player);
 
         if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
 
-            // Set global coins
-            int globalCoins = gameManager.getCoinManager().getRemainingGlobalCoins() - coinValue;
-            gameManager.getCoinManager().setRemainingGlobalCoins(globalCoins);
+            // Set global gomme
+            int globalCoins = gameManager.getGommeManager().getRemainingGlobalCoins() - gommeValue;
+            gameManager.getGommeManager().setRemainingGlobalCoins(globalCoins);
         }
     }
 
-    private void attractCoin(Location location) {
+    private void attractGomme(Location location) {
 
         Vector vector = location.toVector().subtract(new Vector(locX, locY, locZ)).multiply(1.1);
 
@@ -223,14 +223,14 @@ public class Coin extends EntityArmorStand {
             throw new NullPointerException("The compared object can not be null");
         } else if (this == compareObject)
             return true;
-        if (!(compareObject instanceof Coin))
+        if (!(compareObject instanceof Gomme))
             return false;
         if (!super.equals(compareObject))
             return false;
 
-        Coin coin = (Coin) compareObject;
+        Gomme gomme = (Gomme) compareObject;
 
-        return isDroopedByPlayer() == coin.isDroopedByPlayer();
+        return isDroopedByPlayer() == gomme.isDroopedByPlayer();
 
     }
 

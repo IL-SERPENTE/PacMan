@@ -102,11 +102,11 @@ public class PlayerEvent implements Listener {
 
             Player player = (Player) event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
-            int coins = playerPacMan.getGameCoins(); // Get player coins
+            int gommes = playerPacMan.getGommeCoins(); // Get player gommes
 
             if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
                 event.setCancelled(true);
-            } else if (coins > 0) {
+            } else if (gommes > 0) {
 
                 playerPacMan.damage();
             }
@@ -146,14 +146,14 @@ public class PlayerEvent implements Listener {
                 killerPacMan.setKills(killerPacMan.getKills() + 1);
             }
 
-            int coins = 0;
-            int playerCoins = playerPacMan.getGameCoins();
+            int gommes = 0;
+            int playerGommes = playerPacMan.getGommeCoins();
 
-            if (playerPacMan.getGameCoins() > 4)
-                coins = (int) Math.round(playerCoins * 0.2); // Calculate percent of player coins
+            if (playerGommes > 4)
+                gommes = (int) Math.round(playerGommes * 0.2); // Calculate percent of player gommes
 
-            if (playerCoins - coins >= 0)
-                playerPacMan.setGameCoins(playerCoins - coins);
+            if (playerGommes - gommes >= 0)
+                playerPacMan.setGomme(playerGommes - gommes);
 
             World world = ((CraftWorld) player.getWorld()).getHandle();
             Location location = player.getLocation();
@@ -161,8 +161,8 @@ public class PlayerEvent implements Listener {
             double y = location.getY();
             double z = location.getZ();
 
-            if (coins > 0)
-                gameManager.getCoinManager().spawnBigCoin(world, x, y, z, true, coins);
+            if (gommes > 0)
+                gameManager.getGommeManager().spawnBigCoin(world, x, y, z, true, gommes);
 
             ParticleEffect.FIREWORKS_SPARK.display(2.0f, 2.0f, 2.0f, 0.0f, 50, location, 50.0f);
 

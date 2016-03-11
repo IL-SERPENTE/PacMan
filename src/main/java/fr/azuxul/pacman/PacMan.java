@@ -1,6 +1,6 @@
 package fr.azuxul.pacman;
 
-import fr.azuxul.pacman.entity.Coin;
+import fr.azuxul.pacman.entity.Gomme;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.powerup.BasicPowerup;
 import fr.azuxul.pacman.powerup.PowerupBlindness;
@@ -47,8 +47,8 @@ public class PacMan extends JavaPlugin {
         // Register powerups
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, "speed"));
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, "jump-boost"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_COINS, "double-coins"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.COINS_MAGNET, "coins-magnet"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_GOMMES, "double-coins"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.GOMME_MAGNET, "coins-magnet"));
         powerupManager.registerPowerup(new PowerupSwap());
         powerupManager.registerPowerup(new PowerupBlindness());
 
@@ -62,7 +62,7 @@ public class PacMan extends JavaPlugin {
     private static void mapInitialisation() {
 
         PowerupManager powerupManager = gameManager.getPowerupManager();
-        CoinManager coinManager = gameManager.getCoinManager();
+        GommeManager gommeManager = gameManager.getGommeManager();
         Location baseLocation = gameManager.getMapCenter();
         if (baseLocation == null)
             return;
@@ -92,7 +92,7 @@ public class PacMan extends JavaPlugin {
                         block.setType(Material.AIR); // Set air
 
                         // Spawn normal coin
-                        coinManager.spawnCoin(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
+                        gommeManager.spawnCoin(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
                         globalCoins++;
 
                     } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
@@ -102,7 +102,7 @@ public class PacMan extends JavaPlugin {
                     }
                 }
 
-        gameManager.getCoinManager().setGlobalCoins(globalCoins); // Set global coins
+        gameManager.getGommeManager().setGlobalCoins(globalCoins); // Set global coins
     }
 
     @Override
@@ -124,7 +124,7 @@ public class PacMan extends JavaPlugin {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0L, 20L);
 
         // Register entity
-        registerEntity("Coin", 69, Coin.class);
+        registerEntity("Gomme", 69, Gomme.class);
 
         // Kick players
         getServer().getOnlinePlayers().forEach(player -> player.kickPlayer(""));
@@ -148,7 +148,7 @@ public class PacMan extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        gameManager.getCoinManager().killAllCoin();
+        gameManager.getGommeManager().killAllCoin();
     }
 
     /**

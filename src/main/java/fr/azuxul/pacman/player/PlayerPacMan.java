@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
  */
 public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
-    private int gameCoins;
+    private int gomme;
     private int boosterRemainingTime;
     private int invulnerableRemainingTime;
     private int portalTicks;
@@ -34,7 +34,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         super(player);
         boosterRemainingTime = -1;
         invulnerableRemainingTime = -1;
-        gameCoins = 0;
+        gomme = 0;
         kills = 0;
         objectiveSign = null;
     }
@@ -66,21 +66,21 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
     }
 
     /**
-     * Get gameCoins number of playerPacMan
+     * Get gomme number of playerPacMan
      *
-     * @return gameCoins
+     * @return gomme
      */
-    public int getGameCoins() {
-        return gameCoins;
+    public int getGommeCoins() {
+        return gomme;
     }
 
     /**
-     * Set gameCoins number of playerPacMan
+     * Set gomme number of playerPacMan
      *
-     * @param gameCoins value of gameCoins number
+     * @param gomme value of gameCoins number
      */
-    public void setGameCoins(int gameCoins) {
-        this.gameCoins = gameCoins;
+    public void setGomme(int gomme) {
+        this.gomme = gomme;
     }
 
     /**
@@ -185,16 +185,16 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
     }
 
     public void damage() {
-        for (int i = RandomUtils.nextInt(3); i >= 1 && gameCoins > 0; i--) {
+        for (int i = RandomUtils.nextInt(3); i >= 1 && gomme > 0; i--) {
 
-            gameCoins--; // Decrement coins of player
+            gomme--; // Decrement coins of player
 
             Location location = getPlayerIfOnline().getLocation();
 
             // Spawn coin
-            PacMan.getGameManager().getCoinManager().spawnCoin(((CraftWorld) location.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+            PacMan.getGameManager().getGommeManager().spawnCoin(((CraftWorld) location.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
 
-            setGameCoins(gameCoins); // Set player coins
+            setGomme(gomme); // Set player coins
         }
     }
 
@@ -221,9 +221,9 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
         if (comparePlayerPacMan == null) {
             throw new NullPointerException("The compared object can not be null");
-        } else if (comparePlayerPacMan.getGameCoins() == this.getGameCoins()) {
+        } else if (comparePlayerPacMan.getGommeCoins() == this.getGommeCoins()) {
             return 0;
-        } else if (comparePlayerPacMan.getGameCoins() > this.getGameCoins()) {
+        } else if (comparePlayerPacMan.getGommeCoins() > this.getGommeCoins()) {
             return -1;
         } else {
             return 1;

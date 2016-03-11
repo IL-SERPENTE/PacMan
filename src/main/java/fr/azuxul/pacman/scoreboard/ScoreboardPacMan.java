@@ -47,7 +47,7 @@ public class ScoreboardPacMan {
         objectiveSign.setLine(3, "Booster actif: " + ChatColor.GREEN + "Aucun (0)");
         objectiveSign.setLine(4, "   ");
         objectiveSign.setLine(5, "Coins restant: -1");
-        objectiveSign.setLine(6, "Pièces: -1");
+        objectiveSign.setLine(6, "Gommes: -1");
         objectiveSign.setLine(7, "  ");
         objectiveSign.setLine(8, "Classement: ");
         objectiveSign.setLine(9, "    ");
@@ -111,11 +111,11 @@ public class ScoreboardPacMan {
         objectiveSign.setLine(3, "Booster actif: " + ChatColor.GREEN + (activeBooster == null ? "Aucun (0)" : activeBooster.getName() + " (" + playerPacMan.getBoosterRemainingTime() + ")"));
 
         // Display remaining global coins number
-        int remainingCoins = gameManager.getCoinManager().getRemainingGlobalCoins();
+        int remainingCoins = gameManager.getGommeManager().getRemainingGlobalCoins();
         objectiveSign.setLine(5, "Coins restant: " + ChatColor.GOLD + (remainingCoins < 0 ? 0 : remainingCoins));
 
         // Display coins number
-        objectiveSign.setLine(6, "Pièces: " + ChatColor.GOLD + playerPacMan.getGameCoins());
+        objectiveSign.setLine(6, "Gommes: " + ChatColor.GOLD + playerPacMan.getGommeCoins());
 
         // Display classement
         Collections.sort(playerPacManList);
@@ -129,7 +129,7 @@ public class ScoreboardPacMan {
 
             try {
                 line++;
-                objectiveSign.setLine(line, ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getGameCoins());
+                objectiveSign.setLine(line, ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getGommeCoins());
             } catch (NullPointerException e) {
                 gameManager.getServer().getLogger().warning(String.valueOf(e));
             }
