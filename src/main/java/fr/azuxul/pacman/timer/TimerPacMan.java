@@ -43,11 +43,13 @@ public class TimerPacMan implements Runnable {
             // GAME TIMER
 
             seconds--;
-            if (seconds <= 0) {
+            if (seconds <= -1) {
                 minutes--;
-                seconds = 60;
-                if (minutes <= 0)
+                seconds = 59;
+                if (minutes <= -1) {
+                    setToZero();
                     gameManager.end();
+                }
             }
         }
 
