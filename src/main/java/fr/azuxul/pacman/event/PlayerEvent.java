@@ -105,20 +105,26 @@ public class PlayerEvent implements Listener {
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
             int coins = playerPacMan.getGameCoins(); // Get player coins
 
-            if (player.getLastDamageCause() instanceof EntityDamageByEntityEvent && ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager() instanceof Player) {
-
-                Player damager = (Player) ((EntityDamageByEntityEvent) player.getLastDamageCause()).getDamager();
-                PlayerPacMan damgerPacMan = gameManager.getPlayer(damager.getUniqueId());
-
-                damgerPacMan.setInvulnerableTime(-1);
-                damager.sendMessage(gameManager.getCoherenceMachine().getGameTag() + ChatColor.GRAY + " Vous n'êtes plus invulnérable aux dégats.");
-            }
-
             if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
                 event.setCancelled(true);
             } else if (coins > 0) {
 
                 playerPacMan.damage();
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDamageByEntity(EntityDamageByEntityEvent event) {
+
+        if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+
+            Player damager = (Player) event.getDamager();
+            PlayerPacMan damgerPacMan = gameManager.getPlayer(damager.getUniqueId());
+
+            if (damgerPacMan.getInvulnerableRemainingTime() >= 0) {
+                damager.sendMessage(gameManager.getCoherenceMachine().getGameTag() + ChatColor.GRAY + " Vous n'êtes plus invulnérable aux dégats.");
+                damgerPacMan.setInvulnerableTime(-1);
             }
         }
     }
