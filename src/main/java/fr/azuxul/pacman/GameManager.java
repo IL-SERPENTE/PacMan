@@ -249,7 +249,7 @@ public class GameManager extends Game<PlayerPacMan> {
             }
 
             if (winners.contains(playerPacMan)) {
-                if (winners.indexOf(playerPacMan) == 3) {
+                if (winners.indexOf(playerPacMan) == 2) {
                     playerPacMan.addCoins(30, "Partie gagnée");
                     playerPacMan.addStars(2, "Partie gagnée");
                 } else {
