@@ -1,7 +1,6 @@
 package fr.azuxul.pacman.event;
 
 import fr.azuxul.pacman.GameManager;
-import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.portal.Portal;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
@@ -52,7 +51,7 @@ public class PlayerEvent implements Listener {
 
         player.setGameMode(GameMode.ADVENTURE);
         player.getInventory().clear();
-        player.getInventory().addItem(Utils.getRulesBook());
+        player.getInventory().addItem(gameManager.getRulesBook());
 
         player.teleport(gameManager.getSpawn());
     }

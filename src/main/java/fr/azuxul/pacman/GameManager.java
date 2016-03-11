@@ -8,6 +8,7 @@ import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.Game;
 import net.samagames.api.games.themachine.messages.ITemplateManager;
 import net.samagames.tools.LocationUtils;
+import net.samagames.tools.RulesBook;
 import net.samagames.tools.powerups.PowerupManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -38,11 +39,12 @@ public class GameManager extends Game<PlayerPacMan> {
     private final Location spawn;
     private final Location mapCenter;
     private final List<Location> spawns;
+    private final ItemStack rulesBook;
 
     /**
      * Class constructor
      *
-     * @param plugin    PacMan plugin
+     * @param plugin PacMan plugin
      */
     public GameManager(JavaPlugin plugin) {
 
@@ -61,6 +63,21 @@ public class GameManager extends Game<PlayerPacMan> {
 
         SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("spawn-points").getAsJsonArray().forEach(location -> spawns.add(LocationUtils.str2loc(location.getAsString())));
         Collections.shuffle(spawns);
+
+        this.rulesBook = new RulesBook("§6§lLivre de règles").addOwner("Azuxul")
+                .addPage("§lBut du jeu ?§0",
+                        " Vous devez\n récupérer le plus\n" +
+                                " de pièces\n possible avant la\n" +
+                                " fin de la\n partie. (plus de\n" +
+                                " pièces ou\n temps écoulé)")
+                .addPage("§lPvp ?§0",
+                        " Vous pouvez taper\n" +
+                                " vos adversaires\n" +
+                                " pour leur faire\n perdre des pièces !")
+                .addPage("&lPowerups &0",
+                        " Durant la partie,\n certains powerups\n" +
+                                " peuvent apparaître !\n Prenez les" +
+                                " tous et\n découvrez les !").toItemStack();
     }
 
     /**
@@ -93,6 +110,10 @@ public class GameManager extends Game<PlayerPacMan> {
         Collections.sort(winners);
 
         return winners;
+    }
+
+    public ItemStack getRulesBook() {
+        return rulesBook;
     }
 
     /**
