@@ -108,14 +108,14 @@ public class ScoreboardPacMan {
             gameManager.getServer().getLogger().info(String.valueOf(e));
         }
 
-        objectiveSign.setLine(3, "Booster actif: " + ChatColor.GREEN + (activeBooster == null ? "Aucun (0)" : activeBooster.getName() + " (" + playerPacMan.getBoosterRemainingTime() + ")"));
+        objectiveSign.setLine(3, "Booster actif : " + ChatColor.GREEN + (activeBooster == null ? "Aucun (0)" : activeBooster.getName() + " (" + playerPacMan.getBoosterRemainingTime() + ")"));
 
         // Display remaining global gommes number
         int remainingGommes = gameManager.getGommeManager().getRemainingGlobalGommes();
-        objectiveSign.setLine(5, "Gommes restant: " + ChatColor.GOLD + (remainingGommes < 0 ? 0 : remainingGommes));
+        objectiveSign.setLine(5, "Gommes restant : " + ChatColor.GOLD + (remainingGommes < 0 ? 0 : remainingGommes));
 
         // Display gommes number
-        objectiveSign.setLine(6, "Gommes: " + ChatColor.GOLD + playerPacMan.getGomme());
+        objectiveSign.setLine(6, "Gommes : " + ChatColor.GOLD + playerPacMan.getGomme());
 
         // Display classement
         Collections.sort(playerPacManList);
@@ -136,7 +136,7 @@ public class ScoreboardPacMan {
         }
 
         line++;
-        objectiveSign.setLine(line, "Classement: ");
+        objectiveSign.setLine(line, "Classement :");
 
         if (!player.getGameMode().equals(GameMode.SPECTATOR) && activeBooster != null)
             ActionBarAPI.sendMessage(player, ChatColor.GREEN + "Booster : " + ChatColor.GOLD + activeBooster.getName());
