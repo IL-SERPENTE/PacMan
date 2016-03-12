@@ -42,14 +42,14 @@ public class ScoreboardPacMan {
         ObjectiveSign objectiveSign = new ObjectiveSign("BombermanSc", displayName);
 
         objectiveSign.setLine(0, ChatColor.GRAY + "00:00");
-        objectiveSign.setLine(1, "Temps restant:");
+        objectiveSign.setLine(1, "Temps restant :");
         objectiveSign.setLine(2, " ");
-        objectiveSign.setLine(3, "Booster actif: " + ChatColor.GREEN + "Aucun (0)");
+        objectiveSign.setLine(3, "Booster actif : " + ChatColor.GREEN + "Aucun (0)");
         objectiveSign.setLine(4, "   ");
-        objectiveSign.setLine(5, "Gommes restant: -1");
-        objectiveSign.setLine(6, "Gommes: -1");
+        objectiveSign.setLine(5, "Gommes restantes : -1");
+        objectiveSign.setLine(6, "Gommes : -1");
         objectiveSign.setLine(7, "  ");
-        objectiveSign.setLine(8, "Classement: ");
+        objectiveSign.setLine(8, "Classement : ");
         objectiveSign.setLine(9, "    ");
 
         return objectiveSign;
@@ -112,7 +112,7 @@ public class ScoreboardPacMan {
 
         // Display remaining global gommes number
         int remainingGommes = gameManager.getGommeManager().getRemainingGlobalGommes();
-        objectiveSign.setLine(5, "Gommes restant : " + ChatColor.GOLD + (remainingGommes < 0 ? 0 : remainingGommes));
+        objectiveSign.setLine(5, "Gommes restantes : " + ChatColor.GOLD + (remainingGommes < 0 ? 0 : remainingGommes));
 
         // Display gommes number
         objectiveSign.setLine(6, "Gommes : " + ChatColor.GOLD + playerPacMan.getGomme());
@@ -129,7 +129,7 @@ public class ScoreboardPacMan {
 
             try {
                 line++;
-                objectiveSign.setLine(line, ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + ": " + ChatColor.GREEN + playerPacManDisplay.getGomme());
+                objectiveSign.setLine(line, ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + " : " + ChatColor.GREEN + playerPacManDisplay.getGomme());
             } catch (NullPointerException e) {
                 gameManager.getServer().getLogger().warning(String.valueOf(e));
             }
