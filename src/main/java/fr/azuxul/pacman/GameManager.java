@@ -257,16 +257,16 @@ public class GameManager extends Game<PlayerPacMan> {
         timer.setToZero(); // Set timer to zero
         powerupManager.stop();
 
-        // Add coins to players
+        // Add Gommes to players
         for (PlayerPacMan playerPacMan : playerPacManList) {
 
-            int percentOfCoins = 0;
+            int percentOfGommes = 0;
 
-            if (playerPacMan.getGommeCoins() > 0 && gommeManager.getGlobalCoins() > 0) {
-                percentOfCoins = playerPacMan.getGommeCoins() * 100 / gommeManager.getGlobalCoins(); // Calculate percent of player coins
-                int coins = percentOfCoins / 5; // Calculate coins for player
+            if (playerPacMan.getGomme() > 0 && gommeManager.getGlobalGommes() > 0) {
+                percentOfGommes = playerPacMan.getGomme() * 100 / gommeManager.getGlobalGommes(); // Calculate percent of player Gommes
+                int coins = percentOfGommes / 5; // Calculate coins for player
 
-                playerPacMan.addCoins(coins, percentOfCoins + "% des gommes récupérée");
+                playerPacMan.addCoins(coins, percentOfGommes + "% des gommes récupérée");
             }
 
             if (winners.contains(playerPacMan)) {
@@ -279,7 +279,7 @@ public class GameManager extends Game<PlayerPacMan> {
                 }
             }
 
-            if (percentOfCoins >= 35) {
+            if (percentOfGommes >= 35) {
                 playerPacMan.addStars(1, "Plus de 35% des gommes récupérée");
             }
         }
@@ -293,7 +293,7 @@ public class GameManager extends Game<PlayerPacMan> {
 
                 PlayerPacMan winner = winners.get(winnerSize - 1); // Get winner
 
-                templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getGommeCoins()); // Display player win template
+                templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getGomme()); // Display player win template
             } else {
 
                 // Get winners
@@ -301,7 +301,7 @@ public class GameManager extends Game<PlayerPacMan> {
                 PlayerPacMan second = winners.get(1);
                 PlayerPacMan third = winners.get(0);
 
-                templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getGommeCoins(), second.getGommeCoins(), third.getGommeCoins()); // Display players leadboard template
+                templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getGomme(), second.getGomme(), third.getGomme()); // Display players leadboard template
             }
         }
 

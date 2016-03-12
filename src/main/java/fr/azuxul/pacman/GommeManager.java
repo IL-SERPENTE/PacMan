@@ -18,8 +18,8 @@ public class GommeManager {
 
     private final GameManager gameManager;
     private final List<Gomme> gommeList;
-    private int remainingGlobalCoins;
-    private int globalCoins;
+    private int remainingGlobalGommes;
+    private int globalGommes;
 
     public GommeManager(GameManager gameManager) {
 
@@ -28,58 +28,58 @@ public class GommeManager {
     }
 
     /**
-     * Get number of global coins remaining
+     * Get number of global gommes remaining
      *
-     * @return remainingGlobalCoins
+     * @return remainingGlobalGommes
      */
-    public int getRemainingGlobalCoins() {
-        return remainingGlobalCoins;
+    public int getRemainingGlobalGommes() {
+        return remainingGlobalGommes;
     }
 
     /**
-     * Set number of global coins remaining
+     * Set number of global gommes remaining
      *
-     * @param remainingGlobalCoins global coins remaining
+     * @param remainingGlobalGommes global gommes remaining
      */
-    public void setRemainingGlobalCoins(int remainingGlobalCoins) {
+    public void setRemainingGlobalGommes(int remainingGlobalGommes) {
 
         Status status = gameManager.getStatus();
 
-        this.remainingGlobalCoins = remainingGlobalCoins;
+        this.remainingGlobalGommes = remainingGlobalGommes;
 
-        // If remaining coins is equals to 0 and is not end
-        if (remainingGlobalCoins <= 0 && !status.equals(Status.FINISHED)) {
+        // If remaining gommes is equals to 0 and is not end
+        if (remainingGlobalGommes <= 0 && !status.equals(Status.FINISHED)) {
 
             gameManager.getServer().getOnlinePlayers().forEach(gameManager.getScoreboard()::sendScoreboardToPlayer); // Update scoreboard
             gameManager.end(); // End
         }
     }
 
-    public int getGlobalCoins() {
-        return globalCoins;
+    public int getGlobalGommes() {
+        return globalGommes;
     }
 
     /**
-     * Set number of global coins
+     * Set number of global gommes
      *
-     * @param globalCoins global coins
+     * @param globalGommes global gommes
      */
-    public void setGlobalCoins(int globalCoins) {
-        this.remainingGlobalCoins = globalCoins;
-        this.globalCoins = globalCoins;
+    public void setGlobalGommes(int globalGommes) {
+        this.remainingGlobalGommes = globalGommes;
+        this.globalGommes = globalGommes;
     }
 
-    public void spawnCoin(World world, double x, double y, double z, boolean dopedByPlayer) {
+    public void spawnGomme(World world, double x, double y, double z, boolean dopedByPlayer) {
 
         gommeList.add(new Gomme(world, x, y, z, dopedByPlayer));
     }
 
-    public void spawnBigCoin(World world, double x, double y, double z, boolean dopedByPlayer, int coinValue) {
+    public void spawnBigGomme(World world, double x, double y, double z, boolean dopedByPlayer, int gommeValue) {
 
-        gommeList.add(new Gomme(world, x, y, z, dopedByPlayer, coinValue));
+        gommeList.add(new Gomme(world, x, y, z, dopedByPlayer, gommeValue));
     }
 
-    public void killAllCoin() {
+    public void killAllGommes() {
         gommeList.forEach(Entity::die);
     }
 }

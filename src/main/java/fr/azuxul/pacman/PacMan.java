@@ -47,8 +47,8 @@ public class PacMan extends JavaPlugin {
         // Register powerups
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, "speed"));
         powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, "jump-boost"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_GOMMES, "double-coins"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.GOMME_MAGNET, "coins-magnet"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_GOMMES, "double-gommes"));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.GOMME_MAGNET, "gommes-magnet"));
         powerupManager.registerPowerup(new PowerupSwap());
         powerupManager.registerPowerup(new PowerupBlindness());
 
@@ -57,7 +57,7 @@ public class PacMan extends JavaPlugin {
 
     /**
      * Initialise the map :
-     * Replace gold block with coins
+     * Replace gold block with gommes
      */
     private static void mapInitialisation() {
 
@@ -69,8 +69,8 @@ public class PacMan extends JavaPlugin {
         org.bukkit.World world = baseLocation.getWorld();
         World worldNMS = ((CraftWorld) world).getHandle();
 
-        // Replace gold block with coins
-        int globalCoins = 0;
+        // Replace gold block with gommes
+        int globalGommes = 0;
         int xMin = baseLocation.getBlockX() - 100;
         int xMax = baseLocation.getBlockX() + 100;
         int yMin = baseLocation.getBlockY() - 20;
@@ -91,9 +91,9 @@ public class PacMan extends JavaPlugin {
                     if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block
                         block.setType(Material.AIR); // Set air
 
-                        // Spawn normal coin
-                        gommeManager.spawnCoin(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
-                        globalCoins++;
+                        // Spawn normal gomme
+                        gommeManager.spawnGomme(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
+                        globalGommes++;
 
                     } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
                         block.setType(Material.AIR); // Set air
@@ -102,7 +102,7 @@ public class PacMan extends JavaPlugin {
                     }
                 }
 
-        gameManager.getGommeManager().setGlobalCoins(globalCoins); // Set global coins
+        gameManager.getGommeManager().setGlobalGommes(globalGommes); // Set global gommes
     }
 
     @Override
@@ -148,7 +148,7 @@ public class PacMan extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        gameManager.getGommeManager().killAllCoin();
+        gameManager.getGommeManager().killAllGommes();
     }
 
     /**

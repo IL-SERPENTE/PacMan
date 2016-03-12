@@ -70,7 +70,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
      *
      * @return gomme
      */
-    public int getGommeCoins() {
+    public int getGomme() {
         return gomme;
     }
 
@@ -192,7 +192,7 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
             Location location = getPlayerIfOnline().getLocation();
 
             // Spawn coin
-            PacMan.getGameManager().getGommeManager().spawnCoin(((CraftWorld) location.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
+            PacMan.getGameManager().getGommeManager().spawnGomme(((CraftWorld) location.getWorld()).getHandle(), location.getX(), location.getY() + 1.1, location.getZ(), true);
 
             setGomme(gomme); // Set player coins
         }
@@ -221,9 +221,9 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
 
         if (comparePlayerPacMan == null) {
             throw new NullPointerException("The compared object can not be null");
-        } else if (comparePlayerPacMan.getGommeCoins() == this.getGommeCoins()) {
+        } else if (comparePlayerPacMan.getGomme() == this.getGomme()) {
             return 0;
-        } else if (comparePlayerPacMan.getGommeCoins() > this.getGommeCoins()) {
+        } else if (comparePlayerPacMan.getGomme() > this.getGomme()) {
             return -1;
         } else {
             return 1;

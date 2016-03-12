@@ -7,8 +7,8 @@
     "blindness": 9,
     "speed": 10,
     "jump-boost": -1,
-    "double-coins": 8,
-    "coins-magnet": 10
+    "double-gommes": 8,
+    "gommes-magnet": 10
   },
   "portals": [
     {

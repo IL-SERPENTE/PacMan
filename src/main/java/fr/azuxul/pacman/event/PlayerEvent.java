@@ -102,7 +102,7 @@ public class PlayerEvent implements Listener {
 
             Player player = (Player) event.getEntity();
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
-            int gommes = playerPacMan.getGommeCoins(); // Get player gommes
+            int gommes = playerPacMan.getGomme(); // Get player gommes
 
             if (playerPacMan.getInvulnerableRemainingTime() >= 0) {
                 event.setCancelled(true);
@@ -147,7 +147,7 @@ public class PlayerEvent implements Listener {
             }
 
             int gommes = 0;
-            int playerGommes = playerPacMan.getGommeCoins();
+            int playerGommes = playerPacMan.getGomme();
 
             if (playerGommes > 4)
                 gommes = (int) Math.round(playerGommes * 0.2); // Calculate percent of player gommes
@@ -162,7 +162,7 @@ public class PlayerEvent implements Listener {
             double z = location.getZ();
 
             if (gommes > 0)
-                gameManager.getGommeManager().spawnBigCoin(world, x, y, z, true, gommes);
+                gameManager.getGommeManager().spawnBigGomme(world, x, y, z, true, gommes);
 
             ParticleEffect.FIREWORKS_SPARK.display(2.0f, 2.0f, 2.0f, 0.0f, 50, location, 50.0f);
 

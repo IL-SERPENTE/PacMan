@@ -36,8 +36,8 @@ public class Gomme extends EntityArmorStand {
      * @param x           X location
      * @param y           Y location
      * @param z           Z location
-     * @param gommeDrooped if true, coins was remove after 30s,
-     *                    the coin not subtract of global coin number
+     * @param gommeDrooped if true, gommes was remove after 30s,
+     *                    the gomme not subtract of global gomme number
      *                    when is catch and spawn effect is special
      */
     public Gomme(World world, double x, double y, double z, boolean gommeDrooped) {
@@ -65,7 +65,7 @@ public class Gomme extends EntityArmorStand {
 
             GameManager gameManager = PacMan.getGameManager();
 
-            // Kill coin after 600 ticks (30s)
+            // Kill gomme after 600 ticks (30s)
             gameManager.getServer().getScheduler().runTaskLater(gameManager.getPlugin(), () -> this.getBukkitEntity().remove(), 600L);
 
             // Get randomly velocity
@@ -83,10 +83,10 @@ public class Gomme extends EntityArmorStand {
      * @param x           X location
      * @param y           Y location
      * @param z           Z location
-     * @param gommeDrooped if true, coins was remove after 30s,
-     *                    the coin not subtract of global coin number
+     * @param gommeDrooped if true, gommes was remove after 30s,
+     *                    the gomme not subtract of global gomme number
      *                    when is catch and spawn effect is special
-     * @param gommeValue   number of coin added to player coin count
+     * @param gommeValue   number of gomme added to player gomme count
      *                    when is picked up
      */
     public Gomme(World world, double x, double y, double z, boolean gommeDrooped, int gommeValue) {
@@ -114,7 +114,7 @@ public class Gomme extends EntityArmorStand {
 
             GameManager gameManager = PacMan.getGameManager();
 
-            // Kill coin after 600 ticks (30s)
+            // Kill gomme after 600 ticks (30s)
             gameManager.getServer().getScheduler().runTaskLater(gameManager.getPlugin(), () -> this.getBukkitEntity().remove(), 600L);
 
             // Get randomly velocity
@@ -125,7 +125,7 @@ public class Gomme extends EntityArmorStand {
     }
 
     /**
-     * Spawn this coin
+     * Spawn this gomme
      *
      * @param world    world to spawn
      * @param x        x location
@@ -146,7 +146,7 @@ public class Gomme extends EntityArmorStand {
     }
 
     /**
-     * Get if coin was drooped by player
+     * Get if gomme was drooped by player
      *
      * @return droopedByPlayer
      */
@@ -169,7 +169,7 @@ public class Gomme extends EntityArmorStand {
         Status status = gameManager.getStatus();
         double distanceAtGomme = this.getBukkitEntity().getLocation().distance(playerLocation); // Calculate distance
 
-        // If IN_GAME, player game mode is not to spectator, coin is alive and distance at coins is <= 0.65 or player has coins magnet booster
+        // If IN_GAME, player game mode is not to spectator, gomme is alive and distance at gommes is <= 0.65 or player has gommes magnet booster
         if (status.equals(Status.IN_GAME) && !player.getGameMode().equals(GameMode.SPECTATOR) && this.isAlive()) {
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
@@ -194,16 +194,16 @@ public class Gomme extends EntityArmorStand {
 
         player.playNote(playerLocation, Instrument.PIANO, new Note(22));
 
-        playerPacMan.setGomme(playerPacMan.getGommeCoins() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_GOMMES) ? gommeValue * 2 : gommeValue)); // Add gommes to player
+        playerPacMan.setGomme(playerPacMan.getGomme() + (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.DOUBLE_GOMMES) ? gommeValue * 2 : gommeValue)); // Add gommes to player
 
         // Send scoreboard to player
         gameManager.getScoreboard().sendScoreboardToPlayer(player);
 
-        if (!this.isDroopedByPlayer()) { // If coin was not drooped by player
+        if (!this.isDroopedByPlayer()) { // If gomme was not drooped by player
 
             // Set global gomme
-            int globalCoins = gameManager.getGommeManager().getRemainingGlobalCoins() - gommeValue;
-            gameManager.getGommeManager().setRemainingGlobalCoins(globalCoins);
+            int globalGommes = gameManager.getGommeManager().getRemainingGlobalGommes() - gommeValue;
+            gameManager.getGommeManager().setRemainingGlobalGommes(globalGommes);
         }
     }
 
