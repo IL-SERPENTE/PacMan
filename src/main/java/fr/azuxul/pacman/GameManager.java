@@ -252,6 +252,7 @@ public class GameManager extends Game<PlayerPacMan> {
             player.getInventory().clear(); // Clear inventory
             player.getInventory().addItem(woodenSword); // Give wooden sword
             player.teleport(spawns.get(spawnIndex));
+            player.getInventory().setHeldItemSlot(0);
             spawnIndex++;
 
             playerPacMan.setInvulnerableTime(5);
