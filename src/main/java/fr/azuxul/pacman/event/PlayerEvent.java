@@ -185,7 +185,7 @@ public class PlayerEvent implements Listener {
             if (gomme != null)
                 event.setRespawnLocation(gomme.getBukkitEntity().getLocation().clone().add(0, 0.3, 0));
             else
-                player.setBedSpawnLocation(gameManager.getMapCenter(), true);
+                event.setRespawnLocation(gameManager.getMapCenter());
         }
     }
 
