@@ -74,7 +74,9 @@ public class GameManager extends Game<PlayerPacMan> {
                 .addPage("§lPvp ?§0",
                         " Vous pouvez taper\n" +
                                 " vos adversaires\n" +
-                                " pour leur faire\n perdre des gommes !")
+                                " pour leur faire\n perdre des gommes !\n" +
+                                " Quand un joueur\n meure, il lâche\n" +
+                                " 20% de ces gommes.")
                 .addPage("&lPowerups &0",
                         " Durant la partie,\n certains powerups\n" +
                                 " peuvent apparaître !\n Prenez les" +
