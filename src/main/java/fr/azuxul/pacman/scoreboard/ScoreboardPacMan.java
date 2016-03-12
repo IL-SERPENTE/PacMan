@@ -4,6 +4,7 @@ import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import net.samagames.api.games.Status;
+import net.samagames.tools.PlayerUtils;
 import net.samagames.tools.chat.ActionBarAPI;
 import net.samagames.tools.scoreboards.ObjectiveSign;
 import org.bukkit.ChatColor;
@@ -133,7 +134,7 @@ public class ScoreboardPacMan {
 
             try {
                 line++;
-                objectiveSign.setLine(line, ChatColor.GRAY + playerPacManDisplay.getPlayerIfOnline().getDisplayName() + ChatColor.GRAY + " : " + ChatColor.GREEN + playerPacManDisplay.getGomme());
+                objectiveSign.setLine(line, ChatColor.GRAY + PlayerUtils.getColoredFormattedPlayerName(player) + ChatColor.GRAY + " : " + ChatColor.GREEN + playerPacManDisplay.getGomme());
             } catch (NullPointerException e) {
                 gameManager.getServer().getLogger().warning(String.valueOf(e));
             }
