@@ -166,6 +166,8 @@ public class PlayerEvent implements Listener {
             firework.setFireworkMeta(fireworkMeta);
 
             event.setDeathMessage("");
+
+            player.spigot().respawn();
         }
     }
 
@@ -181,7 +183,7 @@ public class PlayerEvent implements Listener {
 
             Gomme gomme = gameManager.getGommeManager().getRandomNaturalGomme();
             if (gomme != null)
-                player.setBedSpawnLocation(gomme.getBukkitEntity().getLocation().add(0, 1, 0), true);
+                event.setRespawnLocation(gomme.getBukkitEntity().getLocation().clone().add(0, 1, 0));
             else
                 player.setBedSpawnLocation(gameManager.getMapCenter(), true);
         }
