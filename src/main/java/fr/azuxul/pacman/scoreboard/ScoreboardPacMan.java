@@ -65,6 +65,11 @@ public class ScoreboardPacMan {
         if (!gameManager.getStatus().equals(Status.IN_GAME)) // If game is not started
             return;
 
+        PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId()); // Get playerPacMan
+
+        if (playerPacMan == null)
+            return;
+
         List<PlayerPacMan> playerPacManList = gameManager.getPlayerPacManList();
         Scoreboard scoreboard = player.getScoreboard();
 
@@ -89,7 +94,6 @@ public class ScoreboardPacMan {
                 generateGlobalTeam(scoreboard);
         }
 
-        PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId()); // Get playerPacMan
         ObjectiveSign objectiveSign = playerPacMan.getObjectiveSign();
 
         if (objectiveSign == null) {
