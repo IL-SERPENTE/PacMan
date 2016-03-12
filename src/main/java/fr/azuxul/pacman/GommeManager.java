@@ -35,10 +35,6 @@ public class GommeManager {
         return gommeList.get(RandomUtils.nextInt(gommeList.size() - 1));
     }
 
-    public List<Gomme> getGommeList() {
-        return gommeList;
-    }
-
     /**
      * Get number of global gommes remaining
      *
@@ -98,5 +94,6 @@ public class GommeManager {
 
     public void killAllGommes() {
         gommeList.forEach(Entity::die);
+        playerGommeList.forEach(Entity::die);
     }
 }
