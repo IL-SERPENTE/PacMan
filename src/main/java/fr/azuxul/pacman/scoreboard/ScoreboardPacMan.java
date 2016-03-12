@@ -123,7 +123,7 @@ public class ScoreboardPacMan {
         int maxI = size >= 5 ? 4 : size;
         int line = 7;
 
-        for (int i = 0; i <= maxI; i++) {
+        for (int i = playerPacManList.size() - 1; i <= maxI; i++) {
 
             PlayerPacMan playerPacManDisplay = playerPacManList.get(i); // Get playerPacMan
 
