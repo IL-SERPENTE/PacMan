@@ -1,5 +1,6 @@
 package fr.azuxul.pacman.timer;
 
+import fr.azuxul.pacman.EndCause;
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.api.SamaGamesAPI;
@@ -48,7 +49,7 @@ public class TimerPacMan implements Runnable {
                 seconds = 59;
                 if (minutes <= -1) {
                     setToZero();
-                    gameManager.end();
+                    gameManager.end(EndCause.TIMER);
                 }
             }
         }

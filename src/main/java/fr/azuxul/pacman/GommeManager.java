@@ -51,7 +51,7 @@ public class GommeManager {
         if (remainingGlobalGommes <= 0 && !status.equals(Status.FINISHED)) {
 
             gameManager.getServer().getOnlinePlayers().forEach(gameManager.getScoreboard()::sendScoreboardToPlayer); // Update scoreboard
-            gameManager.end(); // End
+            gameManager.end(EndCause.GOMMES); // End
         }
     }
 

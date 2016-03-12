@@ -118,7 +118,7 @@ public class GameManager extends Game<PlayerPacMan> {
         super.handleLogout(player);
 
         if (getConnectedPlayers() <= 1 && getStatus().equals(Status.IN_GAME))
-            end();
+            end(EndCause.PLAYER_LOGOUT);
     }
 
     @Override
@@ -269,7 +269,9 @@ public class GameManager extends Game<PlayerPacMan> {
      * Reward players
      * Display winners
      */
-    public void end() {
+    public void end(EndCause cause) {
+
+        displayEndMessage(cause);
 
         ITemplateManager templateManager = getCoherenceMachine().getTemplateManager();
         List<PlayerPacMan> playerPacManList = getPlayerPacManList();
@@ -327,5 +329,15 @@ public class GameManager extends Game<PlayerPacMan> {
         }
 
         this.handleGameEnd();
+    }
+
+    private void displayEndMessage(EndCause cause) {
+
+        if (cause.equals(EndCause.TIMER))
+            getServer().broadcastMessage(getCoherenceMachine().getGameTag() + ChatColor.GOLD + " Le timer est arrivé à zéro, la partie est terminée!");
+        else if (cause.equals(EndCause.GOMMES))
+            getServer().broadcastMessage(getCoherenceMachine().getGameTag() + ChatColor.GOLD + " Toutes les gommes ont été récupérées, la partie est terminée!");
+        else
+            getServer().broadcastMessage(getCoherenceMachine().getGameTag() + ChatColor.GOLD + " Il n'y a plus de joueurs, la partie est terminée!");
     }
 }
