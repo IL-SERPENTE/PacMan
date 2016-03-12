@@ -175,7 +175,7 @@ public class PlayerEvent implements Listener {
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
         if (gameManager.getStatus().equals(Status.IN_GAME)) {
-            playerPacMan.setInvulnerableTime(2);
+            playerPacMan.setInvulnerableTime(5);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
         }
     }
