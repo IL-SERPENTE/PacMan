@@ -19,6 +19,7 @@ public class GommeManager {
 
     private final GameManager gameManager;
     private final List<Gomme> gommeList;
+    private final List<Gomme> playerGommeList;
     private int remainingGlobalGommes;
     private int globalGommes;
 
@@ -26,20 +27,12 @@ public class GommeManager {
 
         this.gameManager = gameManager;
         this.gommeList = new ArrayList<>();
+        this.playerGommeList = new ArrayList<>();
     }
 
     public Gomme getRandomNaturalGomme() {
 
-        Gomme result = null;
-
-        for (int i = 3; i <= 0 || result == null; i--) {
-            Gomme gomme = gommeList.get(RandomUtils.nextInt(gommeList.size() - 1));
-            if (!gomme.isDroopedByPlayer()) {
-                result = gomme;
-            }
-        }
-
-        return result;
+        return gommeList.get(RandomUtils.nextInt(gommeList.size() - 1));
     }
 
     public List<Gomme> getGommeList() {
@@ -90,12 +83,17 @@ public class GommeManager {
 
     public void spawnGomme(World world, double x, double y, double z, boolean dopedByPlayer) {
 
-        gommeList.add(new Gomme(world, x, y, z, dopedByPlayer));
+        Gomme gomme = new Gomme(world, x, y, z, dopedByPlayer);
+
+        if (!dopedByPlayer)
+            gommeList.add(gomme);
+        else
+            playerGommeList.add(gomme);
     }
 
     public void spawnBigGomme(World world, double x, double y, double z, boolean dopedByPlayer, int gommeValue) {
 
-        gommeList.add(new Gomme(world, x, y, z, dopedByPlayer, gommeValue));
+        playerGommeList.add(new Gomme(world, x, y, z, dopedByPlayer, gommeValue));
     }
 
     public void killAllGommes() {
