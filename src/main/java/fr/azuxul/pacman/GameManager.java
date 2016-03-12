@@ -75,8 +75,8 @@ public class GameManager extends Game<PlayerPacMan> {
                         " Vous pouvez taper\n" +
                                 " vos adversaires\n" +
                                 " pour leur faire\n perdre des gommes !\n" +
-                                " Quand un joueur\n meure, il lâche\n" +
-                                " 20% de ces gommes.")
+                                " Quand un joueur\n meurt, il lâche\n" +
+                                " 20% de ses gommes.")
                 .addPage("&lPowerups &0",
                         " Durant la partie,\n certains powerups\n" +
                                 " peuvent apparaître !\n Prenez les" +
@@ -289,19 +289,9 @@ public class GameManager extends Game<PlayerPacMan> {
 
             if (playerPacMan.getGomme() > 0 && gommeManager.getGlobalGommes() > 0) {
                 percentOfGommes = playerPacMan.getGomme() * 100 / gommeManager.getGlobalGommes(); // Calculate percent of player Gommes
-                int coins = percentOfGommes / 5; // Calculate coins for player
+                int coins = percentOfGommes / 2; // Calculate coins for player
 
                 playerPacMan.addCoins(coins, percentOfGommes + "% des gommes récupérée");
-            }
-
-            if (winners.contains(playerPacMan)) {
-                if (winners.indexOf(playerPacMan) == 2) {
-                    playerPacMan.addCoins(30, "Partie gagnée");
-                    playerPacMan.addStars(2, "Partie gagnée");
-                } else {
-                    playerPacMan.addCoins(15, "Terminé dans le classement");
-                    playerPacMan.addStars(1, "Terminé dans le classement");
-                }
             }
 
             if (percentOfGommes >= 35) {
@@ -313,22 +303,34 @@ public class GameManager extends Game<PlayerPacMan> {
         if (!winners.isEmpty()) { // If winners is not empty
 
             int winnerSize = winners.size();
+            PlayerPacMan winner;
 
             if (winnerSize < 3) { // If winners size < 3
 
-                PlayerPacMan winner = winners.get(winnerSize - 1); // Get winner
+                winner = winners.get(winnerSize - 1); // Get winner
 
                 templateManager.getPlayerWinTemplate().execute(winner.getPlayerIfOnline(), winner.getGomme()); // Display player win template
             } else {
 
                 // Get winners
-                PlayerPacMan winner = winners.get(2);
+                winner = winners.get(2);
                 PlayerPacMan second = winners.get(1);
                 PlayerPacMan third = winners.get(0);
 
+                String message = "Terminé dans le classement";
+
+                second.addCoins(15, message);
+                second.addStars(1, message);
+                third.addCoins(15, message);
+                third.addStars(1, message);
+
                 templateManager.getPlayerLeaderboardWinTemplate().execute(winner.getPlayerIfOnline(), second.getPlayerIfOnline(), third.getPlayerIfOnline(), winner.getGomme(), second.getGomme(), third.getGomme()); // Display players leadboard template
             }
+
+            winner.addCoins(30, "Partie gagnée");
+            winner.addStars(2, "Partie gagnée");
         }
+
 
         this.handleGameEnd();
     }

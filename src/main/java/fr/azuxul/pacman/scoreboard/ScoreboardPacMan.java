@@ -120,10 +120,10 @@ public class ScoreboardPacMan {
         // Display classement
         Collections.sort(playerPacManList);
         int size = playerPacManList.size() - 1;
-        int maxI = size - 5 < 0 ? 0 : size - 5;
+        int maxI = size - 3 < 0 ? 0 : size - 3;
         int line = 7;
 
-        for (int i = maxI; i < playerPacManList.size() - 1; i++) {
+        for (int i = maxI; i < size + 1; i++) {
 
             PlayerPacMan playerPacManDisplay = playerPacManList.get(i); // Get playerPacMan
 
