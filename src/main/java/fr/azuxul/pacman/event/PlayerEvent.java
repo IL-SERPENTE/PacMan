@@ -183,7 +183,7 @@ public class PlayerEvent implements Listener {
 
             Gomme gomme = gameManager.getGommeManager().getRandomNaturalGomme();
             if (gomme != null)
-                event.setRespawnLocation(gomme.getBukkitEntity().getLocation().clone().add(0, 1, 0));
+                event.setRespawnLocation(gomme.getBukkitEntity().getLocation().clone().add(0, 0.3, 0));
             else
                 player.setBedSpawnLocation(gameManager.getMapCenter(), true);
         }
