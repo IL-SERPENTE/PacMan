@@ -1,7 +1,6 @@
 package fr.azuxul.pacman.event;
 
 import fr.azuxul.pacman.GameManager;
-import fr.azuxul.pacman.entity.Gomme;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.portal.Portal;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
@@ -181,11 +180,7 @@ public class PlayerEvent implements Listener {
             playerPacMan.setInvulnerableTime(5);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
 
-            Gomme gomme = gameManager.getGommeManager().getRandomNaturalGomme();
-            if (gomme != null)
-                event.setRespawnLocation(gomme.getBukkitEntity().getLocation().clone().add(0, 0.3, 0));
-            else
-                event.setRespawnLocation(gameManager.getMapCenter());
+            event.setRespawnLocation(gameManager.getGommeManager().getGommeList().get(0).getLocation().add(0, 0.3, 0));
         }
     }
 

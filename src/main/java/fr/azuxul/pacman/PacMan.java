@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 
 /**
  * Main class of PacMan plugin for SpigotMC 1.8.8-R0.1-SNAPSHOT
@@ -103,6 +104,7 @@ public class PacMan extends JavaPlugin {
                 }
 
         gameManager.getGommeManager().setGlobalGommes(globalGommes); // Set global gommes
+        Collections.shuffle(gameManager.getGommeManager().getGommeList());
     }
 
     @Override

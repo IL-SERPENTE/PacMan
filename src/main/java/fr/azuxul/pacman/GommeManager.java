@@ -4,7 +4,6 @@ import fr.azuxul.pacman.entity.Gomme;
 import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.games.Status;
-import org.apache.commons.lang.math.RandomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +29,8 @@ public class GommeManager {
         this.playerGommeList = new ArrayList<>();
     }
 
-    public Gomme getRandomNaturalGomme() {
-
-        if (gommeList.isEmpty())
-            return null;
-        else if (gommeList.size() <= 1) {
-            return gommeList.get(0);
-        } else
-            return gommeList.get(RandomUtils.nextInt(gommeList.size() - 1));
+    public List<Gomme> getGommeList() {
+        return gommeList;
     }
 
     public void removeGomme(Gomme gomme) {

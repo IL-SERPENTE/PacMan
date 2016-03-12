@@ -217,6 +217,11 @@ public class Gomme extends EntityArmorStand {
         setGravity(false);
     }
 
+    public Location getLocation() {
+
+        return new Location(world.getWorld(), locX, locY, locZ);
+    }
+
     @Override
     public boolean equals(Object compareObject) {
 
