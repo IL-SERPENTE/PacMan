@@ -6,6 +6,7 @@ import fr.azuxul.pacman.scoreboard.ScoreboardPacMan;
 import fr.azuxul.pacman.timer.TimerPacMan;
 import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.Game;
+import net.samagames.api.games.Status;
 import net.samagames.api.games.themachine.messages.ITemplateManager;
 import net.samagames.tools.LocationUtils;
 import net.samagames.tools.RulesBook;
@@ -110,6 +111,26 @@ public class GameManager extends Game<PlayerPacMan> {
         Collections.sort(winners);
 
         return winners;
+    }
+
+    @Override
+    public void handleLogout(Player player) {
+        super.handleLogout(player);
+
+        if (getConnectedPlayers() <= 1 && getStatus().equals(Status.IN_GAME))
+            end();
+    }
+
+    @Override
+    public void handleLogin(Player player) {
+
+        player.setGameMode(GameMode.ADVENTURE);
+        player.getInventory().clear();
+        player.getInventory().addItem(getRulesBook());
+
+        player.teleport(getSpawn());
+
+        super.handleLogin(player);
     }
 
     public ItemStack getRulesBook() {

@@ -45,18 +45,6 @@ public class PlayerEvent implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-
-        Player player = event.getPlayer();
-
-        player.setGameMode(GameMode.ADVENTURE);
-        player.getInventory().clear();
-        player.getInventory().addItem(gameManager.getRulesBook());
-
-        player.teleport(gameManager.getSpawn());
-    }
-
-    @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
 
         Player player = event.getPlayer();
