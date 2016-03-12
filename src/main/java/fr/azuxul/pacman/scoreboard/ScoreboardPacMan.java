@@ -133,7 +133,7 @@ public class ScoreboardPacMan {
 
             try {
                 line++;
-                objectiveSign.setLine(line, ChatColor.GRAY + playerPacManDisplay.getOfflinePlayer().getName() + ChatColor.GRAY + " : " + ChatColor.GREEN + playerPacManDisplay.getGomme());
+                objectiveSign.setLine(line, ChatColor.GRAY + playerPacManDisplay.getPlayerIfOnline().getDisplayName() + ChatColor.GRAY + " : " + ChatColor.GREEN + playerPacManDisplay.getGomme());
             } catch (NullPointerException e) {
                 gameManager.getServer().getLogger().warning(String.valueOf(e));
             }
