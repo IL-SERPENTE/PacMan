@@ -57,7 +57,7 @@ public class GameManager extends Game<PlayerPacMan> {
         this.powerupManager = new PowerupManager(plugin);
         this.gommeManager = new GommeManager(this);
         this.portalManager = new PortalManager(this);
-        this.spawn = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("wating-lobby").getAsString());
+        this.spawn = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("waiting-lobby").getAsString());
         this.mapCenter = LocationUtils.str2loc(SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("map-center").getAsString());
         this.spawns = new ArrayList<>();
 
