@@ -35,6 +35,14 @@ public class GommeManager {
         return gommeList.get(RandomUtils.nextInt(gommeList.size() - 1));
     }
 
+    public void removeGomme(Gomme gomme) {
+
+        if (gomme.isDroopedByPlayer())
+            playerGommeList.remove(gomme);
+        else
+            gommeList.remove(gomme);
+    }
+
     /**
      * Get number of global gommes remaining
      *

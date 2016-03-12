@@ -204,6 +204,7 @@ public class Gomme extends EntityArmorStand {
             // Set global gomme
             int globalGommes = gameManager.getGommeManager().getRemainingGlobalGommes() - gommeValue;
             gameManager.getGommeManager().setRemainingGlobalGommes(globalGommes);
+            gameManager.getGommeManager().removeGomme(this);
         }
     }
 
