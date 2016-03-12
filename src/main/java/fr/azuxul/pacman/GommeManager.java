@@ -32,7 +32,12 @@ public class GommeManager {
 
     public Gomme getRandomNaturalGomme() {
 
-        return gommeList.get(RandomUtils.nextInt(gommeList.size() - 1));
+        if (gommeList.isEmpty())
+            return null;
+        else if (gommeList.size() <= 1) {
+            return gommeList.get(0);
+        } else
+            return gommeList.get(RandomUtils.nextInt(gommeList.size() - 1));
     }
 
     public void removeGomme(Gomme gomme) {
