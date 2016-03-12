@@ -150,7 +150,7 @@ public class Gomme extends EntityArmorStand {
      *
      * @return droopedByPlayer
      */
-    private boolean isDroopedByPlayer() {
+    public boolean isDroopedByPlayer() {
 
         return droopedByPlayer;
     }
