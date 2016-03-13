@@ -1,6 +1,7 @@
 package fr.azuxul.pacman.event;
 
 import fr.azuxul.pacman.GameManager;
+import fr.azuxul.pacman.GommeManager;
 import fr.azuxul.pacman.entity.Gomme;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.portal.Portal;
@@ -180,11 +181,13 @@ public class PlayerEvent implements Listener {
 
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
 
-            Gomme gomme = gameManager.getGommeManager().getGommeList().get(0);
+            GommeManager gommeManager = gameManager.getGommeManager();
+            Gomme gomme = gommeManager.getGommeList().get(0);
 
             if (gomme.getLocation().getY() < 0) {
                 gomme.die();
-                gameManager.getGommeManager().removeGomme(gomme);
+                gommeManager.removeGomme(gomme);
+                gommeManager.setGlobalGommes(gommeManager.getGlobalGommes() - 1);
             } else
                 event.setRespawnLocation(gomme.getLocation().add(0, 0.3, 0));
 
