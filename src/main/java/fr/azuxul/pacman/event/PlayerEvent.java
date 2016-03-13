@@ -179,6 +179,7 @@ public class PlayerEvent implements Listener {
 
         if (gameManager.getStatus().equals(Status.IN_GAME)) {
 
+            gameManager.getPlayer(player.getUniqueId()).setInvulnerableTime(5);
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
 
             GommeManager gommeManager = gameManager.getGommeManager();
