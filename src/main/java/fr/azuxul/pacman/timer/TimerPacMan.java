@@ -52,17 +52,17 @@ public class TimerPacMan implements Runnable {
                     gameManager.end(EndCause.TIMER);
                 }
             }
+
+            // Update scoreboard to all player and update player
+            gameManager.getInGamePlayers().entrySet().forEach(entry -> {
+                gameManager.getScoreboard().sendScoreboardToPlayer(entry.getValue().getPlayerIfOnline());
+
+                PlayerPacMan playerPacMan = entry.getValue();
+
+                if (playerPacMan != null)
+                    playerPacMan.update();
+            });
         }
-
-        // Update scoreboard to all player and update player
-        gameManager.getInGamePlayers().entrySet().forEach(entry -> {
-            gameManager.getScoreboard().sendScoreboardToPlayer(entry.getValue().getPlayerIfOnline());
-
-            PlayerPacMan playerPacMan = entry.getValue();
-
-            if (playerPacMan != null)
-                playerPacMan.update();
-        });
     }
 
     /**

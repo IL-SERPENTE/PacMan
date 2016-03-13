@@ -253,6 +253,7 @@ public class GameManager extends Game<PlayerPacMan> {
             player.getInventory().addItem(woodenSword); // Give wooden sword
             player.teleport(spawns.get(spawnIndex));
             player.getInventory().setHeldItemSlot(0);
+            player.setBedSpawnLocation(playerSpawn, true);
             spawnIndex++;
 
             playerPacMan.setInvulnerableTime(5);
@@ -265,6 +266,11 @@ public class GameManager extends Game<PlayerPacMan> {
         playerSpawn.getWorld().setSpawnLocation(playerSpawn.getBlockX(), playerSpawn.getBlockY(), playerSpawn.getBlockZ());
 
         powerupManager.start();
+    }
+
+    public boolean isTestServer() {
+
+        return SamaGamesAPI.get().getServerName().startsWith("TestServer_");
     }
 
     /**

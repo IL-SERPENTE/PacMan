@@ -133,8 +133,10 @@ public class ScoreboardPacMan {
             PlayerPacMan playerPacManDisplay = playerPacManList.get(i); // Get playerPacMan
 
             try {
-                line++;
-                objectiveSign.setLine(line, ChatColor.GRAY + PlayerUtils.getColoredFormattedPlayerName(playerPacManDisplay.getUUID()) + ChatColor.GRAY + " : " + ChatColor.GREEN + playerPacManDisplay.getGomme());
+                if (!gameManager.isTestServer()) {
+                    line++;
+                    objectiveSign.setLine(line, ChatColor.GRAY + PlayerUtils.getColoredFormattedPlayerName(playerPacManDisplay.getUUID()) + ChatColor.GRAY + " : " + ChatColor.GREEN + playerPacManDisplay.getGomme());
+                }
             } catch (NullPointerException e) {
                 gameManager.getServer().getLogger().warning(String.valueOf(e));
             }
