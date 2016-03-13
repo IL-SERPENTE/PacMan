@@ -182,7 +182,11 @@ public class PlayerEvent implements Listener {
 
             Gomme gomme = gameManager.getGommeManager().getGommeList().get(0);
 
-            event.setRespawnLocation(gomme.getLocation().add(0, 0.3, 0));
+            if (gomme.getLocation().getY() < 0) {
+                gomme.die();
+                gameManager.getGommeManager().removeGomme(gomme);
+            } else
+                event.setRespawnLocation(gomme.getLocation().add(0, 0.3, 0));
 
             gameManager.getServer().getLogger().info(player.getDisplayName() + " respawn at " + event.getRespawnLocation() + ". Set respawn at " + gomme.getLocation().add(0, 0.3, 0) + ".");
         }
