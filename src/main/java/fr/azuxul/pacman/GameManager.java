@@ -266,6 +266,7 @@ public class GameManager extends Game<PlayerPacMan> {
         playerSpawn.getWorld().setSpawnLocation(playerSpawn.getBlockX(), playerSpawn.getBlockY(), playerSpawn.getBlockZ());
 
         powerupManager.start();
+        getServer().getLogger().info("World spawn location : " + playerSpawn.getWorld().getSpawnLocation());
     }
 
     public boolean isTestServer() {
