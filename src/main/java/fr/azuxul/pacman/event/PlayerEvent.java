@@ -187,8 +187,8 @@ public class PlayerEvent implements Listener {
 
             if (gomme.getLocation().getY() < 0) {
                 gomme.die();
+                gommeManager.setRemainingGlobalGommes(gommeManager.getRemainingGlobalGommes() - 1);
                 gommeManager.removeGomme(gomme);
-                gommeManager.setGlobalGommes(gommeManager.getGlobalGommes() - 1);
             } else
                 event.setRespawnLocation(gomme.getLocation().add(0, 0.3, 0));
 
