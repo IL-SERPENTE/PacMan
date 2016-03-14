@@ -53,7 +53,7 @@ public class PlayerEvent implements Listener {
         Block block = event.getFrom().getBlock();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-        if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.SPEED)) {
+        if (playerPacMan != null && playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.SPEED)) {
 
             // Get random color
             ParticleEffect.ParticleColor color = new ParticleEffect.OrdinaryColor(RandomUtils.nextInt(255), RandomUtils.nextInt(255), RandomUtils.nextInt(255));
