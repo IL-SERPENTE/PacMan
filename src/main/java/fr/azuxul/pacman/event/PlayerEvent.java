@@ -134,6 +134,8 @@ public class PlayerEvent implements Listener {
 
                 PlayerPacMan killerPacMan = gameManager.getPlayer(killer.getUniqueId());
                 killerPacMan.setKills(killerPacMan.getKills() + 1);
+
+                ParticleEffect.HEART.display(1, 1, 1, 1, 1, killer.getLocation().add(0, 2.2, 0), 25);
             }
 
             int gommes = 0;
