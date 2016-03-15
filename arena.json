@@ -10,6 +10,11 @@
     "double-gommes": 8,
     "gommes-magnet": 10
   },
+  "map-init": {
+    "radius": "100, 20, 100",
+    "gomme-block": "GOLD_BLOCK",
+    "powerup-block": "DIAMOND_BLOCK"
+  },
   "portals": [
     {
       "name": "portal0",

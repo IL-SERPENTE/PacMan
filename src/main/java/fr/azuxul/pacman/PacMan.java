@@ -1,5 +1,6 @@
 package fr.azuxul.pacman;
 
+import com.google.gson.JsonObject;
 import fr.azuxul.pacman.entity.Gomme;
 import fr.azuxul.pacman.event.PlayerEvent;
 import fr.azuxul.pacman.powerup.BasicPowerup;
@@ -20,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 /**
  * Main class of PacMan plugin for SpigotMC 1.8.8-R0.1-SNAPSHOT
@@ -30,6 +32,9 @@ import java.util.Collections;
 public class PacMan extends JavaPlugin {
 
     private static GameManager gameManager;
+    private Material gommeMaterial;
+    private Material powerupMaterial;
+    private String[] initRadius;
 
     public static GameManager getGameManager() {
         return gameManager;
@@ -56,11 +61,35 @@ public class PacMan extends JavaPlugin {
         powerupManager.setInverseFrequency(spawnFrequency); // Set spawn frequency
     }
 
+    private void mapPreInitialisation() {
+
+        Logger logger = gameManager.getServer().getLogger();
+
+        JsonObject json = SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("map-init").getAsJsonObject();
+
+        initRadius = json.get("radius").getAsString().split(", ");
+
+        if (initRadius.length > 3) {
+            logger.warning("Map initialisation warning, radius is not valid !");
+            return;
+        }
+
+        try {
+            gommeMaterial = Material.getMaterial(json.get("gomme-block").getAsString().toUpperCase());
+            powerupMaterial = Material.getMaterial(json.get("powerup-block").getAsString().toUpperCase());
+        } catch (Exception e) {
+            logger.warning("Map initialisation warning, blocks is not valid ! " + e);
+            return;
+        }
+
+        mapInitialisation();
+    }
+
     /**
      * Initialise the map :
      * Replace gold block with gommes
      */
-    private static void mapInitialisation() {
+    private void mapInitialisation() {
 
         PowerupManager powerupManager = gameManager.getPowerupManager();
         GommeManager gommeManager = gameManager.getGommeManager();
@@ -72,12 +101,17 @@ public class PacMan extends JavaPlugin {
 
         // Replace gold block with gommes
         int globalGommes = 0;
-        int xMin = baseLocation.getBlockX() - 100;
-        int xMax = baseLocation.getBlockX() + 100;
-        int yMin = baseLocation.getBlockY() - 20;
-        int yMax = baseLocation.getBlockY() + 70;
-        int zMin = baseLocation.getBlockZ() - 100;
-        int zMax = baseLocation.getBlockZ() + 100;
+
+        int xRadius = Integer.parseInt(initRadius[0]);
+        int yRadius = Integer.parseInt(initRadius[1]);
+        int zRadius = Integer.parseInt(initRadius[2]);
+
+        int xMin = baseLocation.getBlockX() - xRadius;
+        int xMax = baseLocation.getBlockX() + xRadius;
+        int yMin = baseLocation.getBlockY() - yRadius;
+        int yMax = baseLocation.getBlockY() + yRadius;
+        int zMin = baseLocation.getBlockZ() - zRadius;
+        int zMax = baseLocation.getBlockZ() + zRadius;
 
         if (yMin <= 0)
             yMin = 1;
@@ -89,19 +123,19 @@ public class PacMan extends JavaPlugin {
                 for (int y = yMin; y <= yMax; y++) {
                     Block block = world.getBlockAt(x, y, z); // Get block
 
-                    if (block.getType().equals(Material.GOLD_BLOCK)) { // If is gold block
+                    if (block.getType().equals(gommeMaterial)) { // If is gold block
                         block.setType(Material.AIR); // Set air
 
                         // Spawn normal gomme
                         gommeManager.spawnGomme(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
                         globalGommes++;
 
-                    } else if (block.getType().equals(Material.DIAMOND_BLOCK)) {
+                    } else if (block.getType().equals(powerupMaterial)) {
                         block.setType(Material.AIR); // Set air
 
                         powerupManager.registerLocation(new Location(world, x + 0.5, y, z + 0.5)); // Register booster location
                     }
-                }
+                    }
 
         gameManager.getGommeManager().setGlobalGommes(globalGommes); // Set global gommes
         Collections.shuffle(gameManager.getGommeManager().getGommeList());
@@ -145,7 +179,7 @@ public class PacMan extends JavaPlugin {
         world.setWeatherDuration(0); // Clear weather
 
         powerupInitialisation();
-        mapInitialisation();
+        mapPreInitialisation();
     }
 
     @Override
