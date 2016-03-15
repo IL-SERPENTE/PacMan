@@ -7,6 +7,7 @@ import fr.azuxul.pacman.powerup.BasicPowerup;
 import fr.azuxul.pacman.powerup.PowerupBlindness;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
 import fr.azuxul.pacman.powerup.PowerupSwap;
+import net.minecraft.server.v1_8_R3.Entity;
 import net.minecraft.server.v1_8_R3.EntityTypes;
 import net.minecraft.server.v1_8_R3.World;
 import net.samagames.api.SamaGamesAPI;
@@ -18,9 +19,9 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -160,7 +161,11 @@ public class PacMan extends JavaPlugin {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, gameManager.getTimer(), 0L, 20L);
 
         // Register entity
-        registerEntity("Gomme", 69, Gomme.class);
+        try {
+            registerEntityInEntityEnum(Gomme.class, "Gomme", 69);
+        } catch (Exception e) {
+            getLogger().warning("Error to register entity Gomme " + e);
+        }
 
         // Kick players
         getServer().getOnlinePlayers().forEach(player -> player.kickPlayer(""));
@@ -187,24 +192,18 @@ public class PacMan extends JavaPlugin {
         gameManager.getGommeManager().killAllGommes();
     }
 
-    /**
-     * Register entity
-     *
-     * @param name  entity name
-     * @param id    entity id
-     * @param clazz entity class
-     */
-    private void registerEntity(String name, int id, Class clazz) {
+    private void registerEntityInEntityEnum(Class paramClass, String paramString, int paramInt) throws Exception {
+        ((Map<String, Class<? extends Entity>>) this.getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
+        ((Map<Class<? extends Entity>, String>) this.getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
+        ((Map<Integer, Class<? extends Entity>>) this.getPrivateStatic(EntityTypes.class, "e")).put(paramInt, paramClass);
+        ((Map<Class<? extends Entity>, Integer>) this.getPrivateStatic(EntityTypes.class, "f")).put(paramClass, paramInt);
+        ((Map<String, Integer>) this.getPrivateStatic(EntityTypes.class, "g")).put(paramString, paramInt);
+    }
 
-        // Exception when plugin are reloaded
+    private Object getPrivateStatic(Class clazz, String f) throws Exception {
+        Field field = clazz.getDeclaredField(f);
+        field.setAccessible(true);
 
-        try {
-            Method method = EntityTypes.class.getDeclaredMethod("a", Class.class, String.class, int.class); // Get method for register new entity
-            method.setAccessible(true); // Set accessible
-            method.invoke(null, clazz, name, id); // Invoke
-
-        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-            getLogger().warning(String.valueOf(e));
-        }
+        return field.get(null);
     }
 }
