@@ -13,6 +13,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -136,7 +137,7 @@ public class Gomme extends EntityArmorStand {
     private void spawn(World world, double x, double y, double z, Vector velocity) {
 
         this.setPosition(x, y, z); // Set location
-        world.addEntity(this); // Spawn
+        world.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM); // Spawn
 
         if (velocity != null) {
             this.getBukkitEntity().setVelocity(velocity); // Set velocity
