@@ -1,6 +1,7 @@
 package fr.azuxul.pacman.entity;
 
 import fr.azuxul.pacman.GameManager;
+import fr.azuxul.pacman.NBTTags;
 import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
@@ -29,6 +30,18 @@ public class Gomme extends EntityArmorStand {
     private final boolean big;
     private final int gommeValue;
 
+    public Gomme(World world) {
+        super(world);
+
+        droopedByPlayer = false;
+        big = false;
+        gommeValue = 1;
+
+        initNBT();
+
+        setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.GOLD_BLOCK))); // Set helmet
+    }
+
     /**
      * Class constructor and
      * spawn gomme
@@ -44,21 +57,12 @@ public class Gomme extends EntityArmorStand {
     public Gomme(World world, double x, double y, double z, boolean gommeDrooped) {
         super(world);
 
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
         Vector velocity = null;
         droopedByPlayer = gommeDrooped;
         big = false;
         gommeValue = 1;
 
-        c(nbtTagCompound); // Init nbtTagCompound
-
-        nbtTagCompound.setBoolean("Small", true); // Set Small
-        nbtTagCompound.setBoolean("NoGravity", !gommeDrooped); // Set NoGravity
-        nbtTagCompound.setBoolean("Invulnerable", true); // Set Invulnerable
-        nbtTagCompound.setBoolean("Invisible", true); // Set Invisible
-        nbtTagCompound.setInt("DisabledSlots", 31); // Disable slots
-
-        f(nbtTagCompound); // Set nbtTagCompound
+        initNBT();
 
         setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.GOLD_BLOCK))); // Set helmet
 
@@ -93,21 +97,12 @@ public class Gomme extends EntityArmorStand {
     public Gomme(World world, double x, double y, double z, boolean gommeDrooped, int gommeValue) {
         super(world);
 
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
         Vector velocity = null;
         droopedByPlayer = gommeDrooped;
         big = true;
         this.gommeValue = gommeValue;
 
-        c(nbtTagCompound); // Init nbtTagCompound
-
-        nbtTagCompound.setBoolean("Small", false); // Set Normal
-        nbtTagCompound.setBoolean("NoGravity", !gommeDrooped); // Set NoGravity
-        nbtTagCompound.setBoolean("Invulnerable", true); // Set Invulnerable
-        nbtTagCompound.setBoolean("Invisible", true); // Set Invisible
-        nbtTagCompound.setInt("DisabledSlots", 31); // Disable slots
-
-        f(nbtTagCompound); // Set nbtTagCompound
+        initNBT();
 
         setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.EMERALD_BLOCK))); // Set helmet
 
@@ -123,6 +118,21 @@ public class Gomme extends EntityArmorStand {
         }
 
         spawn(world, x, y, z, velocity); // Spawn
+    }
+
+    private void initNBT() {
+
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+
+        c(nbtTagCompound); // Init nbtTagCompound
+
+        nbtTagCompound.setBoolean(NBTTags.SMALL.getName(), !big); // Set Normal
+        nbtTagCompound.setBoolean(NBTTags.NO_GRAVITY.getName(), !droopedByPlayer); // Set NoGravity
+        nbtTagCompound.setBoolean(NBTTags.INVULNERABLE.getName(), true); // Set Invulnerable
+        nbtTagCompound.setBoolean(NBTTags.INVISIBLE.getName(), true); // Set Invisible
+        nbtTagCompound.setInt(NBTTags.DISABLED_SLOTS.getName(), 31); // Disable slots
+
+        f(nbtTagCompound); // Set nbtTagCompound
     }
 
     /**
