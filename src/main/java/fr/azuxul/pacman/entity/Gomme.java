@@ -156,6 +156,13 @@ public class Gomme extends EntityArmorStand {
         }
     }
 
+    @Override
+    public void move(double d0, double d1, double d2) {
+
+        if (isDroopedByPlayer())
+            super.move(d0, d1, d2);
+    }
+
     /**
      * Get if gomme was drooped by player
      *
