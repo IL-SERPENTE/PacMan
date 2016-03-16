@@ -15,6 +15,7 @@ import net.samagames.tools.powerups.PowerupManager;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Main class of PacMan plugin for SpigotMC 1.8.8-R0.1-SNAPSHOT
@@ -62,16 +62,31 @@ public class PacMan extends JavaPlugin {
         powerupManager.setInverseFrequency(spawnFrequency); // Set spawn frequency
     }
 
+    private static void registerEntityInEntityEnum(Class paramClass, String paramString, int paramInt) throws Exception {
+        ((Map<String, Class<? extends Entity>>) getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
+        ((Map<Class<? extends Entity>, String>) getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
+        ((Map<Integer, Class<? extends Entity>>) getPrivateStatic(EntityTypes.class, "e")).put(paramInt, paramClass);
+        ((Map<Class<? extends Entity>, Integer>) getPrivateStatic(EntityTypes.class, "f")).put(paramClass, paramInt);
+        ((Map<String, Integer>) getPrivateStatic(EntityTypes.class, "g")).put(paramString, paramInt);
+    }
+
+    private static Object getPrivateStatic(Class clazz, String f) throws Exception {
+        Field field = clazz.getDeclaredField(f);
+        field.setAccessible(true);
+
+        return field.get(null);
+    }
+
     private void mapPreInitialisation() {
 
-        Logger logger = gameManager.getServer().getLogger();
+        Server server = gameManager.getServer();
 
         JsonObject json = SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("map-init").getAsJsonObject();
 
         initRadius = json.get("radius").getAsString().split(", ");
 
         if (initRadius.length > 3) {
-            logger.warning("Map initialisation warning, radius is not valid !");
+            server.getLogger().warning("Map initialisation warning, radius is not valid !");
             return;
         }
 
@@ -79,7 +94,7 @@ public class PacMan extends JavaPlugin {
             gommeMaterial = Material.getMaterial(json.get("gomme-block").getAsString().toUpperCase());
             powerupMaterial = Material.getMaterial(json.get("powerup-block").getAsString().toUpperCase());
         } catch (Exception e) {
-            logger.warning("Map initialisation warning, blocks is not valid ! " + e);
+            server.getLogger().warning("Map initialisation warning, blocks is not valid ! " + e);
             return;
         }
 
@@ -190,20 +205,5 @@ public class PacMan extends JavaPlugin {
     @Override
     public void onDisable() {
         gameManager.getGommeManager().killAllGommes();
-    }
-
-    private void registerEntityInEntityEnum(Class paramClass, String paramString, int paramInt) throws Exception {
-        ((Map<String, Class<? extends Entity>>) this.getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
-        ((Map<Class<? extends Entity>, String>) this.getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
-        ((Map<Integer, Class<? extends Entity>>) this.getPrivateStatic(EntityTypes.class, "e")).put(paramInt, paramClass);
-        ((Map<Class<? extends Entity>, Integer>) this.getPrivateStatic(EntityTypes.class, "f")).put(paramClass, paramInt);
-        ((Map<String, Integer>) this.getPrivateStatic(EntityTypes.class, "g")).put(paramString, paramInt);
-    }
-
-    private Object getPrivateStatic(Class clazz, String f) throws Exception {
-        Field field = clazz.getDeclaredField(f);
-        field.setAccessible(true);
-
-        return field.get(null);
     }
 }

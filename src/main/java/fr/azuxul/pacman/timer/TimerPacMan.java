@@ -5,7 +5,6 @@ import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.api.SamaGamesAPI;
 import net.samagames.api.games.Status;
-import org.bukkit.Server;
 
 /**
  * Timer for PacMan
@@ -16,7 +15,6 @@ import org.bukkit.Server;
 public class TimerPacMan implements Runnable {
 
     private final GameManager gameManager;
-    private final Server server;
     private short seconds;
     private short minutes;
 
@@ -27,7 +25,6 @@ public class TimerPacMan implements Runnable {
      */
     public TimerPacMan(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.server = gameManager.getServer();
         this.minutes = SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("timer").getAsShort();
     }
 
