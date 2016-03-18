@@ -45,7 +45,7 @@ public class Portal {
         GameManager gameManager = PacMan.getGameManager();
         PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-        if (playerPacMan.getPortalTicks() < 1) {
+        if (playerPacMan != null && playerPacMan.getPortalTicks() < 1) {
 
             int index = linkedPortals.size() > 1 ? 100 / linkedPortals.size() / (RandomUtils.nextInt(100) + 1) - 1 : 0;
 

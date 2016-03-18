@@ -192,13 +192,15 @@ public class Gomme extends EntityArmorStand {
 
             PlayerPacMan playerPacMan = gameManager.getPlayer(player.getUniqueId());
 
-            if (distanceAtGomme <= 0.65 || big) {
+            if (playerPacMan != null && !playerPacMan.isModerator()) {
+                if (distanceAtGomme <= 0.65 || big) {
 
-                addGommeToPlayer(player, playerPacMan);
+                    addGommeToPlayer(player, playerPacMan);
 
-            } else if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.GOMME_MAGNET)) {
+                } else if (playerPacMan.getActiveBooster() != null && playerPacMan.getActiveBooster().equals(PowerupEffectType.GOMME_MAGNET)) {
 
-                attractGomme(playerLocation);
+                    attractGomme(playerLocation);
+                }
             }
         }
     }
