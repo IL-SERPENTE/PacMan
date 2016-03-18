@@ -191,6 +191,8 @@ public class PlayerEvent implements Listener {
                 gomme.die();
                 gommeManager.setRemainingGlobalGommes(gommeManager.getRemainingGlobalGommes() - 1);
                 gommeManager.removeGomme(gomme);
+
+                gameManager.getServer().getLogger().info("Gomme at " + gomme.getLocation() + " are killed for invalid y");
             } else
                 event.setRespawnLocation(gomme.getLocation().add(0, 0.3, 0));
 
