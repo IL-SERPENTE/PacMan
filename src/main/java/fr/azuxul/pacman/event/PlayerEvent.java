@@ -196,7 +196,7 @@ public class PlayerEvent implements Listener {
             } else
                 event.setRespawnLocation(gomme.getLocation().add(0, 0.3, 0));
 
-            gameManager.getServer().getLogger().info(player.getDisplayName() + " respawn at " + event.getRespawnLocation() + ". Set respawn at " + gomme.getLocation().add(0, 0.3, 0) + ".");
+            gameManager.getServer().getLogger().info(player.getDisplayName() + " respawn at " + event.getRespawnLocation() + ". Set respawn at " + gomme.getLocation().add(0, 0.3, 0) + ", gomme is alive : " + gomme.isAlive() + ".");
         }
     }
 
