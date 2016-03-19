@@ -37,9 +37,13 @@ public class Gomme extends EntityArmorStand {
         big = false;
         gommeValue = 1;
 
-        initNBT();
+        GameManager gameManager = PacMan.getGameManager();
 
-        setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.GOLD_BLOCK))); // Set helmet
+        // Set global gomme
+        int globalGommes = gameManager.getGommeManager().getRemainingGlobalGommes() - gommeValue;
+        gameManager.getGommeManager().setRemainingGlobalGommes(globalGommes);
+        gameManager.getGommeManager().removeGomme(this);
+        die(); // Kill gomme
     }
 
     /**
