@@ -62,7 +62,7 @@ public class PacMan extends JavaPlugin {
         powerupManager.setInverseFrequency(spawnFrequency); // Set spawn frequency
     }
 
-    private static void registerEntityInEntityEnum(Class paramClass, String paramString, int paramInt) throws Exception {
+    private static void registerEntityInEntityEnum(Class paramClass, String paramString, int paramInt) throws NoSuchFieldException, IllegalAccessException {
         ((Map<String, Class<? extends Entity>>) getPrivateStatic(EntityTypes.class, "c")).put(paramString, paramClass);
         ((Map<Class<? extends Entity>, String>) getPrivateStatic(EntityTypes.class, "d")).put(paramClass, paramString);
         ((Map<Integer, Class<? extends Entity>>) getPrivateStatic(EntityTypes.class, "e")).put(paramInt, paramClass);
@@ -70,7 +70,7 @@ public class PacMan extends JavaPlugin {
         ((Map<String, Integer>) getPrivateStatic(EntityTypes.class, "g")).put(paramString, paramInt);
     }
 
-    private static Object getPrivateStatic(Class clazz, String f) throws Exception {
+    private static Object getPrivateStatic(Class clazz, String f) throws NoSuchFieldException, IllegalAccessException {
         Field field = clazz.getDeclaredField(f);
         field.setAccessible(true);
 
