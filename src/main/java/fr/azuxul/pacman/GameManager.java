@@ -293,6 +293,13 @@ public class GameManager extends Game<PlayerPacMan> {
         // Add Gommes to players
         for (PlayerPacMan playerPacMan : playerPacManList) {
 
+            int place = playerPacManList.size() - playerPacManList.indexOf(playerPacMan);
+            if (place == 1) {
+                playerPacMan.getPlayerIfOnline().sendTitle(ChatColor.GOLD + "Fin de la partie !", ChatColor.GREEN + "Vous êtes premier");
+            } else {
+                playerPacMan.getPlayerIfOnline().sendTitle(ChatColor.GOLD + "Fin de la partie !", ChatColor.GREEN + "Vous êtes " + place + "éme");
+            }
+
             int percentOfGommes = 0;
 
             if (playerPacMan.getGomme() > 0 && gommeManager.getGlobalGommes() > 0) {
