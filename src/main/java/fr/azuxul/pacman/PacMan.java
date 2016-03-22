@@ -51,13 +51,15 @@ public class PacMan extends JavaPlugin {
         PowerupManager powerupManager = gameManager.getPowerupManager();
         int spawnFrequency = SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("powerup-frequency").getAsInt();
 
+        JsonObject jsonObject = SamaGamesAPI.get().getGameManager().getGameProperties().getConfigs().get("powerup-chance").getAsJsonObject();
+
         // Register powerups
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, "speed"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, "jump-boost"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_GOMMES, "double-gommes"));
-        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.GOMME_MAGNET, "gommes-magnet"));
-        powerupManager.registerPowerup(new PowerupSwap());
-        powerupManager.registerPowerup(new PowerupBlindness());
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.SPEED, "speed", jsonObject));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.JUMP_BOOST, "jump-boost", jsonObject));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.DOUBLE_GOMMES, "double-gommes", jsonObject));
+        powerupManager.registerPowerup(new BasicPowerup(PowerupEffectType.GOMME_MAGNET, "gommes-magnet", jsonObject));
+        powerupManager.registerPowerup(new PowerupSwap(jsonObject));
+        powerupManager.registerPowerup(new PowerupBlindness(jsonObject));
 
         powerupManager.setInverseFrequency(spawnFrequency); // Set spawn frequency
     }

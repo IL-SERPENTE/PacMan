@@ -1,8 +1,8 @@
 package fr.azuxul.pacman.powerup;
 
+import com.google.gson.JsonObject;
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
-import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.tools.powerups.Powerup;
 import org.apache.commons.lang.math.RandomUtils;
@@ -24,7 +24,12 @@ import java.util.stream.Collectors;
 public class PowerupSwap implements Powerup {
 
     private final ItemStack icon = new ItemStack(Material.ENDER_PEARL);
-    private final int chance = Utils.getChanceForPowerup("swap");
+    private final int chance;
+
+    public PowerupSwap(JsonObject jsonObject) {
+
+        this.chance = jsonObject.get("swap").getAsInt();
+    }
 
     /**
      * When player pickup booster

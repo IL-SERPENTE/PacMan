@@ -1,8 +1,8 @@
 package fr.azuxul.pacman.powerup;
 
+import com.google.gson.JsonObject;
 import fr.azuxul.pacman.GameManager;
 import fr.azuxul.pacman.PacMan;
-import fr.azuxul.pacman.Utils;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import net.samagames.tools.powerups.Powerup;
 import org.bukkit.ChatColor;
@@ -21,7 +21,12 @@ import org.bukkit.potion.PotionEffectType;
 public class PowerupBlindness implements Powerup {
 
     private final ItemStack icon = new ItemStack(Material.INK_SACK);
-    private final int chance = Utils.getChanceForPowerup("blindness");
+    private final int chance;
+
+    public PowerupBlindness(JsonObject jsonObject) {
+
+        this.chance = jsonObject.get("blindness").getAsInt();
+    }
 
     /**
      * When player pickup booster
