@@ -209,7 +209,7 @@ public class Gomme extends EntityArmorStand {
         }
     }
 
-    private void addGommeToPlayer(Player player, PlayerPacMan playerPacMan) {
+    public void addGommeToPlayer(Player player, PlayerPacMan playerPacMan) {
 
         GameManager gameManager = PacMan.getGameManager();
         Location playerLocation = player.getLocation();

@@ -187,17 +187,13 @@ public class PlayerEvent implements Listener {
             GommeManager gommeManager = gameManager.getGommeManager();
             Gomme gomme = gommeManager.getGommeList().get(0);
 
-            if (gomme.getLocation().getY() < 0) {
-                gomme.die();
-                gommeManager.setRemainingGlobalGommes(gommeManager.getRemainingGlobalGommes() - 1);
-                gommeManager.removeGomme(gomme);
-
-                gameManager.getServer().getLogger().info("Gomme at " + gomme.getLocation() + " are killed for invalid y");
-            } else {
+            if (gomme.getLocation().getY() >= 0) {
                 event.setRespawnLocation(gomme.getLocation().add(0, 0.3, 0));
 
                 gameManager.getServer().getLogger().info(player.getDisplayName() + " respawn at " + event.getRespawnLocation() + ". Set respawn at " + gomme.getLocation().add(0, 0.3, 0) + ", gomme is alive : " + gomme.isAlive() + ".");
             }
+
+            gomme.addGommeToPlayer(player, gameManager.getPlayer(player.getUniqueId()));
         }
     }
 
