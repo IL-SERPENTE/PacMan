@@ -109,8 +109,6 @@ public class PacMan extends JavaPlugin {
      */
     private void mapInitialisation() {
 
-        PowerupManager powerupManager = gameManager.getPowerupManager();
-        GommeManager gommeManager = gameManager.getGommeManager();
         Location baseLocation = gameManager.getMapCenter();
         if (baseLocation == null)
             return;
@@ -139,24 +137,34 @@ public class PacMan extends JavaPlugin {
         for (int x = xMin; x <= xMax; x++)
             for (int z = zMin; z <= zMax; z++)
                 for (int y = yMin; y <= yMax; y++) {
-                    Block block = world.getBlockAt(x, y, z); // Get block
-
-                    if (block.getType().equals(gommeMaterial)) { // If is gold block
-                        block.setType(Material.AIR); // Set air
-
-                        // Spawn normal gomme
-                        gommeManager.spawnGomme(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
-                        globalGommes++;
-
-                    } else if (block.getType().equals(powerupMaterial)) {
-                        block.setType(Material.AIR); // Set air
-
-                        powerupManager.registerLocation(new Location(world, x + 0.5, y, z + 0.5)); // Register booster location
-                    }
-                    }
+                    globalGommes += registerBlock(x, y, z, world, worldNMS);
+                }
 
         gameManager.getGommeManager().setGlobalGommes(globalGommes); // Set global gommes
         Collections.shuffle(gameManager.getGommeManager().getGommeList());
+    }
+
+    private int registerBlock(int x, int y, int z, org.bukkit.World world, World worldNMS) {
+
+        PowerupManager powerupManager = gameManager.getPowerupManager();
+        GommeManager gommeManager = gameManager.getGommeManager();
+
+        Block block = world.getBlockAt(x, y, z); // Get block
+
+        if (block.getType().equals(gommeMaterial)) { // If is gold block
+            block.setType(Material.AIR); // Set air
+
+            // Spawn normal gomme
+            gommeManager.spawnGomme(worldNMS, x + 0.5, y - 0.3, z + 0.5, false);
+            return 1;
+
+        } else if (block.getType().equals(powerupMaterial)) {
+            block.setType(Material.AIR); // Set air
+
+            powerupManager.registerLocation(new Location(world, x + 0.5, y, z + 0.5)); // Register booster location
+        }
+
+        return 0;
     }
 
     @Override
