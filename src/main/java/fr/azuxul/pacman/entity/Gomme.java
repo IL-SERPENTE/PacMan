@@ -5,14 +5,14 @@ import fr.azuxul.pacman.NBTTags;
 import fr.azuxul.pacman.PacMan;
 import fr.azuxul.pacman.player.PlayerPacMan;
 import fr.azuxul.pacman.powerup.PowerupEffectType;
-import net.minecraft.server.v1_8_R3.EntityArmorStand;
-import net.minecraft.server.v1_8_R3.EntityHuman;
-import net.minecraft.server.v1_8_R3.NBTTagCompound;
-import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.v1_9_R1.EntityArmorStand;
+import net.minecraft.server.v1_9_R1.EntityHuman;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
+import net.minecraft.server.v1_9_R1.World;
 import net.samagames.api.games.Status;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_9_R1.entity.CraftArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -68,7 +68,7 @@ public class Gomme extends EntityArmorStand {
 
         initNBT();
 
-        setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.GOLD_BLOCK))); // Set helmet
+        ((CraftArmorStand) getBukkitEntity()).setHelmet(new ItemStack(Material.GOLD_BLOCK)); // Set helmet
 
         if (gommeDrooped) { // If is drooped by player
 
@@ -108,7 +108,7 @@ public class Gomme extends EntityArmorStand {
 
         initNBT();
 
-        setEquipment(4, CraftItemStack.asNMSCopy(new ItemStack(Material.EMERALD_BLOCK))); // Set helmet
+        ((CraftArmorStand) getBukkitEntity()).setHelmet(new ItemStack(Material.EMERALD_BLOCK)); // Set helmet
 
         if (gommeDrooped) { // If is drooped by player
 

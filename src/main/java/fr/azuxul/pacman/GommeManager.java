@@ -1,8 +1,8 @@
 package fr.azuxul.pacman;
 
 import fr.azuxul.pacman.entity.Gomme;
-import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.World;
+import net.minecraft.server.v1_9_R1.Entity;
+import net.minecraft.server.v1_9_R1.World;
 import net.samagames.api.games.Status;
 
 import java.util.ArrayList;

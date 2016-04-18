@@ -6,7 +6,7 @@ import net.samagames.api.games.GamePlayer;
 import net.samagames.tools.scoreboards.ObjectiveSign;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
