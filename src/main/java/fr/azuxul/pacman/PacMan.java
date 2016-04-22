@@ -178,6 +178,7 @@ public class PacMan extends JavaPlugin {
 
         samaGamesAPI.getGameManager().registerGame(gameManager); // Register game on SamaGameAPI
         samaGamesAPI.getGameManager().getGameProperties(); // Get properties
+        samaGamesAPI.getGameManager().setLegacyPvP(true); // Get legacy pvp
 
         // Register events
         getServer().getPluginManager().registerEvents(new PlayerEvent(gameManager), this);
