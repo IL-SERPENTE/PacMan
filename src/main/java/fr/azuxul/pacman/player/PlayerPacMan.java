@@ -6,7 +6,7 @@ import net.samagames.api.games.GamePlayer;
 import net.samagames.tools.scoreboards.ObjectiveSign;
 import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_9_R2.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan> {
 
     private int gomme;
+    private int totalGomme;
     private int boosterRemainingTime;
     private int invulnerableRemainingTime;
     private int portalTicks;
@@ -35,8 +36,17 @@ public class PlayerPacMan extends GamePlayer implements Comparable<PlayerPacMan>
         boosterRemainingTime = -1;
         invulnerableRemainingTime = -1;
         gomme = 0;
+        totalGomme = 0;
         kills = 0;
         objectiveSign = null;
+    }
+
+    public void addTotalGomme(int gommeAdd) {
+        totalGomme += gommeAdd;
+    }
+
+    public int getTotalGomme() {
+        return totalGomme;
     }
 
     public ObjectiveSign getObjectiveSign() {
